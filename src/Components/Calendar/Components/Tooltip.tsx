@@ -1,15 +1,15 @@
 /* eslint-disable react/prop-types */
 import * as React from 'react';
 
-import Lens from '@mui/icons-material/Lens';
-import { AccessTime, LocationOnOutlined, MusicNoteOutlined, PhoneOutlined, EventOutlined } from '@mui/icons-material';
+import { AccessTime, LocationOnOutlined, MusicNoteOutlined, PhoneOutlined, EventOutlined, Lens } from '@mui/icons-material';
 
 import Grid from '@mui/material/Grid';
 import { styled } from '@mui/material/styles';
 
-import { classes } from '../../../App';
 import classNames from 'clsx';
 import { IAppointments } from '../../../Types/appointments.type';
+import { IResource } from '../../../Types/calendar.type';
+import { classes } from '../../Calendar/Calendar';
 
 
 const StyledTooltipContent = styled('div')(({ theme: { spacing, typography, palette }, color }) => ({
@@ -69,7 +69,7 @@ const StyledTooltipContent = styled('div')(({ theme: { spacing, typography, pale
 interface TooltipProps {
 	appointmentData: IAppointments,
 	formatDate: any
-	appointmentResources: any
+	appointmentResources: IResource[]
 }
 
 export const Tooltip = ({ appointmentData, formatDate, appointmentResources } : TooltipProps) => {
