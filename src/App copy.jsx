@@ -1,9 +1,9 @@
 /* eslint-disable react/prop-types */
 import * as React from 'react';
 import {
-  EditingState,
-  IntegratedEditing,
   ViewState,
+  GroupingState,
+  IntegratedGrouping,
 } from '@devexpress/dx-react-scheduler';
 import {
   Scheduler,
@@ -13,11 +13,11 @@ import {
   Toolbar,
   DateNavigator,
   ViewSwitcher,
+  AllDayPanel,
   AppointmentTooltip,
   AppointmentForm,
+  GroupingPanel,
   Resources,
-  MonthView,
-  ConfirmationDialog,
 } from '@devexpress/dx-react-scheduler-material-ui';
 import { connectProps } from '@devexpress/dx-react-core';
 import { styled, alpha } from '@mui/material/styles';
@@ -25,28 +25,40 @@ import PriorityHigh from '@mui/icons-material/PriorityHigh';
 import LowPriority from '@mui/icons-material/LowPriority';
 import Lens from '@mui/icons-material/Lens';
 import Event from '@mui/icons-material/Event';
-import {AccessTime, LocationOnOutlined, MusicNoteOutlined, PhoneOutlined, EventOutlined} from '@mui/icons-material';
+import AccessTime from '@mui/icons-material/AccessTime';
 import Paper from '@mui/material/Paper';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import Grid from '@mui/material/Grid';
 import FormControl from '@mui/material/FormControl';
-import {IAppointments} from './Types/appointments.type'
+import classNames from 'clsx';
+
 import { priorities } from './demo-data/tasks';
 import { data as tasks } from './demo-data/grouping';
-import { Tooltip } from './Components/Calendar/Components/Tooltip';
 
+const grouping = [{
+  resourceName: 'priorityId',
+}];
 
-const filterTasks = (items, status) => items.filter(task => {
-  if(status === 4) {
-    return task.id === status
+const filterTasks = (items, priorityId) => items.filter(task => {
+  if(priorityId === 4) {
+    return task.id === priorityId
   }
-   return !status || task.status === status
+   return !priorityId || task.priorityId === priorityId
 });
 
+const getIconById = (id) => {
+  if (id === 1) {
+    return LowPriority;
+  }
+  if (id === 2) {
+    return Event;
+  }
+  return PriorityHigh;
+};
 
 const PREFIX = 'Demo';
-export const classes = {
+const classes = {
   flexibleSpace: `${PREFIX}-flexibleSpace`,
   prioritySelector: `${PREFIX}-prioritySelector`,
   content: `${PREFIX}-content`,
@@ -73,6 +85,40 @@ export const classes = {
   headerCellMediumPriority: `${PREFIX}-headerCellMediumPriority`,
   headerCellHighPriority: `${PREFIX}-headerCellHighPriority`,
 };
+const stylesByPriority = priorities.reduce((acc, priority) => ({
+  ...acc,
+  [`cell${priority.text.replace(' ', '')}`]: {
+    backgroundColor: alpha(priority.color[400], 0.1),
+    '&:hover': {
+      backgroundColor: alpha(priority.color[400], 0.15),
+    },
+    '&:focus': {
+      backgroundColor: alpha(priority.color[400], 0.2),
+    },
+  },
+  [`headerCell${priority.text.replace(' ', '')}`]: {
+    backgroundColor: alpha(priority.color[400], 0.1),
+    '&:hover': {
+      backgroundColor: alpha(priority.color[400], 0.1),
+    },
+    '&:focus': {
+      backgroundColor: alpha(priority.color[400], 0.1),
+    },
+  },
+}), {});
+
+const groupingStyles  = ({ theme }) => ({
+  [`&.${classes.cellLowPriority}`]: stylesByPriority.cellLowPriority,
+  [`&.${classes.cellMediumPriority}`]: stylesByPriority.cellMediumPriority,
+  [`&.${classes.cellHighPriority}`]: stylesByPriority.cellHighPriority,
+  [`&.${classes.headerCellLowPriority}`]: stylesByPriority.headerCellLowPriority,
+  [`&.${classes.headerCellMediumPriority}`]: stylesByPriority.headerCellMediumPriority,
+  [`&.${classes.headerCellHighPriority}`]: stylesByPriority.headerCellHighPriority,
+  [`& .${classes.icon}`]: {
+    paddingLeft: theme.spacing(1),
+    verticalAlign: 'middle',
+  },
+});
 
 const StyledToolbarFlexibleSpace = styled(Toolbar.FlexibleSpace)(() => ({
   [`&.${classes.flexibleSpace}`]: {
@@ -116,6 +162,7 @@ const StyledPrioritySelectorItem = styled('div')(({ theme: { palette, spacing },
     },
   },
 }));
+const StyledWeekViewTimeTableCell = styled(WeekView.TimeTableCell)(groupingStyles);
 const StyledTooltipContent = styled('div')(({ theme: { spacing, typography, palette }, color }) => ({
   [`&.${classes.content}`]: {
     padding: spacing(3, 1),
@@ -169,6 +216,120 @@ const StyledTooltipContent = styled('div')(({ theme: { spacing, typography, pale
     paddingBottom: spacing(1.5),
   },
 }));
+
+const StyledDayViewDayScaleCell = styled(DayView.DayScaleCell)(groupingStyles);
+
+const StyledWeekViewDayScaleCell = styled(WeekView.DayScaleCell)(groupingStyles);
+
+const StyledAllDayPanelCell = styled(AllDayPanel.Cell)(groupingStyles);
+
+const StyledGroupingPanelCell = styled(GroupingPanel.Cell)(groupingStyles);
+
+const StyledDayViewTimeTableCell = styled(DayView.TimeTableCell)(groupingStyles);
+
+const DayViewTimeTableCell = ({
+  // eslint-disable-next-line react/prop-types
+  groupingInfo, ...restProps
+}) => {
+  // eslint-disable-next-line react/prop-types
+  const groupId = groupingInfo[0].id;
+  return (
+    <StyledDayViewTimeTableCell
+      className={classNames({
+        [classes.cellLowPriority]: groupId === 1,
+        [classes.cellMediumPriority]: groupId === 2,
+        [classes.cellHighPriority]: groupId === 3,
+      })}
+      groupingInfo={groupingInfo}
+      {...restProps}
+    />
+  );
+};
+const DayViewDayScaleCell = ({
+  groupingInfo, ...restProps
+}) => {
+  const groupId = groupingInfo[0].id;
+  return (
+    <StyledDayViewDayScaleCell
+      className={classNames({
+        [classes.headerCellLowPriority]: groupId === 1,
+        [classes.headerCellMediumPriority]: groupId === 2,
+        [classes.headerCellHighPriority]: groupId === 3,
+      })}
+      groupingInfo={groupingInfo}
+      {...restProps}
+    />
+  );
+};
+const WeekViewTimeTableCell = ({
+  groupingInfo, ...restProps
+}) => {
+  const groupId = groupingInfo[0].id;
+  return (
+    <StyledWeekViewTimeTableCell
+      className={classNames({
+        [classes.cellLowPriority]: groupId === 1,
+        [classes.cellMediumPriority]: groupId === 2,
+        [classes.cellHighPriority]: groupId === 3,
+      })}
+      groupingInfo={groupingInfo}
+      {...restProps}
+    />
+  );
+};
+const WeekViewDayScaleCell = ({
+  groupingInfo, ...restProps
+}) => {
+  const groupId = groupingInfo[0].id;
+  return (
+    <StyledWeekViewDayScaleCell
+      className={classNames({
+        [classes.headerCellLowPriority]: groupId === 1,
+        [classes.headerCellMediumPriority]: groupId === 2,
+        [classes.headerCellHighPriority]: groupId === 3,
+      })}
+      groupingInfo={groupingInfo}
+      {...restProps}
+    />
+  );
+};
+const AllDayCell = ({
+  groupingInfo, ...restProps
+}) => {
+  const groupId = groupingInfo[0].id;
+  return (
+    <StyledAllDayPanelCell
+      className={classNames({
+        [classes.cellLowPriority]: groupId === 1,
+        [classes.cellMediumPriority]: groupId === 2,
+        [classes.cellHighPriority]: groupId === 3,
+      })}
+      groupingInfo={groupingInfo}
+      {...restProps}
+    />
+  );
+};
+const GroupingPanelCell = ({
+  group, ...restProps
+}) => {
+  const groupId = group.id;
+  const Icon = getIconById(groupId);
+  return (
+    <StyledGroupingPanelCell
+      className={classNames({
+        [classes.headerCellLowPriority]: groupId === 1,
+        [classes.headerCellMediumPriority]: groupId === 2,
+        [classes.headerCellHighPriority]: groupId === 3,
+      })}
+      group={group}
+      {...restProps}
+    >
+      <Icon
+        className={classes.icon}
+      />
+    </StyledGroupingPanelCell>
+  );
+};
 
 const PrioritySelectorItem = ({
   color, text: resourceTitle,
@@ -224,40 +385,73 @@ const FlexibleSpace = (({
 const TooltipContent = ({
   appointmentData, formatDate, appointmentResources,
 }) => {
-  
+  const resource = appointmentResources[0];
+  let icon = <LowPriority className={classes.icon} />;
+  if (appointmentData.priorityId === 2) {
+    icon = <Event className={classes.icon} />;
+  }
+  if (appointmentData.priorityId === 3) {
+    icon = <PriorityHigh className={classes.icon} />;
+  }
   return (
-    <Tooltip appointmentData={appointmentData} formatDate={formatDate} appointmentResources={appointmentResources}/>
-  
+    <StyledTooltipContent className={classes.content} color={resource.color}>
+      <Grid container alignItems="flex-start" className={classes.titleContainer}>
+        <Grid item xs={2} className={classNames(classes.textCenter)}>
+          <Lens className={classNames(classes.lens, classes.colorfulContent)} />
+        </Grid>
+        <Grid item xs={10}>
+          <div>
+            <div className={classNames(classes.title, classes.dateAndTitle)}>
+              {appointmentData.title}
+            </div>
+            <div className={classNames(classes.text, classes.dateAndTitle)}>
+              {formatDate(appointmentData.startDate, { day: 'numeric', weekday: 'long' })}
+            </div>
+          </div>
+        </Grid>
+      </Grid>
+      <Grid container alignItems="center" className={classes.contentContainer}>
+        <Grid item xs={2} className={classes.textCenter}>
+          <AccessTime className={classes.icon} />
+        </Grid>
+        <Grid item xs={10}>
+          <div className={classes.text}>
+            {`${formatDate(appointmentData.startDate, { hour: 'numeric', minute: 'numeric' })}
+              - ${formatDate(appointmentData.endDate, { hour: 'numeric', minute: 'numeric' })}`}
+          </div>
+        </Grid>
+      </Grid>
+      <Grid container alignItems="center" key={`${resource.fieldName}_${resource.id}`}>
+        <Grid
+          className={classNames(classes.contentItemIcon, classes.icon, classes.colorfulContent)}
+          item
+          xs={2}
+        >
+          {icon}
+        </Grid>
+        <Grid item xs={10}>
+          <span className={classNames(classes.text, classes.colorfulContent)}>
+            {resource.text}
+          </span>
+        </Grid>
+      </Grid>
+    </StyledTooltipContent>
   );
 };
-
-const FormTest = (data) => {
-  return <Grid>Aloha</Grid>
-}
-
-const changeEvent = (data) => {
-  console.log('-----', data)
-}
-
 
 export default class Demo extends React.PureComponent {
   constructor(props) {
     super(props);
 
     this.state = {
-      currentViewName: 'Mensal',
+      currentDate: '2018-05-28',
+      currentViewName: 'Day',
       data: tasks,
       currentPriority: 0,
       resources: [{
-        fieldName: 'status',
+        fieldName: 'priorityId',
         title: 'Priority',
         instances: priorities,
-      }, {
-        fieldName: 'id',
-        title: 'Meus Eventos',
-        instances: [{
-          id: 'id', text: 'meus Eventos', color: null
-        }],
       }],
     };
     this.currentViewNameChange = (currentViewName) => {
@@ -268,9 +462,6 @@ export default class Demo extends React.PureComponent {
     };
     this.priorityChange = (value) => {
       const { resources } = this.state;
-
-
-    
       const nextResources = [{
         ...resources[0],
         instances: value > 0 ? [priorities[value - 1]] : priorities,
@@ -285,25 +476,6 @@ export default class Demo extends React.PureComponent {
         priorityChange: this.priorityChange,
       };
     });
-
-
-  this.commitChanges = ({ added, changed, deleted }) => {
-  this.setState((state) => {
-    let { data } = state;
-    if (added) {
-      const startingAddedId = data.length > 0 ? data[data.length - 1].id + 1 : 0;
-      data = [...data, { id: startingAddedId, ...added }];
-    }
-    if (changed) {
-      data = data.map(appointment => (
-        changed[appointment.id] ? { ...appointment, ...changed[appointment.id] } : appointment));
-    }
-    if (deleted !== undefined) {
-      data = data.filter(appointment => appointment.id !== deleted);
-    }
-    return { data };
-  });
-}
   }
 
   componentDidUpdate() {
@@ -320,7 +492,6 @@ export default class Demo extends React.PureComponent {
         <Scheduler
           data={filterTasks(data, currentPriority)}
           height={660}
-          locale={'pt-BR'}
         >
           <ViewState
             currentDate={currentDate}
@@ -328,46 +499,47 @@ export default class Demo extends React.PureComponent {
             onCurrentViewNameChange={this.currentViewNameChange}
             onCurrentDateChange={this.currentDateChange}
           />
-          
+          <GroupingState
+            grouping={grouping}
+          />
 
           <DayView
             startDayHour={9}
             endDayHour={19}
+            timeTableCellComponent={DayViewTimeTableCell}
+            dayScaleCellComponent={DayViewDayScaleCell}
             intervalCount={2}
-            name='Dia'
           />
           <WeekView
             startDayHour={9}
             endDayHour={17}
             excludedDays={[0, 6]}
-            name="Semanal"
+            name="Work Week"
+            timeTableCellComponent={WeekViewTimeTableCell}
+            dayScaleCellComponent={WeekViewDayScaleCell}
           />
-
-          <MonthView
-            name="Mensal"
+          <AllDayPanel
+            cellComponent={AllDayCell}
           />
 
           <Appointments />
           <Resources
             data={resources}
           />
-        
+          <IntegratedGrouping />
+
+          <GroupingPanel
+            cellComponent={GroupingPanelCell}
+          />
           <Toolbar flexibleSpaceComponent={this.flexibleSpace} />
           <DateNavigator />
           <ViewSwitcher />
-          <EditingState onCommitChanges={this.commitChanges} />
-          <IntegratedEditing />
-          <ConfirmationDialog/>
-          
           <AppointmentTooltip
             contentComponent={TooltipContent}
             showOpenButton
             showCloseButton
-            showDeleteButton
-
           />
-
-          <AppointmentForm onAppointmentDataChange={changeEvent} messages={{afterLabel: 'meu deus', commitCommand: 'Salvar', }} />
+          <AppointmentForm readOnly />
         </Scheduler>
       </Paper>
     );

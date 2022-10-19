@@ -210,7 +210,11 @@ export const tasks = [
 ];
 
 export const priorities = [
-	{ id: 1, text: 'Eventos', color: lightBlue },
+	{ id: 1, text: 'Agendado', color: green },
+	{ id: 2, text: 'Medium Priority', color: lightBlue },
+	{ id: 3, text: 'High Priority', color: deepOrange },
+	{ id: 4, text: 'Priority', color: deepOrange },
+
 ];
 
 export const owners = [
