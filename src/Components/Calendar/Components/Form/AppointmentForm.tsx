@@ -47,7 +47,7 @@ const schema = yup.object().shape({
   place: yup.string().max(50, "Nome muito grande"),
   address_number: yup.string().max(10, "Numero muito grande"),
   address_complement: yup.string().max(150, "Complemento muito grande"),
-  status: yup.string(),
+  status: yup.string().default("agendado"),
   id_band: yup.number().required("Informe a banda que vai tocar no evento"),
   startDate: yup.date().required("Data inicial obrigatória").required("Data inicial obrigatória"),
   endDate: yup.date().required("Data final obrigatória").required("Data final obrigatória"),
@@ -56,7 +56,7 @@ const schema = yup.object().shape({
 export const AppointmentForm = ({ data }: any) => {
   const theme = useTheme()
   const mobile = useMediaQuery(theme.breakpoints.down("sm"))
-  console.log(data)
+  const [maskedCellPhone, setMaskedCellPhone] = useState("")
   const { startDate, endDate } = data.appointmentData
   const hasHour =
     new Date(startDate).toLocaleTimeString().substring(0, 5) === "00:00"
@@ -71,6 +71,13 @@ export const AppointmentForm = ({ data }: any) => {
 
   const [reqStartDate, setreqStartDate] = useState(startDateFormatted)
   const [reqEndDate, setreqEndDate] = useState(endDateFormatted)
+
+  const maskCellNumber = value => {
+    value = value.replace(/\D/g, "")
+    value = value.replace(/(\d{2})(\d)/, "($1) $2")
+    value = value.replace(/(\d{4,5})(\d)/, "$1-$2")
+    setMaskedCellPhone(value)
+  }
 
   const {
     register,
@@ -121,12 +128,17 @@ export const AppointmentForm = ({ data }: any) => {
                   label="Telefone *"
                   error={!!errors.cellphone}
                   helperText={errors.cellphone && errors.cellphone.message}
+                  onChange={e => maskCellNumber(e.currentTarget.value)}
+                  value={maskedCellPhone}
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
                         <PhoneOutlined />
                       </InputAdornment>
                     ),
+                  }}
+                  inputProps={{
+                    maxLength: 15,
                   }}
                 ></TextField>
               )}
@@ -322,7 +334,9 @@ export const AppointmentForm = ({ data }: any) => {
                       defaultValue="agendado"
                       {...field}
                     >
-                      <MenuItem value={"agendado"}>Agendado</MenuItem>
+                      <MenuItem value={"agendado"} selected>
+                        Agendado
+                      </MenuItem>
                       <MenuItem value={"cancelado"}>Cancelado</MenuItem>
                       <MenuItem value={"concluido"}>Concluído</MenuItem>
                     </Select>
