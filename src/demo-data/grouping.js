@@ -12,7 +12,7 @@ export const data = [
 		"state": "ES",
 		"city": "São Mateus",
 		"place": "Radio Amanhecer",
-		"house_number": "05",
+		"address_number": "05",
 		"address_complement": null,
 		"duration": 1,
 		"updatedAt": "2022-10-16T20:17:47.338Z",
