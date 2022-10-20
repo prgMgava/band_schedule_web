@@ -22,11 +22,11 @@ import MenuItem from "@mui/material/MenuItem"
 import Select from "@mui/material/Select"
 import Grid from "@mui/material/Grid"
 import FormControl from "@mui/material/FormControl"
-import { IAppointments } from "../../Types/appointments.type"
 import { priorities } from "../../demo-data/tasks"
 import { data as tasks } from "../../demo-data/grouping"
 import { Tooltip } from "../../Components/Calendar/Components/Tooltip"
 import { AppointmentForm as CustomAppointmentForm } from "./Components/Form/AppointmentForm"
+import { useForm } from "react-hook-form"
 
 const filterTasks = (items, status) =>
   items.filter(task => {
@@ -107,59 +107,6 @@ const StyledPrioritySelectorItem = styled("div")(({ theme: { palette, spacing },
     },
   },
 }))
-const StyledTooltipContent = styled("div")(({ theme: { spacing, typography, palette }, color }) => ({
-  [`&.${classes.content}`]: {
-    padding: spacing(3, 1),
-    paddingTop: 0,
-    backgroundColor: palette.background.paper,
-    boxSizing: "border-box",
-    width: "400px",
-  },
-  [`& .${classes.contentContainer}`]: {
-    paddingBottom: spacing(1.5),
-  },
-  [`& .${classes.text}`]: {
-    ...typography.body2,
-    display: "inline-block",
-  },
-  [`& .${classes.title}`]: {
-    ...typography.h6,
-    color: palette.text.secondary,
-    fontWeight: typography.fontWeightBold,
-    overflow: "hidden",
-    textOverflow: "ellipsis",
-    whiteSpace: "normal",
-  },
-  [`& .${classes.icon}`]: {
-    verticalAlign: "middle",
-  },
-  [`& .${classes.contentItemIcon}`]: {
-    textAlign: "center",
-  },
-  [`& .${classes.grayIcon}`]: {
-    color: palette.action.active,
-  },
-  [`& .${classes.colorfulContent}`]: {
-    color: color ? color[300] : "",
-  },
-  [`& .${classes.lens}`]: {
-    width: spacing(4.5),
-    height: spacing(4.5),
-    verticalAlign: "super",
-  },
-  [`& .${classes.textCenter}`]: {
-    textAlign: "center",
-  },
-  [`& .${classes.dateAndTitle}`]: {
-    lineHeight: 1.1,
-  },
-  [`& .${classes.titleContainer}`]: {
-    paddingBottom: spacing(2),
-  },
-  [`& .${classes.container}`]: {
-    paddingBottom: spacing(1.5),
-  },
-}))
 
 const PrioritySelectorItem = ({ color, text: resourceTitle }) => {
   const text = resourceTitle || "All Tasks"
@@ -210,12 +157,22 @@ const TooltipContent = ({ appointmentData, formatDate, appointmentResources }) =
   )
 }
 
-const FormTest = data => {
+const CustomFormAppointment = data => {
   return <CustomAppointmentForm data={data} />
 }
 
+const CustomButtonSubmit = data => {
+  console.log(data, "button")
+  return (
+    <>
+      <button>Salvei</button>
+      <button>fechar</button>
+    </>
+  )
+}
+
 const changeEvent = data => {
-  // console.log("-----", data)
+  console.log("-----", data)
 }
 
 export default class Demo extends React.PureComponent {
@@ -319,7 +276,7 @@ export default class Demo extends React.PureComponent {
           <Toolbar flexibleSpaceComponent={this.flexibleSpace} />
           <ViewSwitcher />
           <DateNavigator />
-          <EditingState onCommitChanges={this.commitChanges} />
+          <EditingState onCommitChanges={this.commitChanges} addedAppointment />
           <IntegratedEditing />
           <ConfirmationDialog />
 
@@ -328,7 +285,8 @@ export default class Demo extends React.PureComponent {
           <AppointmentForm
             onAppointmentDataChange={changeEvent}
             messages={{ afterLabel: "meu deus", commitCommand: "Salvar" }}
-            basicLayoutComponent={FormTest}
+            basicLayoutComponent={CustomFormAppointment}
+            commandLayoutComponent={CustomButtonSubmit}
           />
         </Scheduler>
       </Paper>
