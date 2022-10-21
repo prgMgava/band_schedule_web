@@ -30,12 +30,14 @@ import { Stack } from "@mui/system"
 import React, { useState } from "react"
 import MenuIcon from "@mui/icons-material/Menu"
 import { AppointmentForm } from "../Form/AppointmentForm"
+import { BandForm } from "../Form/BandForm"
 
 export const Header = ({ setAppointments }: any) => {
   const theme = useTheme()
 
   const mobile = useMediaQuery(theme.breakpoints.down("sm"))
   const [anchorEl, setAnchorEl] = React.useState(null)
+  const [currentForm, setCurrentForm] = useState("")
   const open = Boolean(anchorEl)
   const handleClick = event => {
     setAnchorEl(event.currentTarget)
@@ -57,14 +59,19 @@ export const Header = ({ setAppointments }: any) => {
       startDate: new Date(),
     },
   }
+
+  const forms = {
+    appointment: <AppointmentForm data={data} setAppointments={setAppointments} fromMenu={true} />,
+    band: <BandForm></BandForm>,
+  }
   return (
     <>
       <Drawer anchor={"left"} open={openDrawer} onClose={toggleDrawer} style={{ padding: "0 4px 0 4px" }}>
         <IconButton onClick={toggleDrawer} size="medium" style={{ width: "25px", marginLeft: "8px" }}>
           <Close alignmentBaseline="baseline"></Close>
         </IconButton>
+        {forms[currentForm]}
         <Divider />
-        <AppointmentForm data={data} setAppointments={setAppointments} fromMenu={true} />
       </Drawer>
       <Box width={"100%"} height={"75px"} boxShadow={2} bgcolor={"#0d1f35"} mb={5}>
         <Stack direction={"row"} width={"100vw"} justifyContent={"space-between"}>
@@ -129,13 +136,23 @@ export const Header = ({ setAppointments }: any) => {
                 <Typography component="h6" fontSize={"10px"} pl={1}>
                   Acesso só para administradores
                 </Typography>
-                <MenuItem onClick={() => setOpenDrawer(true)}>
+                <MenuItem
+                  onClick={() => {
+                    setCurrentForm("appointment")
+                    setOpenDrawer(true)
+                  }}
+                >
                   <ListItemIcon>
                     <EventAvailable fontSize="small" />
                   </ListItemIcon>
                   Adicionar evento
                 </MenuItem>
-                <MenuItem>
+                <MenuItem
+                  onClick={() => {
+                    setCurrentForm("band")
+                    setOpenDrawer(true)
+                  }}
+                >
                   <ListItemIcon>
                     <MusicNote fontSize="small" />
                   </ListItemIcon>

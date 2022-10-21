@@ -14,3 +14,9 @@ export interface IAppointmentFields {
   endDate: string
   address: boolean
 }
+
+export interface IBandFields {
+  name: string
+  cellphone: string
+  email: string
+}
