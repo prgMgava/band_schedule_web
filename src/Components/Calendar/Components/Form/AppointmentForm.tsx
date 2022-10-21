@@ -36,10 +36,11 @@ import {
 import { Stack } from "@mui/system"
 import { useState } from "react"
 import { statesList } from "../../Utils/states"
+import { toast } from "react-toastify"
 
 const schema = yup.object().shape({
   title: yup.string().required("Nome do evento é obrigatório").max(100, "Nome muito grande"),
-  cellphone: yup.string().required("Telefone do responsável é obrigatório").max(50, "Telefone muito grande"),
+  cellphone: yup.string().max(50, "Telefone muito grande"),
   street: yup.string().max(50, "Nome de rua muito grande").required("Informe uma rua"),
   district: yup.string().max(50, "Nome de bairro muito grande").required("Informe um bairro"),
   state: yup.string().required("Informe um estado"),
@@ -53,7 +54,7 @@ const schema = yup.object().shape({
   endDate: yup.date().required("Data final obrigatória").required("Data final obrigatória"),
 })
 
-export const AppointmentForm = ({ data }: any) => {
+export const AppointmentForm = ({ data, setAppointments }: any) => {
   const theme = useTheme()
   const mobile = useMediaQuery(theme.breakpoints.down("sm"))
   const [maskedCellPhone, setMaskedCellPhone] = useState("")
@@ -83,12 +84,16 @@ export const AppointmentForm = ({ data }: any) => {
     register,
     handleSubmit,
     watch,
+    reset,
     control,
     formState: { errors },
   } = useForm<IAppointmentFields>({ resolver: yupResolver(schema), mode: "onSubmit" })
 
   const submitForm: SubmitHandler<IAppointmentFields> = (data: IAppointmentFields) => {
     console.log(data)
+    toast.success("Evento adicionado com sucesso")
+    setAppointments(old => [...old, data])
+    reset()
   }
 
   return (
@@ -122,9 +127,9 @@ export const AppointmentForm = ({ data }: any) => {
             <Controller
               name="cellphone"
               control={control}
-              render={({ field }) => (
+              render={({ field: { onChange, ...rest } }) => (
                 <TextField
-                  {...field}
+                  {...rest}
                   label="Telefone *"
                   error={!!errors.cellphone}
                   helperText={errors.cellphone && errors.cellphone.message}

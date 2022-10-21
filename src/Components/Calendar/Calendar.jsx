@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import * as React from "react"
+import React from "react"
 import { EditingState, IntegratedEditing, ViewState } from "@devexpress/dx-react-scheduler"
 import {
   Scheduler,
@@ -157,10 +157,6 @@ const TooltipContent = ({ appointmentData, formatDate, appointmentResources }) =
   )
 }
 
-const CustomFormAppointment = data => {
-  return <CustomAppointmentForm data={data} />
-}
-
 const CustomButtonSubmit = data => {
   console.log(data, "button")
   return (
@@ -175,121 +171,100 @@ const changeEvent = data => {
   console.log("-----", data)
 }
 
-export default class Demo extends React.PureComponent {
-  constructor(props) {
-    super(props)
-
-    this.state = {
-      currentViewName: "Mensal",
-      data: tasks,
-      currentPriority: 0,
-      resources: [
+export const Demo = () => {
+  const [currentViewName, setCurrentViewName] = React.useState("Mensal")
+  const [data, setData] = React.useState(tasks)
+  const [currentPriority, setCurrentPriority] = React.useState(0)
+  const [resources, setResources] = React.useState([
+    {
+      fieldName: "status",
+      title: "Priority",
+      instances: priorities,
+    },
+    {
+      fieldName: "id",
+      title: "Meus Eventos",
+      instances: [
         {
-          fieldName: "status",
-          title: "Priority",
-          instances: priorities,
-        },
-        {
-          fieldName: "id",
-          title: "Meus Eventos",
-          instances: [
-            {
-              id: "id",
-              text: "meus Eventos",
-              color: null,
-            },
-          ],
+          id: "id",
+          text: "meus Eventos",
+          color: null,
         },
       ],
-    }
-    this.currentViewNameChange = currentViewName => {
-      this.setState({ currentViewName })
-    }
-    this.currentDateChange = currentDate => {
-      this.setState({ currentDate })
-    }
-    this.priorityChange = value => {
-      const { resources } = this.state
+    },
+  ])
+  const [currentDate, setCurrentDate] = React.useState(new Date())
 
-      const nextResources = [
-        {
-          ...resources[0],
-          instances: value > 0 ? [priorities[value - 1]] : priorities,
-        },
-      ]
-
-      this.setState({ currentPriority: value, resources: nextResources })
-    }
-    this.flexibleSpace = connectProps(FlexibleSpace, () => {
-      const { currentPriority } = this.state
-      return {
-        priority: currentPriority,
-        priorityChange: this.priorityChange,
-      }
-    })
-
-    this.commitChanges = ({ added, changed, deleted }) => {
-      this.setState(state => {
-        let { data } = state
-        if (added) {
-          const startingAddedId = data.length > 0 ? data[data.length - 1].id + 1 : 0
-          data = [...data, { id: startingAddedId, ...added }]
-        }
-        if (changed) {
-          data = data.map(appointment =>
-            changed[appointment.id] ? { ...appointment, ...changed[appointment.id] } : appointment
-          )
-        }
-        if (deleted !== undefined) {
-          data = data.filter(appointment => appointment.id !== deleted)
-        }
-        return { data }
-      })
-    }
+  const currentViewNameChange = currentViewName => {
+    setCurrentViewName(currentViewName)
   }
 
-  componentDidUpdate() {
-    this.flexibleSpace.update()
+  const currentDateChange = currentDate => {
+    setCurrentDate(currentDate)
   }
 
-  render() {
-    const { data, currentDate, currentViewName, currentPriority, resources } = this.state
-
-    return (
-      <Paper>
-        <Scheduler data={filterTasks(data, currentPriority)} height={660} locale={"pt-BR"}>
-          <ViewState
-            currentDate={currentDate}
-            currentViewName={currentViewName}
-            onCurrentViewNameChange={this.currentViewNameChange}
-            onCurrentDateChange={this.currentDateChange}
-          />
-
-          <DayView startDayHour={9} endDayHour={19} intervalCount={2} name="Dia" />
-          <WeekView startDayHour={9} endDayHour={17} excludedDays={[0, 6]} name="Semanal" />
-
-          <MonthView name="Mensal" />
-
-          <Appointments />
-          <Resources data={resources} />
-
-          <Toolbar flexibleSpaceComponent={this.flexibleSpace} />
-          <ViewSwitcher />
-          <DateNavigator />
-          <EditingState onCommitChanges={this.commitChanges} addedAppointment />
-          <IntegratedEditing />
-          <ConfirmationDialog />
-
-          <AppointmentTooltip contentComponent={TooltipContent} showOpenButton showCloseButton showDeleteButton />
-
-          <AppointmentForm
-            onAppointmentDataChange={changeEvent}
-            messages={{ afterLabel: "meu deus", commitCommand: "Salvar" }}
-            basicLayoutComponent={CustomFormAppointment}
-            commandLayoutComponent={CustomButtonSubmit}
-          />
-        </Scheduler>
-      </Paper>
-    )
+  const priorityChange = value => {
+    const nextResources = [
+      {
+        ...resources[0],
+        instances: value > 0 ? [priorities[value - 1]] : priorities,
+      },
+    ]
+    setCurrentPriority(value)
+    setResources(nextResources)
   }
+
+  const flexibleSpace = connectProps(FlexibleSpace, () => {
+    return {
+      priority: currentPriority,
+      priorityChange: priorityChange,
+    }
+  })
+
+  const commitChanges = ({ added, changed, deleted }) => {
+    console.log(added, changed, deleted)
+  }
+
+  const CustomFormAppointment = data => {
+    return <CustomAppointmentForm data={data} setAppointments={setData} />
+  }
+
+  React.useEffect(() => {
+    flexibleSpace.update()
+  }, [])
+
+  return (
+    <Paper>
+      <Scheduler data={filterTasks(data, currentPriority)} height={660} locale={"pt-BR"}>
+        <ViewState
+          currentDate={currentDate}
+          currentViewName={currentViewName}
+          onCurrentViewNameChange={currentViewNameChange}
+          onCurrentDateChange={currentDateChange}
+        />
+
+        <DayView startDayHour={9} endDayHour={19} intervalCount={2} name="Dia" />
+        <WeekView startDayHour={9} endDayHour={17} excludedDays={[0, 6]} name="Semanal" />
+
+        <MonthView name="Mensal" />
+
+        <Appointments />
+        <Resources data={resources} />
+
+        <Toolbar flexibleSpaceComponent={flexibleSpace} />
+        <ViewSwitcher />
+        <DateNavigator />
+        <EditingState onCommitChanges={commitChanges} onAddedAppointmentChange={commitChanges} />
+        <IntegratedEditing />
+        <ConfirmationDialog />
+
+        <AppointmentTooltip contentComponent={TooltipContent} showOpenButton showCloseButton showDeleteButton />
+
+        <AppointmentForm
+          messages={{ afterLabel: "meu deus", commitCommand: "Salvar" }}
+          basicLayoutComponent={CustomFormAppointment}
+        />
+      </Scheduler>
+    </Paper>
+  )
 }

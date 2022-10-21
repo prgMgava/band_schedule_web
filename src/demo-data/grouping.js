@@ -1,6 +1,6 @@
 export const data = [
 	{
-		"status": 1,
+		"status": 'concluido',
 		"id": 21,
 		"title": "My first Event",
 		"cellphone": "27123456789",
@@ -30,19 +30,19 @@ export const data = [
 	}, {
 		title: 'Book Flights to San Fran for Sales Trip',
 		priorityId: 1,
-		startDate: new Date(2018, 4, 10, 10, 0),
-		endDate: new Date(2018, 4, 10, 12, 0),
+		"startDate": "2022-10-18T09:12:12.000Z",
+		"endDate": "2022-10-18T10:12:12.000Z",
 		street: 'Rua dos Bobos',
-		status: 'Agendado',
+		status: 'agendado',
 		band: 'AC/DC',
 		id: 1,
 	}, {
 		title: 'Install New Router in Dev Room',
 		priorityId: 3,
-		startDate: new Date(2018, 4, 7, 13),
-		endDate: new Date(2018, 4, 7, 15, 30),
+		"startDate": "2022-10-25T09:12:12.000Z",
+		"endDate": "2022-10-25T10:12:12.000Z",
 		street: 'Rua dos Bobos',
-		status: 'Agendado',
+		status: 'cancelado',
 		band: 'AC/DC',
 		id: 2,
 	}, {
@@ -51,7 +51,7 @@ export const data = [
 		startDate: new Date(2018, 4, 7, 13, 0),
 		endDate: new Date(2018, 4, 7, 15, 15),
 		street: 'Rua dos Bobos',
-		status: 'Agendado',
+		status: 'concluido',
 		band: 'AC/DC',
 		id: 4,
 	},];

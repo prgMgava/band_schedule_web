@@ -1,4 +1,4 @@
-import { green, deepOrange, lightBlue } from '@mui/material/colors';
+import { green, deepOrange, lightBlue, red } from '@mui/material/colors';
 
 export const tasks = [
 	{
@@ -210,10 +210,9 @@ export const tasks = [
 ];
 
 export const priorities = [
-	{ id: 1, text: 'Agendado', color: green },
-	{ id: 2, text: 'Medium Priority', color: lightBlue },
-	{ id: 3, text: 'High Priority', color: deepOrange },
-	{ id: 4, text: 'Priority', color: deepOrange },
+	{ id: 'agendado', text: 'Agendado', color: lightBlue },
+	{ id: 'cancelado', text: 'Cancelado', color: red },
+	{ id: 'concluido', text: 'Concluído', color: green },
 
 ];
 
