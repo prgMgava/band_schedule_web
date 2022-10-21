@@ -3,7 +3,7 @@ export const data = [
 		"status": 'concluido',
 		"id": 21,
 		"title": "My first Event",
-		"cellphone": "27123456789",
+		"cellphone": "(12) 12345-6789",
 		"id_band": 27,
 		"startDate": "2022-10-16T09:12:12.000Z",
 		"endDate": "2022-10-16T10:12:12.000Z",

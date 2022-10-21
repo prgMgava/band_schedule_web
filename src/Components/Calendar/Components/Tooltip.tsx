@@ -113,7 +113,7 @@ export const Tooltip = ({ appointmentData, formatDate, appointmentResources }: T
         </Grid>
         <Grid item xs={10}>
           <div className={classes.text}>
-            {appointmentData.place} {appointmentData.street && `- ${appointmentData.street}`}{" "}
+            {appointmentData.street && `${appointmentData.street}`}{" "}
             {appointmentData.address_number && `n.º ${appointmentData.address_number}`}{" "}
             {appointmentData.district && `, ${appointmentData.district}`}{" "}
             {appointmentData.city && `, ${appointmentData.city}`}{" "}
@@ -134,7 +134,7 @@ export const Tooltip = ({ appointmentData, formatDate, appointmentResources }: T
           <PhoneOutlined className={classes.icon} />
         </Grid>
         <Grid item xs={10}>
-          <div className={classes.text}>{appointmentData.band?.cellphone}</div>
+          <div className={classes.text}>{appointmentData.cellphone}</div>
         </Grid>
       </Grid>
       <Grid container alignItems="center" key={`${resource.fieldName}_${resource.id}`}>

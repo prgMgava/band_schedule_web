@@ -40,7 +40,7 @@ import { toast } from "react-toastify"
 
 const schema = yup.object().shape({
   title: yup.string().required("Nome do evento é obrigatório").max(100, "Nome muito grande"),
-  cellphone: yup.string().max(50, "Telefone muito grande"),
+  cellphone: yup.string().max(50, "Telefone muito grande").required("Telefone obrigatório"),
   street: yup.string().max(50, "Nome de rua muito grande").required("Informe uma rua"),
   district: yup.string().max(50, "Nome de bairro muito grande").required("Informe um bairro"),
   state: yup.string().required("Informe um estado"),
@@ -54,7 +54,7 @@ const schema = yup.object().shape({
   endDate: yup.date().required("Data final obrigatória").required("Data final obrigatória"),
 })
 
-export const AppointmentForm = ({ data, setAppointments }: any) => {
+export const AppointmentForm = ({ data, setAppointments, fromMenu = false }: any) => {
   const theme = useTheme()
   const mobile = useMediaQuery(theme.breakpoints.down("sm"))
   const [maskedCellPhone, setMaskedCellPhone] = useState("")
@@ -86,6 +86,7 @@ export const AppointmentForm = ({ data, setAppointments }: any) => {
     watch,
     reset,
     control,
+    setValue,
     formState: { errors },
   } = useForm<IAppointmentFields>({ resolver: yupResolver(schema), mode: "onSubmit" })
 
@@ -96,8 +97,10 @@ export const AppointmentForm = ({ data, setAppointments }: any) => {
     reset()
   }
 
+  React.useEffect(() => setValue("cellphone", maskedCellPhone), [maskedCellPhone])
+
   return (
-    <Grid padding={mobile ? "" : 8}>
+    <Grid padding={fromMenu ? "24px" : mobile ? "" : 8}>
       <form onSubmit={handleSubmit(submitForm)}>
         <Stack spacing={3}>
           <Stack>
@@ -195,7 +198,7 @@ export const AppointmentForm = ({ data, setAppointments }: any) => {
               control={control}
               render={({ field }) => (
                 <Box>
-                  <FormControl error={!!errors.id_band}>
+                  <FormControl error={!!errors.state}>
                     <InputLabel id="demo-simple-select-helper-label">Estado *</InputLabel>
                     <Select
                       sx={{ minWidth: 240 }}
@@ -211,7 +214,7 @@ export const AppointmentForm = ({ data, setAppointments }: any) => {
                         </MenuItem>
                       ))}
                     </Select>
-                    {!!errors.state && <FormHelperText sx={{ color: "#E34367" }}>Selecione uma banda</FormHelperText>}
+                    {!!errors.state && <FormHelperText sx={{ color: "#E34367" }}>Selecione um estado</FormHelperText>}
                   </FormControl>
                 </Box>
               )}
@@ -349,6 +352,7 @@ export const AppointmentForm = ({ data, setAppointments }: any) => {
                 </Box>
               )}
             />
+            {/* TODO: set bandName filtering the arrays */}
             <Controller
               name="id_band"
               control={control}

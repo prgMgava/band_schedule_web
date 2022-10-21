@@ -27,6 +27,7 @@ import { data as tasks } from "../../demo-data/grouping"
 import { Tooltip } from "../../Components/Calendar/Components/Tooltip"
 import { AppointmentForm as CustomAppointmentForm } from "./Components/Form/AppointmentForm"
 import { useForm } from "react-hook-form"
+import { Header } from "./Components/Header/Header"
 
 const filterTasks = (items, status) =>
   items.filter(task => {
@@ -234,37 +235,40 @@ export const Demo = () => {
   }, [])
 
   return (
-    <Paper>
-      <Scheduler data={filterTasks(data, currentPriority)} height={660} locale={"pt-BR"}>
-        <ViewState
-          currentDate={currentDate}
-          currentViewName={currentViewName}
-          onCurrentViewNameChange={currentViewNameChange}
-          onCurrentDateChange={currentDateChange}
-        />
+    <>
+      <Header setAppointments={setData} />
+      <Paper>
+        <Scheduler data={filterTasks(data, currentPriority)} height={660} locale={"pt-BR"}>
+          <ViewState
+            currentDate={currentDate}
+            currentViewName={currentViewName}
+            onCurrentViewNameChange={currentViewNameChange}
+            onCurrentDateChange={currentDateChange}
+          />
 
-        <DayView startDayHour={9} endDayHour={19} intervalCount={2} name="Dia" />
-        <WeekView startDayHour={9} endDayHour={17} excludedDays={[0, 6]} name="Semanal" />
+          <DayView startDayHour={9} endDayHour={19} intervalCount={2} name="Dia" />
+          <WeekView startDayHour={9} endDayHour={17} excludedDays={[0, 6]} name="Semanal" />
 
-        <MonthView name="Mensal" />
+          <MonthView name="Mensal" />
 
-        <Appointments />
-        <Resources data={resources} />
+          <Appointments />
+          <Resources data={resources} />
 
-        <Toolbar flexibleSpaceComponent={flexibleSpace} />
-        <ViewSwitcher />
-        <DateNavigator />
-        <EditingState onCommitChanges={commitChanges} onAddedAppointmentChange={commitChanges} />
-        <IntegratedEditing />
-        <ConfirmationDialog />
+          <Toolbar flexibleSpaceComponent={flexibleSpace} />
+          <ViewSwitcher />
+          <DateNavigator />
+          <EditingState onCommitChanges={commitChanges} onAddedAppointmentChange={commitChanges} />
+          <IntegratedEditing />
+          <ConfirmationDialog />
 
-        <AppointmentTooltip contentComponent={TooltipContent} showOpenButton showCloseButton showDeleteButton />
+          <AppointmentTooltip contentComponent={TooltipContent} showOpenButton showCloseButton showDeleteButton />
 
-        <AppointmentForm
-          messages={{ afterLabel: "meu deus", commitCommand: "Salvar" }}
-          basicLayoutComponent={CustomFormAppointment}
-        />
-      </Scheduler>
-    </Paper>
+          <AppointmentForm
+            messages={{ afterLabel: "meu deus", commitCommand: "Salvar" }}
+            basicLayoutComponent={CustomFormAppointment}
+          />
+        </Scheduler>
+      </Paper>
+    </>
   )
 }
