@@ -33,6 +33,7 @@ import { toast } from "react-toastify"
 import { admList, bandList } from "../../../../demo-data/grouping"
 import { useMobile } from "../../../../Provider/Theme/Mobile"
 import { useBand } from "../../../../Provider/Band/Band"
+import { useAuth } from "../../../../Provider/Auth/Auth"
 
 interface IDataForm {
   band_id: number
@@ -41,6 +42,7 @@ interface IDataForm {
 export const SuperAdminForm = () => {
   const { mobile } = useMobile()
   const { myBands, deleteBand } = useBand()
+  const { getAdmins, adminList } = useAuth()
   const [dataForm, setDataForm] = useState<IDataForm>({} as IDataForm)
   const {
     handleSubmit,
@@ -72,6 +74,10 @@ export const SuperAdminForm = () => {
     setOpen(false)
     toast.error("Dados deletados com sucesso")
   }
+
+  React.useEffect(() => {
+    getAdmins()
+  }, [])
 
   return (
     <Grid padding={mobile ? 8 : 8}>
@@ -122,9 +128,9 @@ export const SuperAdminForm = () => {
                       fullWidth={true}
                       {...field}
                     >
-                      {admList.map((item, index) => (
-                        <MenuItem value={item.value} key={index}>
-                          {item.name}
+                      {adminList.map(item => (
+                        <MenuItem value={item.id} key={uuid()}>
+                          {item.username}
                         </MenuItem>
                       ))}
                     </Select>

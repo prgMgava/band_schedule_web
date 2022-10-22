@@ -58,7 +58,6 @@ const BandProvider = ({ children }: BandProviderProps) => {
         message: "OK",
       }
     } catch (e) {
-      console.log(e)
       return {
         success: false,
         message: e.response.data.error,

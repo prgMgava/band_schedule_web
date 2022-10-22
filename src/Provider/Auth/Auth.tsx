@@ -4,6 +4,7 @@ import jwt_decode from "jwt-decode"
 
 import { AxiosResponse } from "axios"
 import { api } from "../../Services/api"
+import { IUser } from "../../Types/user.type"
 const AuthContext = createContext<AuthContextData>({} as AuthContextData)
 
 const useAuth = () => {
@@ -48,6 +49,8 @@ interface AuthContextData {
   setData: Dispatch<React.SetStateAction<AuthState>>
   superAdmin: boolean
   adm: boolean
+  getAdmins: () => Promise<IResponse>
+  adminList: IUser[]
 }
 
 interface AuthProviderProps {
@@ -66,6 +69,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     }
     return {} as AuthState
   })
+  const [adminList, setAdminList] = useState<IUser[]>([])
   const [userData, setUserData] = useState({} as any)
   const signIn = useCallback(async ({ username, password }: SignInCredentials) => {
     try {
@@ -148,6 +152,28 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   }, [])
 
+  const getAdmins = async () => {
+    try {
+      if (data.superAdmin) {
+        const { data: list }: AxiosResponse<IUser[]> = await api.get(`/user/adm`, {
+          headers: { "x-access-token": data.accessToken },
+        })
+
+        setAdminList(list)
+      }
+
+      return {
+        success: true,
+        message: "OK",
+      }
+    } catch (e) {
+      return {
+        success: false,
+        message: e.response.data.error,
+      }
+    }
+  }
+
   return (
     <AuthContext.Provider
       value={{
@@ -162,6 +188,8 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
         superAdmin: data.superAdmin,
         adm: data.adm,
         createAdm,
+        getAdmins,
+        adminList,
       }}
     >
       {children}
