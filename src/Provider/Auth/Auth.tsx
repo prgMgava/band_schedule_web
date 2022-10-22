@@ -31,7 +31,7 @@ interface SignUpCredentials extends SignInCredentials {
   email: string
 }
 
-interface IResponse {
+export interface IResponse {
   success: boolean
   message: string
 }
@@ -45,6 +45,8 @@ interface AuthContextData {
   getUser: () => void
   userData: any
   setData: Dispatch<React.SetStateAction<AuthState>>
+  superAdmin: boolean
+  adm: boolean
 }
 
 interface AuthProviderProps {
@@ -54,9 +56,10 @@ interface AuthProviderProps {
 const AuthProvider = ({ children }: AuthProviderProps) => {
   const [data, setData] = useState<AuthState>(() => {
     const accessToken = localStorage.getItem("@BandSchedule:accessToken") || ""
+    debugger
     const id = localStorage.getItem("@BandSchedule:id") || ""
     const adm = localStorage.getItem("@BandSchedule:adm") || ""
-    const superAdmin = localStorage.getItem("@BandSchedule:superAdmin") || ""
+    const superAdmin = localStorage.getItem("@BandSchedule:super_admin") || ""
 
     if (accessToken && id) {
       return { accessToken, id: JSON.parse(id), adm: Boolean(adm), superAdmin: Boolean(superAdmin) }
@@ -125,7 +128,18 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
 
   return (
     <AuthContext.Provider
-      value={{ accessToken: data.accessToken, getUser, id: data.id, setData, signIn, signOut, userData, signUp }}
+      value={{
+        accessToken: data.accessToken,
+        getUser,
+        id: data.id,
+        setData,
+        signIn,
+        signOut,
+        userData,
+        signUp,
+        superAdmin: data.superAdmin,
+        adm: data.adm,
+      }}
     >
       {children}
     </AuthContext.Provider>

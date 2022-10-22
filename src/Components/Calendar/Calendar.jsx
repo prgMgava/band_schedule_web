@@ -29,6 +29,8 @@ import { AppointmentForm as CustomAppointmentForm } from "./Components/Form/Appo
 import { useForm } from "react-hook-form"
 import { Header } from "./Components/Header/Header"
 import { Stack } from "@mui/material"
+import { useBand } from "../../Provider/Band/Band"
+import { useAuth } from "../../Provider/Auth/Auth"
 
 const filterTasks = (items, status) =>
   items.filter(task => {
@@ -175,6 +177,8 @@ const changeEvent = data => {
 }
 
 export const Demo = () => {
+  const { id } = useAuth()
+  const { getMyBands, myBands } = useBand()
   const [currentViewName, setCurrentViewName] = React.useState("Mensal")
   const [data, setData] = React.useState(tasks)
   const [currentPriority, setCurrentPriority] = React.useState(0)
@@ -245,6 +249,7 @@ export const Demo = () => {
 
   React.useEffect(() => {
     flexibleSpace.update()
+    getMyBands(id)
   }, [])
 
   return (

@@ -21,6 +21,8 @@ import {
   useTheme,
 } from "@mui/material"
 
+import uuid from "react-uuid"
+
 import { useForm, SubmitHandler, Controller, useWatch } from "react-hook-form"
 import { yupResolver } from "@hookform/resolvers/yup"
 import * as yup from "yup"
@@ -41,6 +43,8 @@ import { useState } from "react"
 import { statesList } from "../../Utils/states"
 import { toast } from "react-toastify"
 import { useEffect } from "react"
+import { useMobile } from "../../../../Provider/Theme/Mobile"
+import { useBand } from "../../../../Provider/Band/Band"
 
 const schema = yup.object().shape({
   title: yup.string().required("Nome do evento é obrigatório").max(100, "Nome muito grande"),
@@ -65,8 +69,8 @@ const schema = yup.object().shape({
 // }
 
 export const AppointmentForm = ({ data, setAppointments, fromMenu = false, closeForm = () => {} }) => {
-  const theme = useTheme()
-  const mobile = useMediaQuery(theme.breakpoints.down("sm"))
+  const { mobile } = useMobile()
+  const { myBands } = useBand()
   const [maskedCellPhone, setMaskedCellPhone] = useState("")
   const { startDate, endDate, title } = data.appointmentData
   const [currentState, setCurrentState] = useState(data.appointmentData?.state)
@@ -417,9 +421,11 @@ export const AppointmentForm = ({ data, setAppointments, fromMenu = false, close
                       defaultValue={currenBand}
                       {...field}
                     >
-                      <MenuItem value={1}>Banda 1</MenuItem>
-                      <MenuItem value={2}>Banda 2</MenuItem>
-                      <MenuItem value={3}>Banda 3</MenuItem>
+                      {myBands.map(band => (
+                        <MenuItem value={1} key={uuid()}>
+                          {band.name}
+                        </MenuItem>
+                      ))}
                     </Select>
                     {!!errors.id_band && <FormHelperText sx={{ color: "#E34367" }}>Selecione uma banda</FormHelperText>}
                   </FormControl>
