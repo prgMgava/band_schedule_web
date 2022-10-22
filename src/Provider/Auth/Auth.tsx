@@ -51,7 +51,9 @@ interface AuthContextData {
   adm: boolean
   getAdmins: () => Promise<IResponse>
   adminList: IUser[]
+  memberList: IUser[]
   deleteAdmin: (id: number) => Promise<IResponse>
+  getMembers: () => Promise<IResponse>
 }
 
 interface AuthProviderProps {
@@ -71,6 +73,8 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     return {} as AuthState
   })
   const [adminList, setAdminList] = useState<IUser[]>([])
+  const [memberList, setMemberList] = useState<IUser[]>([])
+
   const [userData, setUserData] = useState({} as any)
   const signIn = useCallback(async ({ username, password }: SignInCredentials) => {
     try {
@@ -199,6 +203,28 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   }, [])
 
+  const getMembers = async () => {
+    try {
+      if (data.superAdmin) {
+        const { data: list }: AxiosResponse<IUser[]> = await api.get(`/user/member`, {
+          headers: { "x-access-token": data.accessToken },
+        })
+
+        setMemberList(list)
+      }
+
+      return {
+        success: true,
+        message: "OK",
+      }
+    } catch (e) {
+      return {
+        success: false,
+        message: e.response.data.error,
+      }
+    }
+  }
+
   return (
     <AuthContext.Provider
       value={{
@@ -216,6 +242,8 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
         getAdmins,
         adminList,
         deleteAdmin,
+        getMembers,
+        memberList,
       }}
     >
       {children}

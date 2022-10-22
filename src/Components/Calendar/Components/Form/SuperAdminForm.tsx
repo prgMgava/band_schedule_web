@@ -36,13 +36,14 @@ import { useBand } from "../../../../Provider/Band/Band"
 import { useAuth } from "../../../../Provider/Auth/Auth"
 
 interface IDataForm {
-  band_id: number
-  user_id: number
+  band_id?: number
+  user_id?: number
+  member_id?: number
 }
 export const SuperAdminForm = ({ toggleDrawer }: any) => {
   const { mobile } = useMobile()
   const { myBands, deleteBand } = useBand()
-  const { getAdmins, adminList, deleteAdmin } = useAuth()
+  const { getAdmins, adminList, deleteAdmin, getMembers, memberList } = useAuth()
   const [dataForm, setDataForm] = useState<IDataForm>({} as IDataForm)
   const {
     handleSubmit,
@@ -72,6 +73,7 @@ export const SuperAdminForm = ({ toggleDrawer }: any) => {
   const handleDelete = async () => {
     dataForm.band_id && (await deleteBand(dataForm.band_id))
     dataForm.user_id && (await deleteAdmin(dataForm.user_id))
+    dataForm.member_id && (await deleteAdmin(dataForm.member_id))
 
     toggleDrawer()
     toast.error("Dados deletados com sucesso")
@@ -79,6 +81,7 @@ export const SuperAdminForm = ({ toggleDrawer }: any) => {
 
   React.useEffect(() => {
     getAdmins()
+    getMembers()
   }, [])
 
   return (
@@ -109,7 +112,6 @@ export const SuperAdminForm = ({ toggleDrawer }: any) => {
                         </MenuItem>
                       ))}
                     </Select>
-                    {!!errors.state && <FormHelperText sx={{ color: "#E34367" }}>Selecione um estado</FormHelperText>}
                   </FormControl>
                 </Box>
               )}
@@ -122,11 +124,11 @@ export const SuperAdminForm = ({ toggleDrawer }: any) => {
               render={({ field }) => (
                 <Box width={"100%"}>
                   <FormControl fullWidth={true}>
-                    <InputLabel id="demo-simple-select-helper-label">Adm</InputLabel>
+                    <InputLabel id="demo-simple-select-helper-label">Administrador</InputLabel>
                     <Select
                       labelId="demo-simple-select-label"
                       id="demo-simple-select"
-                      label="Adm"
+                      label="Administrador"
                       fullWidth={true}
                       {...field}
                     >
@@ -136,7 +138,32 @@ export const SuperAdminForm = ({ toggleDrawer }: any) => {
                         </MenuItem>
                       ))}
                     </Select>
-                    {!!errors.state && <FormHelperText sx={{ color: "#E34367" }}>Selecione um estado</FormHelperText>}
+                  </FormControl>
+                </Box>
+              )}
+            />
+          </Stack>
+          <Stack direction={mobile ? "column" : "row"} spacing={2} justifyContent={"center"}>
+            <Controller
+              name="member_id"
+              control={control}
+              render={({ field }) => (
+                <Box width={"100%"}>
+                  <FormControl fullWidth={true}>
+                    <InputLabel id="demo-simple-select-helper-label">Usuário</InputLabel>
+                    <Select
+                      labelId="demo-simple-select-label"
+                      id="demo-simple-select"
+                      label="Usuário"
+                      fullWidth={true}
+                      {...field}
+                    >
+                      {memberList.map(item => (
+                        <MenuItem value={item.id} key={uuid()}>
+                          {item.username}
+                        </MenuItem>
+                      ))}
+                    </Select>
                   </FormControl>
                 </Box>
               )}
@@ -162,10 +189,19 @@ export const SuperAdminForm = ({ toggleDrawer }: any) => {
           <DialogContent>
             <DialogContentText id="alert-dialog-description">
               Você tem certeza que deseja excluir o(s) seguinte(s) dados:
-              {dataForm?.band_id && <Box>Banda: {myBands.find(item => item.id === dataForm.band_id)?.name}</Box>}
+              {dataForm?.band_id && (
+                <Box>
+                  <b>Banda: {myBands.find(item => item.id === dataForm.band_id)?.name}</b>
+                </Box>
+              )}
               {dataForm?.user_id && (
                 <Box>
                   <b>Adm: {adminList.find(item => item.id === dataForm.user_id)?.username}</b>
+                </Box>
+              )}
+              {dataForm?.member_id && (
+                <Box>
+                  <b>Usuário: {memberList.find(item => item.id === dataForm.member_id)?.username}</b>
                 </Box>
               )}
             </DialogContentText>
