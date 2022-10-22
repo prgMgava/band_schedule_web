@@ -1,3 +1,4 @@
+/* eslint-disable no-debugger */
 import React, { useContext, createContext, useState, ReactNode, useCallback, Dispatch } from "react"
 
 import { AxiosResponse } from "axios"
@@ -8,6 +9,7 @@ import { IResponse, useAuth } from "../Auth/Auth"
 interface BandContextProps {
   myBands: IBand[]
   getMyBands: (owner: GetMyBandsProps) => Promise<IResponse>
+  createBand: ({ name, cellphone, email }: CreateBandProp) => Promise<IResponse>
 }
 const BandContext = createContext<BandContextProps>({} as BandContextProps)
 
@@ -21,6 +23,12 @@ const useBand = () => {
 
 interface GetMyBandsProps {
   owner: number
+}
+
+interface CreateBandProp {
+  name: string
+  email: string
+  cellphone: string
 }
 
 interface BandProviderProps {
@@ -54,7 +62,36 @@ const BandProvider = ({ children }: BandProviderProps) => {
       }
     }
   }, [])
-  return <BandContext.Provider value={{ myBands, getMyBands }}>{children}</BandContext.Provider>
+
+  const createBand = useCallback(async ({ name, cellphone, email }: CreateBandProp) => {
+    try {
+      if (adm) {
+        const response: AxiosResponse = await api.post(
+          "/band",
+          { name, cellphone, email },
+          {
+            headers: { "x-access-token": accessToken },
+          }
+        )
+        setMyBands(old => [...old, response.data])
+        return {
+          success: true,
+          message: "Banda cadastrada com sucesso",
+        }
+      }
+      return {
+        success: false,
+        message: "Você não tem permissão de criar uma banda",
+      }
+    } catch (e) {
+      console.log(e)
+      return {
+        success: false,
+        message: e.response.data.error,
+      }
+    }
+  }, [])
+  return <BandContext.Provider value={{ myBands, getMyBands, createBand }}>{children}</BandContext.Provider>
 }
 
 export { useBand, BandProvider }

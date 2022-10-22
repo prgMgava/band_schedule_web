@@ -38,7 +38,7 @@ import { useAuth } from "../../../../Provider/Auth/Auth"
 
 export const Header = ({ setAppointments }: any) => {
   const { mobile } = useMobile()
-  const { signOut } = useAuth()
+  const { signOut, adm, superAdmin } = useAuth()
   const [anchorEl, setAnchorEl] = React.useState(null)
   const [currentForm, setCurrentForm] = useState("")
   const open = Boolean(anchorEl)
@@ -153,6 +153,7 @@ export const Header = ({ setAppointments }: any) => {
                     setCurrentForm("appointment")
                     setOpenDrawer(true)
                   }}
+                  disabled={!adm}
                 >
                   <ListItemIcon>
                     <EventAvailable fontSize="small" />
@@ -164,6 +165,7 @@ export const Header = ({ setAppointments }: any) => {
                     setCurrentForm("band")
                     setOpenDrawer(true)
                   }}
+                  disabled={!adm}
                 >
                   <ListItemIcon>
                     <MusicNote fontSize="small" />
@@ -175,6 +177,7 @@ export const Header = ({ setAppointments }: any) => {
                     setCurrentForm("admin")
                     setOpenDrawer(true)
                   }}
+                  disabled={!superAdmin}
                 >
                   <ListItemIcon>
                     <PersonAddAlt fontSize="small" />

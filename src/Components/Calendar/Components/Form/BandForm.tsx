@@ -11,6 +11,8 @@ import { NewspaperOutlined, PhoneOutlined, EmailOutlined } from "@mui/icons-mate
 import { Stack } from "@mui/system"
 import { useState } from "react"
 import { toast } from "react-toastify"
+import { useMobile } from "../../../../Provider/Theme/Mobile"
+import { useBand } from "../../../../Provider/Band/Band"
 
 const schema = yup.object().shape({
   name: yup.string().required("Nome da Banda é obrigatório").max(100, "Nome muito grande"),
@@ -19,8 +21,8 @@ const schema = yup.object().shape({
 })
 
 export const BandForm = () => {
-  const theme = useTheme()
-  const mobile = useMediaQuery(theme.breakpoints.down("sm"))
+  const { mobile } = useMobile()
+  const { createBand } = useBand()
   const [maskedCellPhone, setMaskedCellPhone] = useState("")
 
   const maskCellNumber = value => {
@@ -38,9 +40,9 @@ export const BandForm = () => {
     formState: { errors },
   } = useForm<IBandFields>({ resolver: yupResolver(schema), mode: "all" })
 
-  const submitForm: SubmitHandler<IBandFields> = (data: IBandFields) => {
-    console.log(data)
-    toast.success("Banda adicionado com sucesso")
+  const submitForm: SubmitHandler<IBandFields> = async (data: IBandFields) => {
+    const response = await createBand(data)
+    toast[response.success ? "success" : "error"](response.message)
     reset()
   }
 

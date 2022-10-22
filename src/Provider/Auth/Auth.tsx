@@ -56,13 +56,12 @@ interface AuthProviderProps {
 const AuthProvider = ({ children }: AuthProviderProps) => {
   const [data, setData] = useState<AuthState>(() => {
     const accessToken = localStorage.getItem("@BandSchedule:accessToken") || ""
-    debugger
     const id = localStorage.getItem("@BandSchedule:id") || ""
     const adm = localStorage.getItem("@BandSchedule:adm") || ""
     const superAdmin = localStorage.getItem("@BandSchedule:super_admin") || ""
 
     if (accessToken && id) {
-      return { accessToken, id: JSON.parse(id), adm: Boolean(adm), superAdmin: Boolean(superAdmin) }
+      return { accessToken, id: JSON.parse(id), adm: adm === "true", superAdmin: superAdmin === "true" }
     }
     return {} as AuthState
   })
@@ -112,7 +111,6 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   const signUp = useCallback(async ({ username, password, cellphone, email }: SignUpCredentials) => {
     try {
       await api.post("/user/member", { username, password, cellphone, email })
-      debugger
       return {
         success: true,
         message: "Usuário criado com sucesso faça seu login",
