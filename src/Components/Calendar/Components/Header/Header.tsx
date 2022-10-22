@@ -66,7 +66,7 @@ export const Header = ({ setAppointments }: any) => {
   const forms = {
     appointment: <AppointmentForm data={data} setAppointments={setAppointments} fromMenu={true} />,
     band: <BandForm toggleDrawer={toggleDrawer}></BandForm>,
-    admin: <AdminForm />,
+    admin: <AdminForm toggleDrawer={toggleDrawer} />,
     superAdmin: <SuperAdmin />,
   }
   return (
@@ -153,7 +153,7 @@ export const Header = ({ setAppointments }: any) => {
                     setCurrentForm("appointment")
                     setOpenDrawer(true)
                   }}
-                  disabled={!adm}
+                  disabled={!adm || !superAdmin}
                 >
                   <ListItemIcon>
                     <EventAvailable fontSize="small" />

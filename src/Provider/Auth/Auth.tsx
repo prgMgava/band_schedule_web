@@ -41,6 +41,7 @@ interface AuthContextData {
   accessToken: string
   signIn: (credentials: SignInCredentials) => Promise<IResponse>
   signUp: (credentials: SignUpCredentials) => Promise<IResponse>
+  createAdm: (credentials: SignUpCredentials) => Promise<IResponse>
   signOut: () => void
   getUser: () => void
   userData: any
@@ -124,6 +125,29 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   }, [])
 
+  const createAdm = useCallback(async ({ username, password, cellphone, email }: SignUpCredentials) => {
+    try {
+      debugger
+      if (data.superAdmin) {
+        await api.post(
+          "/user/adm",
+          { username, password, cellphone, email },
+          { headers: { "x-access-token": data.accessToken } }
+        )
+      }
+      return {
+        success: true,
+        message: "Adm criado com sucesso faça seu login",
+      }
+    } catch (e) {
+      console.log(e)
+      return {
+        success: false,
+        message: e.response.data.error,
+      }
+    }
+  }, [])
+
   return (
     <AuthContext.Provider
       value={{
@@ -137,6 +161,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
         signUp,
         superAdmin: data.superAdmin,
         adm: data.adm,
+        createAdm,
       }}
     >
       {children}

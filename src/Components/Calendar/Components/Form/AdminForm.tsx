@@ -22,10 +22,10 @@ const schema = yup.object().shape({
   password: yup.string().max(20, "Senha Muito grande").required("Senha obrigatória"),
 })
 
-export const AdminForm = ({ isSignup = false }: any) => {
+export const AdminForm = ({ toggleDrawer, isSignup = false }: any) => {
   const { mobile } = useMobile()
   const navigate = useNavigate()
-  const { signUp } = useAuth()
+  const { signUp, createAdm } = useAuth()
   const [maskedCellPhone, setMaskedCellPhone] = useState("")
 
   const maskCellNumber = value => {
@@ -44,14 +44,18 @@ export const AdminForm = ({ isSignup = false }: any) => {
   } = useForm<IAdminFields>({ resolver: yupResolver(schema), reValidateMode: "onChange", mode: "onSubmit" })
 
   const submitForm: SubmitHandler<IAdminFields> = async (data: IAdminFields) => {
-    const response = await signUp(data)
     if (isSignup) {
+      const response = await signUp(data)
       toast[response.success ? "success" : "error"](response.message)
+      if (response.success) {
+        navigate("/")
+      }
     } else {
+      const response = await createAdm(data)
       toast[response.success ? "success" : "error"](response.message)
-    }
-    if (response.success) {
-      navigate("/")
+      if (response.success) {
+        toggleDrawer()
+      }
     }
   }
 
@@ -175,19 +179,23 @@ export const AdminForm = ({ isSignup = false }: any) => {
           </Button>
         </Stack>
 
-        <Stack mt={3} fontSize={12} direction="row">
-          Não tem cadastro faça seu &nbsp;
-          <Link
-            underline="none"
-            onClick={() => navigate("/")}
-            component="button"
-            color={"green"}
-            fontSize={12}
-            fontWeight={800}
-          >
-            LOGIN
-          </Link>
-        </Stack>
+        {isSignup ? (
+          <Stack mt={3} fontSize={12} direction="row">
+            Não tem cadastro faça seu &nbsp;
+            <Link
+              underline="none"
+              onClick={() => navigate("/")}
+              component="button"
+              color={"green"}
+              fontSize={12}
+              fontWeight={800}
+            >
+              LOGIN
+            </Link>
+          </Stack>
+        ) : (
+          <></>
+        )}
       </form>
     </Grid>
   )
