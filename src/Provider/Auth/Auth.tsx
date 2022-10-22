@@ -26,10 +26,16 @@ interface SignInCredentials {
   password: string
 }
 
+interface SignUpCredentials extends SignInCredentials {
+  cellphone: string
+  email: string
+}
+
 interface AuthContextData {
   id: () => string
   accessToken: string
   signIn: (credentials: SignInCredentials) => Promise<void>
+  signUp: (credentials: SignUpCredentials) => Promise<void>
   signOut: () => void
   getUser: () => void
   userData: any
@@ -88,9 +94,27 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
       .then((response: AxiosResponse<any>) => setUserData(response.data))
       .catch(err => console.log(err))
   }
+
+  const signUp = useCallback(async ({ username, password, cellphone, email }: SignUpCredentials) => {
+    // api
+    //   .post("/register", {
+    //     email,
+    //     password,
+    //     username,
+    //     cellphone,
+    //   })
+    //   .then(() => {
+    //     signIn({ password, username })
+    //   })
+    //   .catch(() => {
+    //     alert("deu ruim")
+    //   })
+    signIn({ password, username })
+  }, [])
+
   return (
     <AuthContext.Provider
-      value={{ accessToken: data.accessToken, getUser, id: data.id, setData, signIn, signOut, userData }}
+      value={{ accessToken: data.accessToken, getUser, id: data.id, setData, signIn, signOut, userData, signUp }}
     >
       {children}
     </AuthContext.Provider>

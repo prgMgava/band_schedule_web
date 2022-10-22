@@ -33,11 +33,12 @@ import { AppointmentForm } from "../Form/AppointmentForm"
 import { BandForm } from "../Form/BandForm"
 import { AdminForm } from "../Form/AdminForm"
 import { SuperAdmin } from "../SuperAdmin/SuperAdmin"
+import { useMobile } from "../../../../Provider/Auth/Mobile"
+import { useAuth } from "../../../../Provider/Auth/Auth"
 
 export const Header = ({ setAppointments }: any) => {
-  const theme = useTheme()
-
-  const mobile = useMediaQuery(theme.breakpoints.down("sm"))
+  const { mobile } = useMobile()
+  const { signOut } = useAuth()
   const [anchorEl, setAnchorEl] = React.useState(null)
   const [currentForm, setCurrentForm] = useState("")
   const open = Boolean(anchorEl)
@@ -180,7 +181,7 @@ export const Header = ({ setAppointments }: any) => {
                   </ListItemIcon>
                   Adicionar administrador
                 </MenuItem>
-                <MenuItem>
+                <MenuItem onClick={() => signOut()}>
                   <ListItemIcon>
                     <Logout fontSize="small" />
                   </ListItemIcon>

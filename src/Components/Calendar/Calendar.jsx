@@ -191,7 +191,7 @@ export const Demo = () => {
         {
           id: "id",
           text: "meus Eventos",
-          color: null,
+          color: "#000000",
         },
       ],
     },

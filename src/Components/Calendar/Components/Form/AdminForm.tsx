@@ -1,6 +1,6 @@
 import * as React from "react"
 
-import { Button, Grid, InputAdornment, Typography, useMediaQuery, useTheme } from "@mui/material"
+import { Button, Grid, InputAdornment, Link, Typography, useMediaQuery, useTheme } from "@mui/material"
 
 import { useForm, SubmitHandler, Controller } from "react-hook-form"
 import { IAdminFields } from "../../../../Types/form.type"
@@ -11,6 +11,9 @@ import { NewspaperOutlined, PhoneOutlined, EmailOutlined, LockOpenOutlined } fro
 import { Stack } from "@mui/system"
 import { useState } from "react"
 import { toast } from "react-toastify"
+import { useMobile } from "../../../../Provider/Auth/Mobile"
+import { useNavigate } from "react-router-dom"
+import { useAuth } from "../../../../Provider/Auth/Auth"
 
 const schema = yup.object().shape({
   username: yup.string().required("Nome da Banda é obrigatório").max(100, "Nome muito grande"),
@@ -20,8 +23,9 @@ const schema = yup.object().shape({
 })
 
 export const AdminForm = ({ isSignup = false }: any) => {
-  const theme = useTheme()
-  const mobile = useMediaQuery(theme.breakpoints.down("sm"))
+  const { mobile } = useMobile()
+  const navigate = useNavigate()
+  const { signUp } = useAuth()
   const [maskedCellPhone, setMaskedCellPhone] = useState("")
 
   const maskCellNumber = value => {
@@ -40,8 +44,12 @@ export const AdminForm = ({ isSignup = false }: any) => {
   } = useForm<IAdminFields>({ resolver: yupResolver(schema), mode: "all" })
 
   const submitForm: SubmitHandler<IAdminFields> = (data: IAdminFields) => {
-    console.log(data)
-    toast.success("Administrador adicionado com sucesso")
+    signUp(data)
+    if (isSignup) {
+      toast.success("Usuário adicionado com sucesso")
+    } else {
+      toast.success("Administrador adicionado com sucesso")
+    }
     reset()
   }
 
@@ -139,7 +147,7 @@ export const AdminForm = ({ isSignup = false }: any) => {
               render={({ field }) => (
                 <TextField
                   {...field}
-                  label="Senha"
+                  label="Senha *"
                   autoComplete="new-password"
                   type={"password"}
                   error={!!errors.password}
@@ -163,6 +171,20 @@ export const AdminForm = ({ isSignup = false }: any) => {
             {" "}
             {isSignup ? "Cadastrar" : "Salvar"}
           </Button>
+        </Stack>
+
+        <Stack mt={3} fontSize={12} direction="row">
+          Não tem cadastro faça seu &nbsp;
+          <Link
+            underline="none"
+            onClick={() => navigate("/")}
+            component="button"
+            color={"green"}
+            fontSize={12}
+            fontWeight={800}
+          >
+            LOGIN
+          </Link>
         </Stack>
       </form>
     </Grid>
