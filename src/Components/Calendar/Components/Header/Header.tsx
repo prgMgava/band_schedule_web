@@ -31,6 +31,8 @@ import React, { useState } from "react"
 import MenuIcon from "@mui/icons-material/Menu"
 import { AppointmentForm } from "../Form/AppointmentForm"
 import { BandForm } from "../Form/BandForm"
+import { AdminForm } from "../Form/AdminForm"
+import { SuperAdmin } from "../SuperAdmin/SuperAdmin"
 
 export const Header = ({ setAppointments }: any) => {
   const theme = useTheme()
@@ -63,6 +65,8 @@ export const Header = ({ setAppointments }: any) => {
   const forms = {
     appointment: <AppointmentForm data={data} setAppointments={setAppointments} fromMenu={true} />,
     band: <BandForm></BandForm>,
+    admin: <AdminForm />,
+    superAdmin: <SuperAdmin />,
   }
   return (
     <>
@@ -70,6 +74,8 @@ export const Header = ({ setAppointments }: any) => {
         <IconButton onClick={toggleDrawer} size="medium" style={{ width: "25px", marginLeft: "8px" }}>
           <Close alignmentBaseline="baseline"></Close>
         </IconButton>
+        <Divider />
+
         {forms[currentForm]}
         <Divider />
       </Drawer>
@@ -129,7 +135,12 @@ export const Header = ({ setAppointments }: any) => {
                 transformOrigin={{ horizontal: "right", vertical: "top" }}
                 anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
               >
-                <MenuItem onClick={() => <AppointmentForm />}>
+                <MenuItem
+                  onClick={() => {
+                    setCurrentForm("superAdmin")
+                    setOpenDrawer(true)
+                  }}
+                >
                   <Avatar /> Meu perfil
                 </MenuItem>
                 <Divider />
@@ -158,7 +169,12 @@ export const Header = ({ setAppointments }: any) => {
                   </ListItemIcon>
                   Adicionar banda
                 </MenuItem>
-                <MenuItem>
+                <MenuItem
+                  onClick={() => {
+                    setCurrentForm("admin")
+                    setOpenDrawer(true)
+                  }}
+                >
                   <ListItemIcon>
                     <PersonAddAlt fontSize="small" />
                   </ListItemIcon>

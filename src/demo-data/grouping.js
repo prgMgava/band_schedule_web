@@ -55,3 +55,15 @@ export const data = [
 		band: 'AC/DC',
 		id: 4,
 	},];
+
+export const bandList = [
+	{ value: 1, name: 'Banda 1' },
+	{ value: 2, name: 'Banda 2' },
+	{ value: 3, name: 'Banda 3' }
+]
+
+export const admList = [
+	{ value: 1, name: 'Usuario 1' },
+	{ value: 2, name: 'Usuario 2' },
+	{ value: 3, name: 'Usuario 3' }
+]

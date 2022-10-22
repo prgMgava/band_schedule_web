@@ -110,8 +110,9 @@ const StyledPrioritySelectorItem = styled("div")(({ theme: { palette, spacing },
 }))
 
 const PrioritySelectorItem = ({ color, text: resourceTitle }) => {
-  const text = resourceTitle || "All Tasks"
-  const shortText = resourceTitle ? text.substring(0, 1) : "All"
+  console.log("resourc", resourceTitle)
+  const text = resourceTitle || "Todos os eventos"
+  const shortText = resourceTitle ? text.substring(0, 1) : "Todos"
 
   return (
     <StyledPrioritySelectorItem className={classes.prioritySelectorItem} color={color}>
@@ -123,7 +124,7 @@ const PrioritySelectorItem = ({ color, text: resourceTitle }) => {
 }
 
 const PrioritySelector = ({ priorityChange, priority }) => {
-  const currentPriority = priority > 0 ? priorities[priority - 1] : {}
+  const currentPriority = priorities.find(item => item.id === priority) || {}
   return (
     <StyledFormControl className={classes.prioritySelector} variant="standard">
       <Select
@@ -205,6 +206,9 @@ export const Demo = () => {
   }
 
   const priorityChange = value => {
+    console.log(value)
+    // eslint-disable-next-line no-debugger
+    //debugger
     const nextResources = [
       {
         ...resources[0],
@@ -246,8 +250,8 @@ export const Demo = () => {
             onCurrentDateChange={currentDateChange}
           />
 
-          <DayView startDayHour={9} endDayHour={19} intervalCount={2} name="Dia" />
-          <WeekView startDayHour={9} endDayHour={17} excludedDays={[0, 6]} name="Semanal" />
+          <DayView intervalCount={2} name="Dia" />
+          <WeekView name="Semanal" />
 
           <MonthView name="Mensal" />
 

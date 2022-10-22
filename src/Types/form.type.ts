@@ -20,3 +20,10 @@ export interface IBandFields {
   cellphone: string
   email: string
 }
+
+export interface IAdminFields {
+  username: string
+  cellphone: string
+  email: string
+  password: string
+}
