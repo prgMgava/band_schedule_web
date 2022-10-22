@@ -4,7 +4,7 @@ export const data = [
 		"id": 21,
 		"title": "My first Event",
 		"cellphone": "(12) 12345-6789",
-		"id_band": 27,
+		"id_band": 1,
 		"startDate": "2022-10-16T09:12:12.000Z",
 		"endDate": "2022-10-16T10:12:12.000Z",
 		"street": "Rua Alfa",

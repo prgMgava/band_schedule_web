@@ -1,3 +1,4 @@
+/* eslint-disable no-debugger */
 import * as React from "react"
 
 import {
@@ -17,8 +18,7 @@ import {
   useTheme,
 } from "@mui/material"
 
-import { useForm, SubmitHandler, Controller } from "react-hook-form"
-import { IAppointmentFields } from "../../../../Types/form.type"
+import { useForm, SubmitHandler, Controller, useWatch } from "react-hook-form"
 import { yupResolver } from "@hookform/resolvers/yup"
 import * as yup from "yup"
 import { TextField } from "@mui/material"
@@ -37,6 +37,7 @@ import { Stack } from "@mui/system"
 import { useState } from "react"
 import { statesList } from "../../Utils/states"
 import { toast } from "react-toastify"
+import { useEffect } from "react"
 
 const schema = yup.object().shape({
   title: yup.string().required("Nome do evento é obrigatório").max(100, "Nome muito grande"),
@@ -46,19 +47,33 @@ const schema = yup.object().shape({
   state: yup.string().required("Informe um estado"),
   city: yup.string().max(50, "Nome de cidade muito grande").required("Informe uma cidade"),
   place: yup.string().max(50, "Nome muito grande"),
-  address_number: yup.string().max(10, "Numero muito grande"),
-  address_complement: yup.string().max(150, "Complemento muito grande"),
+  address_number: yup.string().max(10, "Numero muito grande").nullable(),
+  address_complement: yup.string().max(150, "Complemento muito grande").nullable(),
   status: yup.string().default("agendado"),
   id_band: yup.number().required("Informe a banda que vai tocar no evento"),
   startDate: yup.date().required("Data inicial obrigatória").required("Data inicial obrigatória"),
   endDate: yup.date().required("Data final obrigatória").required("Data final obrigatória"),
 })
 
-export const AppointmentForm = ({ data, setAppointments, fromMenu = false }: any) => {
+// interface AppointmentProps {
+//   data: IAppointmentFields
+//   setAppointments: any
+//   fromMenu: boolean
+// }
+
+// eslint-disable-next-line @typescript-eslint/no-empty-function
+export const AppointmentForm = ({ data, setAppointments, fromMenu = false, closeForm = () => {} }: any) => {
   const theme = useTheme()
   const mobile = useMediaQuery(theme.breakpoints.down("sm"))
   const [maskedCellPhone, setMaskedCellPhone] = useState("")
-  const { startDate, endDate } = data.appointmentData
+  const { startDate, endDate, title } = data.appointmentData
+  const [currentState, setCurrentState] = useState(data.appointmentData?.state)
+  const [currenBand, setCurrentBand] = useState(data.appointmentData?.id_band)
+  const [currentStatus, setCurrentStatus] = useState(data.appointmentData?.status)
+  const [currentEditingData, setCurrentEditingData] = useState(data.appointmentData)
+
+  const isEditing = !!title
+
   const hasHour =
     new Date(startDate).toLocaleTimeString().substring(0, 5) === "00:00"
       ? new Date().toLocaleTimeString().substring(0, 5)
@@ -70,6 +85,7 @@ export const AppointmentForm = ({ data, setAppointments, fromMenu = false }: any
   const startDateFormatted = `${new Date(startDate).toISOString().substring(0, 11)}${hasHour}`
   const endDateFormatted = `${new Date(endDate).toISOString().substring(0, 11)}${hasHourEnd}`
 
+  console.log(data)
   const [reqStartDate, setreqStartDate] = useState(startDateFormatted)
   const [reqEndDate, setreqEndDate] = useState(endDateFormatted)
 
@@ -87,18 +103,42 @@ export const AppointmentForm = ({ data, setAppointments, fromMenu = false }: any
     reset,
     control,
     setValue,
+    getValues,
     formState: { errors },
-  } = useForm<IAppointmentFields>({ resolver: yupResolver(schema), mode: "onSubmit" })
+  } = useForm({ resolver: yupResolver(schema), mode: "onSubmit" })
 
-  const submitForm: SubmitHandler<IAppointmentFields> = (data: IAppointmentFields) => {
+  const submitForm = data => {
     console.log(data)
     toast.success("Evento adicionado com sucesso")
-    setAppointments(old => [...old, data])
+    setAppointments(old => {
+      const anterior = old.filter(item => item.id !== data.id)
+      return [...anterior, data]
+    })
+    setCurrentEditingData(null)
     reset()
+    closeForm(false)
   }
 
   React.useEffect(() => setValue("cellphone", maskedCellPhone), [maskedCellPhone])
 
+  useEffect(() => {
+    if (isEditing && !!currentEditingData) {
+      const { startDate, endDate, ...rest } = currentEditingData
+      Object.keys(rest).map(item => {
+        setValue(item, data.appointmentData[item])
+      })
+    }
+    setMaskedCellPhone(data.appointmentData?.cellphone)
+    setCurrentState(data.appointmentData?.state)
+    setCurrentBand(data.appointmentData?.id_band)
+
+    getValues()
+    debugger
+  }, [])
+
+  useEffect(() => {
+    console.log()
+  }, [currentState, currenBand])
   return (
     <Grid padding={fromMenu ? "24px" : mobile ? "" : 8}>
       <form onSubmit={handleSubmit(submitForm)}>
@@ -209,7 +249,7 @@ export const AppointmentForm = ({ data, setAppointments, fromMenu = false }: any
                       labelId="demo-simple-select-label"
                       id="demo-simple-select"
                       label="States"
-                      defaultValue="agendado"
+                      defaultValue={currentState}
                       {...field}
                     >
                       {statesList.map((item, index) => (
@@ -347,7 +387,7 @@ export const AppointmentForm = ({ data, setAppointments, fromMenu = false }: any
                       labelId="demo-simple-select-label"
                       id="demo-simple-select"
                       label="Status"
-                      defaultValue="agendado"
+                      defaultValue={currentStatus ? currentStatus : "agendado"}
                       {...field}
                     >
                       <MenuItem value={"agendado"} selected>
@@ -373,6 +413,7 @@ export const AppointmentForm = ({ data, setAppointments, fromMenu = false }: any
                       labelId="demo-simple-select-error-label"
                       id="demo-simple-select-error"
                       label="Banda"
+                      defaultValue={currenBand}
                       {...field}
                     >
                       <MenuItem value={1}>Banda 1</MenuItem>

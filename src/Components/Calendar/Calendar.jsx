@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import React from "react"
+import React, { useState } from "react"
 import { EditingState, IntegratedEditing, ViewState } from "@devexpress/dx-react-scheduler"
 import {
   Scheduler,
@@ -196,8 +196,13 @@ export const Demo = () => {
       ],
     },
   ])
+  const [closedModal, setClosedModal] = useState(false)
   const [currentDate, setCurrentDate] = React.useState(new Date())
-
+  const closeForm = e => {
+    console.log("mostrar", e)
+    setClosedModal(e)
+    return e
+  }
   const currentViewNameChange = currentViewName => {
     setCurrentViewName(currentViewName)
   }
@@ -232,7 +237,7 @@ export const Demo = () => {
   }
 
   const CustomFormAppointment = data => {
-    return <CustomAppointmentForm data={data} setAppointments={setData} />
+    return <CustomAppointmentForm data={data} setAppointments={setData} closeForm={closeForm} />
   }
 
   React.useEffect(() => {
@@ -271,6 +276,8 @@ export const Demo = () => {
           <AppointmentForm
             messages={{ afterLabel: "meu deus", commitCommand: "Salvar" }}
             basicLayoutComponent={CustomFormAppointment}
+            visible={closedModal}
+            onVisibilityChange={closeForm}
           />
         </Scheduler>
       </Paper>
