@@ -1,3 +1,4 @@
+/* eslint-disable no-debugger */
 import { Card, Box, Stack, Link } from "@mui/material"
 import React, { useEffect } from "react"
 import { AdminForm } from "../Components/Calendar/Components/Form/AdminForm"
@@ -12,7 +13,7 @@ import { NewspaperOutlined, PhoneOutlined, EmailOutlined, LockOpenOutlined } fro
 import { useState } from "react"
 import { toast } from "react-toastify"
 import { ILoginFields } from "../Types/form.type"
-import { useMobile } from "../Provider/Auth/Mobile"
+import { useMobile } from "../Provider/Theme/Mobile"
 import { useAuth } from "../Provider/Auth/Auth"
 import { Navigate, useLocation, useNavigate } from "react-router-dom"
 
@@ -34,8 +35,9 @@ export const Login = () => {
   } = useForm<ILoginFields>({ resolver: yupResolver(schema), mode: "all" })
 
   const submitForm: SubmitHandler<ILoginFields> = async ({ password, username }: ILoginFields) => {
-    signIn({ password, username })
-    toast.success("Login com sucesso")
+    const response = await signIn({ password, username })
+
+    toast[response.success ? "success" : "error"](response.message)
     reset()
   }
 

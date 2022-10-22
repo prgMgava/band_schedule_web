@@ -33,7 +33,7 @@ import { AppointmentForm } from "../Form/AppointmentForm"
 import { BandForm } from "../Form/BandForm"
 import { AdminForm } from "../Form/AdminForm"
 import { SuperAdmin } from "../SuperAdmin/SuperAdmin"
-import { useMobile } from "../../../../Provider/Auth/Mobile"
+import { useMobile } from "../../../../Provider/Theme/Mobile"
 import { useAuth } from "../../../../Provider/Auth/Auth"
 
 export const Header = ({ setAppointments }: any) => {

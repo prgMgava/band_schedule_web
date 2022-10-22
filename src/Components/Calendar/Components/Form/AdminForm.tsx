@@ -11,7 +11,7 @@ import { NewspaperOutlined, PhoneOutlined, EmailOutlined, LockOpenOutlined } fro
 import { Stack } from "@mui/system"
 import { useState } from "react"
 import { toast } from "react-toastify"
-import { useMobile } from "../../../../Provider/Auth/Mobile"
+import { useMobile } from "../../../../Provider/Theme/Mobile"
 import { useNavigate } from "react-router-dom"
 import { useAuth } from "../../../../Provider/Auth/Auth"
 

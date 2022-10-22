@@ -3,7 +3,7 @@ import React, { useContext, createContext, useState, ReactNode, useCallback, Dis
 import jwt_decode from "jwt-decode"
 
 import { AxiosResponse } from "axios"
-import { api } from "../../services/api"
+import { api } from "../../Services/api"
 const AuthContext = createContext<AuthContextData>({} as AuthContextData)
 
 const useAuth = () => {
@@ -31,10 +31,15 @@ interface SignUpCredentials extends SignInCredentials {
   email: string
 }
 
+interface IResponse {
+  success: boolean
+  message: string
+}
+
 interface AuthContextData {
   id: () => string
   accessToken: string
-  signIn: (credentials: SignInCredentials) => Promise<void>
+  signIn: (credentials: SignInCredentials) => Promise<IResponse>
   signUp: (credentials: SignUpCredentials) => Promise<void>
   signOut: () => void
   getUser: () => void
@@ -60,21 +65,28 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   })
   const [userData, setUserData] = useState({} as any)
   const signIn = useCallback(async ({ username, password }: SignInCredentials) => {
-    //const response = await api.post("/login", { username, password })
-    const response = {
-      data: {
-        accessToken:
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiYWRtIjp0cnVlLCJzdXBlckFkbWluIjpmYWxzZSwiaWF0IjoxNjY1OTUxNDExfQ.cK3AEl8qDinXlLdC8u0CdjOrq-2_k7XTonHpJaDeLOM",
-      },
-    }
-    const { accessToken } = response.data
+    try {
+      const response = await api.post("/login", { username, password })
+      debugger
+      const { token: accessToken } = response.data
 
-    const { id, adm, superAdmin } = jwt_decode<any>(accessToken)
-    localStorage.setItem("@BandSchedule:accessToken", accessToken)
-    localStorage.setItem("@BandSchedule:id", JSON.stringify(id))
-    localStorage.setItem("@BandSchedule:adm", adm?.toString())
-    localStorage.setItem("@BandSchedule:superAdmin", superAdmin?.toString())
-    setData({ accessToken, id, adm, superAdmin })
+      const { id, adm, super_admin: superAdmin } = jwt_decode<any>(accessToken)
+      localStorage.setItem("@BandSchedule:accessToken", accessToken)
+      localStorage.setItem("@BandSchedule:id", JSON.stringify(id))
+      localStorage.setItem("@BandSchedule:adm", adm?.toString())
+      localStorage.setItem("@BandSchedule:super_admin", superAdmin?.toString())
+      setData({ accessToken, id, adm, superAdmin })
+      return {
+        success: true,
+        message: response.data.success,
+      }
+    } catch (e) {
+      console.log(e)
+      return {
+        success: false,
+        message: e.response.data.error,
+      }
+    }
   }, [])
 
   const signOut = useCallback(() => {

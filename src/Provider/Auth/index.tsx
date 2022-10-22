@@ -1,7 +1,7 @@
 import { ReactNode } from "react"
 import { AuthProvider } from "./Auth"
 import React from "react"
-import { MobileProvider } from "./Mobile"
+import { MobileProvider } from "../Theme/Mobile"
 
 interface AppProviderProps {
   children: ReactNode
