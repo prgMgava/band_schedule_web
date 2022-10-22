@@ -28,6 +28,7 @@ import { Tooltip } from "../../Components/Calendar/Components/Tooltip"
 import { AppointmentForm as CustomAppointmentForm } from "./Components/Form/AppointmentForm"
 import { useForm } from "react-hook-form"
 import { Header } from "./Components/Header/Header"
+import { Stack } from "@mui/material"
 
 const filterTasks = (items, status) =>
   items.filter(task => {
@@ -239,9 +240,9 @@ export const Demo = () => {
   }, [])
 
   return (
-    <>
+    <Stack justifyContent={"space-around"} direction="column" alignContent={"space-around"}>
       <Header setAppointments={setData} />
-      <Paper>
+      <Paper style={{ position: "absolute", bottom: 100 }}>
         <Scheduler data={filterTasks(data, currentPriority)} height={660} locale={"pt-BR"}>
           <ViewState
             currentDate={currentDate}
@@ -273,6 +274,6 @@ export const Demo = () => {
           />
         </Scheduler>
       </Paper>
-    </>
+    </Stack>
   )
 }

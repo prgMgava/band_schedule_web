@@ -67,8 +67,8 @@ export const SuperAdminForm = () => {
   }
 
   return (
-    <Grid padding={mobile ? 8 : ""}>
-      <form onSubmit={handleSubmit(submitForm)}>
+    <Grid padding={mobile ? 8 : ""} width="100%">
+      <form onSubmit={handleSubmit(submitForm)} style={{ width: "100%" }}>
         <Stack spacing={3} width="100%">
           <Stack>
             <Typography variant="subtitle1">Aqui você pode deletar bandas e administradores</Typography>
@@ -78,8 +78,8 @@ export const SuperAdminForm = () => {
               name="band_id"
               control={control}
               render={({ field }) => (
-                <Box>
-                  <FormControl>
+                <Box width="100%">
+                  <FormControl fullWidth={true}>
                     <InputLabel id="demo-simple-select-helper-label">Banda</InputLabel>
                     <Select
                       sx={{ minWidth: 240 }}
@@ -106,7 +106,7 @@ export const SuperAdminForm = () => {
               control={control}
               render={({ field }) => (
                 <Box>
-                  <FormControl>
+                  <FormControl fullWidth={true}>
                     <InputLabel id="demo-simple-select-helper-label">Adm</InputLabel>
                     <Select
                       sx={{ minWidth: 240 }}

@@ -53,7 +53,7 @@ export const BandForm = () => {
           <Stack>
             <Typography variant="subtitle1">Preencha com as informações da banda</Typography>
           </Stack>
-          <Stack direction={mobile ? "column" : "row"} spacing={2} justifyContent="center">
+          <Stack direction={mobile ? "column" : "row"} spacing={2}>
             <Controller
               name="name"
               control={control}
@@ -64,6 +64,7 @@ export const BandForm = () => {
                   label="Nome *"
                   error={!!errors.name}
                   helperText={errors.name && errors.name.message}
+                  fullWidth={true}
                   name="name"
                   InputProps={{
                     startAdornment: (
@@ -76,7 +77,7 @@ export const BandForm = () => {
               )}
             />
           </Stack>
-          <Stack direction={mobile ? "column" : "row"} spacing={2} justifyContent="center">
+          <Stack direction={mobile ? "column" : "row"} spacing={2}>
             <Controller
               name="cellphone"
               control={control}
@@ -86,6 +87,7 @@ export const BandForm = () => {
                   label="Telefone"
                   error={!!errors.cellphone}
                   helperText={errors.cellphone && errors.cellphone.message}
+                  fullWidth={true}
                   onChange={e => maskCellNumber(e.currentTarget.value)}
                   value={maskedCellPhone}
                   InputProps={{
@@ -102,7 +104,7 @@ export const BandForm = () => {
               )}
             />
           </Stack>
-          <Stack direction={mobile ? "column" : "row"} spacing={2} justifyContent="center">
+          <Stack direction={mobile ? "column" : "row"} spacing={2}>
             <Controller
               name="email"
               control={control}
@@ -112,6 +114,7 @@ export const BandForm = () => {
                   label="Email"
                   error={!!errors.email}
                   helperText={errors.email && errors.email.message}
+                  fullWidth={true}
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">

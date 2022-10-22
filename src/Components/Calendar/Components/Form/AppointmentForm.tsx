@@ -117,6 +117,7 @@ export const AppointmentForm = ({ data, setAppointments, fromMenu = false }: any
                   error={!!errors.title}
                   helperText={errors.title && errors.title.message}
                   name="title"
+                  fullWidth={true}
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
@@ -138,6 +139,7 @@ export const AppointmentForm = ({ data, setAppointments, fromMenu = false }: any
                   helperText={errors.cellphone && errors.cellphone.message}
                   onChange={e => maskCellNumber(e.currentTarget.value)}
                   value={maskedCellPhone}
+                  fullWidth={true}
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
@@ -162,6 +164,7 @@ export const AppointmentForm = ({ data, setAppointments, fromMenu = false }: any
                   label="Rua *"
                   error={!!errors.street}
                   helperText={errors.street && errors.street.message}
+                  fullWidth={true}
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
@@ -181,6 +184,7 @@ export const AppointmentForm = ({ data, setAppointments, fromMenu = false }: any
                   label="Bairro *"
                   error={!!errors.district}
                   helperText={errors.district && errors.district.message}
+                  fullWidth={true}
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
@@ -198,7 +202,7 @@ export const AppointmentForm = ({ data, setAppointments, fromMenu = false }: any
               control={control}
               render={({ field }) => (
                 <Box>
-                  <FormControl error={!!errors.state}>
+                  <FormControl error={!!errors.state} fullWidth={true}>
                     <InputLabel id="demo-simple-select-helper-label">Estado *</InputLabel>
                     <Select
                       sx={{ minWidth: 240 }}
@@ -228,6 +232,7 @@ export const AppointmentForm = ({ data, setAppointments, fromMenu = false }: any
                   label="Cidade *"
                   error={!!errors.city}
                   helperText={errors.city && errors.city.message}
+                  fullWidth={true}
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
@@ -249,6 +254,7 @@ export const AppointmentForm = ({ data, setAppointments, fromMenu = false }: any
                   label="Número"
                   error={!!errors.address_number}
                   helperText={errors.address_number && errors.address_number.message}
+                  fullWidth={true}
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
@@ -264,12 +270,11 @@ export const AppointmentForm = ({ data, setAppointments, fromMenu = false }: any
               control={control}
               render={({ field }) => (
                 <TextField
+                  fullWidth={true}
                   {...field}
                   label="Complemento"
                   error={!!errors.address_complement}
                   helperText={errors.address_complement && errors.address_complement.message}
-                  multiline
-                  sx={{ width: "100%" }}
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
@@ -286,44 +291,47 @@ export const AppointmentForm = ({ data, setAppointments, fromMenu = false }: any
             <Typography variant="subtitle1">Preencha as datas e horários</Typography>
           </Stack>
           <Stack direction={mobile ? "column" : "row"} spacing={2}>
-            <fieldset
-              style={{ border: `${errors.startDate ? "1px #E34367 solid" : "1px #C0C0C0 solid"}`, borderRadius: "4px" }}
-            >
-              <legend style={{ fontSize: "12px", color: "	#888888" }}>Data inicial *</legend>
-              <Box>
-                <FormControl>
+            <FormControl fullWidth={true}>
+              <fieldset
+                style={{
+                  border: `${errors.startDate ? "1px #E34367 solid" : "1px #C0C0C0 solid"}`,
+                  borderRadius: "4px",
+                }}
+              >
+                <legend style={{ fontSize: "12px", color: "	#888888" }}>Data inicial *</legend>
+                <Box>
                   <input
                     type={"datetime-local"}
                     defaultValue={reqStartDate}
                     id="startDate"
                     {...register("startDate")}
-                    style={{ height: "24px", border: "none", outline: "none" }}
+                    style={{ height: "24px", border: "none", outline: "none", width: "100%" }}
                   ></input>
                   {!!errors.startDate && (
                     <FormHelperText sx={{ color: "#E34367" }}>Selecione uma data inicial</FormHelperText>
                   )}
-                </FormControl>
-              </Box>
-            </fieldset>
-            <fieldset
-              style={{ border: `${errors.endDate ? "1px #E34367 solid" : "1px #C0C0C0 solid"}`, borderRadius: "4px" }}
-            >
-              <legend style={{ fontSize: "12px", color: "	#888888" }}>Data final</legend>
-              <Box>
-                <FormControl>
+                </Box>
+              </fieldset>
+            </FormControl>
+            <FormControl fullWidth={true}>
+              <fieldset
+                style={{ border: `${errors.endDate ? "1px #E34367 solid" : "1px #C0C0C0 solid"}`, borderRadius: "4px" }}
+              >
+                <legend style={{ fontSize: "12px", color: "	#888888" }}>Data final</legend>
+                <Box>
                   <input
                     type={"datetime-local"}
                     defaultValue={reqEndDate}
                     id="endDate"
                     {...register("endDate")}
-                    style={{ height: "24px", border: "none", outline: "none" }}
+                    style={{ height: "24px", border: "none", outline: "none", width: "100%" }}
                   ></input>
                   {!!errors.endDate && (
                     <FormHelperText sx={{ color: "#E34367" }}>Selecione uma data final</FormHelperText>
                   )}
-                </FormControl>
-              </Box>
-            </fieldset>
+                </Box>
+              </fieldset>
+            </FormControl>
           </Stack>
           <Divider variant="inset" />
           <Stack direction={mobile ? "column" : "row"} spacing={2}>
@@ -332,7 +340,7 @@ export const AppointmentForm = ({ data, setAppointments, fromMenu = false }: any
               control={control}
               render={({ field }) => (
                 <Box>
-                  <FormControl>
+                  <FormControl fullWidth={true}>
                     <InputLabel id="demo-simple-select-helper-label">Status</InputLabel>
                     <Select
                       sx={{ minWidth: 270 }}
@@ -358,7 +366,7 @@ export const AppointmentForm = ({ data, setAppointments, fromMenu = false }: any
               control={control}
               render={({ field }) => (
                 <Box>
-                  <FormControl error={!!errors.id_band}>
+                  <FormControl error={!!errors.id_band} fullWidth={true}>
                     <InputLabel id="demo-simple-select-helper-label">Banda *</InputLabel>
                     <Select
                       sx={{ minWidth: 270 }}

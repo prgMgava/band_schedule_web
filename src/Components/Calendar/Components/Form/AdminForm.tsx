@@ -54,7 +54,7 @@ export const AdminForm = () => {
           <Stack>
             <Typography variant="subtitle1">Preencha com as informações do administrador</Typography>
           </Stack>
-          <Stack direction={mobile ? "column" : "row"} spacing={2} justifyContent="center">
+          <Stack direction={mobile ? "column" : "row"} spacing={2}>
             <Controller
               name="username"
               control={control}
@@ -65,6 +65,7 @@ export const AdminForm = () => {
                   autoComplete="nope"
                   error={!!errors.username}
                   helperText={errors.username && errors.username.message}
+                  fullWidth={true}
                   name="username"
                   InputProps={{
                     startAdornment: (
@@ -78,7 +79,7 @@ export const AdminForm = () => {
               )}
             />
           </Stack>
-          <Stack direction={mobile ? "column" : "row"} spacing={2} justifyContent="center">
+          <Stack direction={mobile ? "column" : "row"} spacing={2}>
             <Controller
               name="cellphone"
               control={control}
@@ -88,6 +89,7 @@ export const AdminForm = () => {
                   label="Telefone"
                   error={!!errors.cellphone}
                   helperText={errors.cellphone && errors.cellphone.message}
+                  fullWidth={true}
                   onChange={e => maskCellNumber(e.currentTarget.value)}
                   value={maskedCellPhone}
                   InputProps={{
@@ -104,7 +106,7 @@ export const AdminForm = () => {
               )}
             />
           </Stack>
-          <Stack direction={mobile ? "column" : "row"} spacing={2} justifyContent="center">
+          <Stack direction={mobile ? "column" : "row"} spacing={2}>
             <Controller
               name="email"
               control={control}
@@ -114,6 +116,7 @@ export const AdminForm = () => {
                   label="Email"
                   error={!!errors.email}
                   helperText={errors.email && errors.email.message}
+                  fullWidth={true}
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
@@ -125,7 +128,7 @@ export const AdminForm = () => {
               )}
             />
           </Stack>
-          <Stack direction={mobile ? "column" : "row"} spacing={2} justifyContent="center">
+          <Stack direction={mobile ? "column" : "row"} spacing={2}>
             <Controller
               name="password"
               control={control}
@@ -137,6 +140,7 @@ export const AdminForm = () => {
                   type={"password"}
                   error={!!errors.password}
                   helperText={errors.password && errors.password.message}
+                  fullWidth={true}
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
