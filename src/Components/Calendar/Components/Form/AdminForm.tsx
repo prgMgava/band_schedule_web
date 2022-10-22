@@ -16,7 +16,7 @@ import { useNavigate } from "react-router-dom"
 import { useAuth } from "../../../../Provider/Auth/Auth"
 
 const schema = yup.object().shape({
-  username: yup.string().required("Nome da Banda é obrigatório").max(100, "Nome muito grande"),
+  username: yup.string().required("Username é obrigatório").max(100, "Nome muito grande"),
   email: yup.string().max(150, "Email muito grande"),
   cellphone: yup.string().max(50, "Telefone muito grande"),
   password: yup.string().max(20, "Senha Muito grande").required("Senha obrigatória"),
@@ -41,16 +41,18 @@ export const AdminForm = ({ isSignup = false }: any) => {
     control,
     setValue,
     formState: { errors },
-  } = useForm<IAdminFields>({ resolver: yupResolver(schema), mode: "all" })
+  } = useForm<IAdminFields>({ resolver: yupResolver(schema), reValidateMode: "onChange", mode: "onSubmit" })
 
-  const submitForm: SubmitHandler<IAdminFields> = (data: IAdminFields) => {
-    signUp(data)
+  const submitForm: SubmitHandler<IAdminFields> = async (data: IAdminFields) => {
+    const response = await signUp(data)
     if (isSignup) {
-      toast.success("Usuário adicionado com sucesso")
+      toast[response.success ? "success" : "error"](response.message)
     } else {
-      toast.success("Administrador adicionado com sucesso")
+      toast[response.success ? "success" : "error"](response.message)
     }
-    reset()
+    if (response.success) {
+      navigate("/")
+    }
   }
 
   React.useEffect(() => setValue("cellphone", maskedCellPhone), [maskedCellPhone])

@@ -40,7 +40,7 @@ interface AuthContextData {
   id: () => string
   accessToken: string
   signIn: (credentials: SignInCredentials) => Promise<IResponse>
-  signUp: (credentials: SignUpCredentials) => Promise<void>
+  signUp: (credentials: SignUpCredentials) => Promise<IResponse>
   signOut: () => void
   getUser: () => void
   userData: any
@@ -67,7 +67,6 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   const signIn = useCallback(async ({ username, password }: SignInCredentials) => {
     try {
       const response = await api.post("/login", { username, password })
-      debugger
       const { token: accessToken } = response.data
 
       const { id, adm, super_admin: superAdmin } = jwt_decode<any>(accessToken)
@@ -108,20 +107,20 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   }
 
   const signUp = useCallback(async ({ username, password, cellphone, email }: SignUpCredentials) => {
-    // api
-    //   .post("/register", {
-    //     email,
-    //     password,
-    //     username,
-    //     cellphone,
-    //   })
-    //   .then(() => {
-    //     signIn({ password, username })
-    //   })
-    //   .catch(() => {
-    //     alert("deu ruim")
-    //   })
-    signIn({ password, username })
+    try {
+      await api.post("/user/member", { username, password, cellphone, email })
+      debugger
+      return {
+        success: true,
+        message: "Usuário criado com sucesso faça seu login",
+      }
+    } catch (e) {
+      console.log(e)
+      return {
+        success: false,
+        message: e.response.data.error,
+      }
+    }
   }, [])
 
   return (
