@@ -51,6 +51,7 @@ interface AuthContextData {
   adm: boolean
   getAdmins: () => Promise<IResponse>
   adminList: IUser[]
+  deleteAdmin: (id: number) => Promise<IResponse>
 }
 
 interface AuthProviderProps {
@@ -131,7 +132,6 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const createAdm = useCallback(async ({ username, password, cellphone, email }: SignUpCredentials) => {
     try {
-      debugger
       if (data.superAdmin) {
         await api.post(
           "/user/adm",
@@ -174,6 +174,31 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   }
 
+  const deleteAdmin = useCallback(async (id: number) => {
+    try {
+      if (data.superAdmin) {
+        await api.delete(`/user/${id}`, {
+          headers: { "x-access-token": data.accessToken },
+        })
+        setAdminList(old => old.filter(user => user.id !== id))
+        return {
+          success: true,
+          message: "Admin deletado com sucesso",
+        }
+      }
+      return {
+        success: false,
+        message: "Você não tem permissão de deletar um admin",
+      }
+    } catch (e) {
+      console.log(e)
+      return {
+        success: false,
+        message: e.response.data.error,
+      }
+    }
+  }, [])
+
   return (
     <AuthContext.Provider
       value={{
@@ -190,6 +215,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
         createAdm,
         getAdmins,
         adminList,
+        deleteAdmin,
       }}
     >
       {children}

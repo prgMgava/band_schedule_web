@@ -67,7 +67,7 @@ export const Header = ({ setAppointments }: any) => {
     appointment: <AppointmentForm data={data} setAppointments={setAppointments} fromMenu={true} />,
     band: <BandForm toggleDrawer={toggleDrawer}></BandForm>,
     admin: <AdminForm toggleDrawer={toggleDrawer} />,
-    superAdmin: <SuperAdmin />,
+    superAdmin: <SuperAdmin toggleDrawer={toggleDrawer} />,
   }
   return (
     <>

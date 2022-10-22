@@ -108,7 +108,7 @@ const BandProvider = ({ children }: BandProviderProps) => {
       }
       return {
         success: false,
-        message: "Você não tem permissão de criar uma banda",
+        message: "Você não tem permissão de deletar uma banda",
       }
     } catch (e) {
       console.log(e)

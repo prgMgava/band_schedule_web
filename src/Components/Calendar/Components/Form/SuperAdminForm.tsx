@@ -39,10 +39,10 @@ interface IDataForm {
   band_id: number
   user_id: number
 }
-export const SuperAdminForm = () => {
+export const SuperAdminForm = ({ toggleDrawer }: any) => {
   const { mobile } = useMobile()
   const { myBands, deleteBand } = useBand()
-  const { getAdmins, adminList } = useAuth()
+  const { getAdmins, adminList, deleteAdmin } = useAuth()
   const [dataForm, setDataForm] = useState<IDataForm>({} as IDataForm)
   const {
     handleSubmit,
@@ -71,7 +71,9 @@ export const SuperAdminForm = () => {
 
   const handleDelete = async () => {
     dataForm.band_id && (await deleteBand(dataForm.band_id))
-    setOpen(false)
+    dataForm.user_id && (await deleteAdmin(dataForm.user_id))
+
+    toggleDrawer()
     toast.error("Dados deletados com sucesso")
   }
 
@@ -161,7 +163,11 @@ export const SuperAdminForm = () => {
             <DialogContentText id="alert-dialog-description">
               Você tem certeza que deseja excluir o(s) seguinte(s) dados:
               {dataForm?.band_id && <Box>Banda: {myBands.find(item => item.id === dataForm.band_id)?.name}</Box>}
-              {dataForm?.user_id && <Box>Banda: {myBands.find(item => item.id === dataForm.band_id)?.name}</Box>}
+              {dataForm?.user_id && (
+                <Box>
+                  <b>Adm: {adminList.find(item => item.id === dataForm.user_id)?.username}</b>
+                </Box>
+              )}
             </DialogContentText>
           </DialogContent>
           <DialogActions>
