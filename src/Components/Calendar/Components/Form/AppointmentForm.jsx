@@ -1,3 +1,6 @@
+/* eslint-disable react/prop-types */
+/* eslint-disable @typescript-eslint/no-empty-function */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable no-debugger */
 import * as React from "react"
 
@@ -61,8 +64,7 @@ const schema = yup.object().shape({
 //   fromMenu: boolean
 // }
 
-// eslint-disable-next-line @typescript-eslint/no-empty-function
-export const AppointmentForm = ({ data, setAppointments, fromMenu = false, closeForm = () => {} }: any) => {
+export const AppointmentForm = ({ data, setAppointments, fromMenu = false, closeForm = () => {} }) => {
   const theme = useTheme()
   const mobile = useMediaQuery(theme.breakpoints.down("sm"))
   const [maskedCellPhone, setMaskedCellPhone] = useState("")
@@ -133,7 +135,6 @@ export const AppointmentForm = ({ data, setAppointments, fromMenu = false, close
     setCurrentBand(data.appointmentData?.id_band)
 
     getValues()
-    debugger
   }, [])
 
   useEffect(() => {

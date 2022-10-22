@@ -213,8 +213,7 @@ export const Demo = () => {
 
   const priorityChange = value => {
     console.log(value)
-    // eslint-disable-next-line no-debugger
-    //debugger
+
     const nextResources = [
       {
         ...resources[0],
@@ -238,6 +237,10 @@ export const Demo = () => {
 
   const CustomFormAppointment = data => {
     return <CustomAppointmentForm data={data} setAppointments={setData} closeForm={closeForm} />
+  }
+
+  const HiddenButton = data => {
+    return <></>
   }
 
   React.useEffect(() => {
@@ -278,6 +281,7 @@ export const Demo = () => {
             basicLayoutComponent={CustomFormAppointment}
             visible={closedModal}
             onVisibilityChange={closeForm}
+            commandButtonComponent={HiddenButton}
           />
         </Scheduler>
       </Paper>

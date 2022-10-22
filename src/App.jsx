@@ -6,10 +6,11 @@ import { Box, useMediaQuery, useTheme, CardHeader, Stack } from "@mui/material"
 import "./App.css"
 
 import { Header } from "./Components/Calendar/Components/Header/Header"
+import Routes from "./Routes"
 export const App = () => {
   return (
     <Stack bg="#0D1F35">
-      <Demo />
+      <Routes />
       <ToastContainer />
     </Stack>
   )

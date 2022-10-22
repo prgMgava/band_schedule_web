@@ -27,3 +27,8 @@ export interface IAdminFields {
   email: string
   password: string
 }
+
+export interface ILoginFields {
+  username: string
+  password: string
+}

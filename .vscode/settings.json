@@ -1,7 +1,5 @@
 {
-	"cSpell.words": [
-		"devexpress"
-	],
-	"editor.formatOnSave": true,
- "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "cSpell.words": ["concluido", "devexpress", "setreq"],
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode"
 }

@@ -3,7 +3,7 @@ import * as React from "react"
 import { Button, Grid, InputAdornment, Typography, useMediaQuery, useTheme } from "@mui/material"
 
 import { useForm, SubmitHandler, Controller } from "react-hook-form"
-import { IAdminFields, IBandFields } from "../../../../Types/form.type"
+import { IAdminFields } from "../../../../Types/form.type"
 import { yupResolver } from "@hookform/resolvers/yup"
 import * as yup from "yup"
 import { TextField } from "@mui/material"
@@ -19,7 +19,7 @@ const schema = yup.object().shape({
   password: yup.string().max(20, "Senha Muito grande").required("Senha obrigatória"),
 })
 
-export const AdminForm = () => {
+export const AdminForm = ({ isSignup = false }: any) => {
   const theme = useTheme()
   const mobile = useMediaQuery(theme.breakpoints.down("sm"))
   const [maskedCellPhone, setMaskedCellPhone] = useState("")
@@ -51,9 +51,13 @@ export const AdminForm = () => {
     <Grid padding={mobile ? "" : 8}>
       <form onSubmit={handleSubmit(submitForm)} autoComplete="off">
         <Stack spacing={3}>
-          <Stack>
-            <Typography variant="subtitle1">Preencha com as informações do administrador</Typography>
-          </Stack>
+          {!isSignup ? (
+            <Stack>
+              <Typography variant="subtitle1">Preencha com as informações do administrador</Typography>
+            </Stack>
+          ) : (
+            <></>
+          )}
           <Stack direction={mobile ? "column" : "row"} spacing={2}>
             <Controller
               name="username"
@@ -157,7 +161,7 @@ export const AdminForm = () => {
         <Stack spacing={"10px"} mt={3}>
           <Button type="submit" variant="contained">
             {" "}
-            Salvar
+            {isSignup ? "Cadastrar" : "Salvar"}
           </Button>
         </Stack>
       </form>
