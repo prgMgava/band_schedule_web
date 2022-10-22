@@ -1,5 +1,5 @@
 import * as React from "react"
-
+import uuid from "react-uuid"
 import {
   Box,
   Button,
@@ -31,11 +31,17 @@ import { Stack } from "@mui/system"
 import { useState } from "react"
 import { toast } from "react-toastify"
 import { admList, bandList } from "../../../../demo-data/grouping"
+import { useMobile } from "../../../../Provider/Theme/Mobile"
+import { useBand } from "../../../../Provider/Band/Band"
 
+interface IDataForm {
+  band_id: number
+  user_id: number
+}
 export const SuperAdminForm = () => {
-  const theme = useTheme()
-  const mobile = useMediaQuery(theme.breakpoints.down("sm"))
-  const [dataForm, setDataForm] = useState({})
+  const { mobile } = useMobile()
+  const { myBands, deleteBand } = useBand()
+  const [dataForm, setDataForm] = useState<IDataForm>({} as IDataForm)
   const {
     handleSubmit,
     reset,
@@ -61,13 +67,14 @@ export const SuperAdminForm = () => {
     setOpen(false)
   }
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
+    dataForm.band_id && (await deleteBand(dataForm.band_id))
     setOpen(false)
     toast.error("Dados deletados com sucesso")
   }
 
   return (
-    <Grid padding={mobile ? 8 : ""} width="100%">
+    <Grid padding={mobile ? 8 : 8}>
       <form onSubmit={handleSubmit(submitForm)} style={{ width: "100%" }}>
         <Stack spacing={3} width="100%">
           <Stack>
@@ -82,14 +89,14 @@ export const SuperAdminForm = () => {
                   <FormControl fullWidth={true}>
                     <InputLabel id="demo-simple-select-helper-label">Banda</InputLabel>
                     <Select
-                      sx={{ minWidth: 240 }}
+                      fullWidth={true}
                       labelId="demo-simple-select-label"
                       id="demo-simple-select"
                       label="States"
                       {...field}
                     >
-                      {bandList.map((item, index) => (
-                        <MenuItem value={item.value} key={index}>
+                      {myBands.map(item => (
+                        <MenuItem value={item.id} key={uuid()}>
                           {item.name}
                         </MenuItem>
                       ))}
@@ -105,14 +112,14 @@ export const SuperAdminForm = () => {
               name="user_id"
               control={control}
               render={({ field }) => (
-                <Box>
+                <Box width={"100%"}>
                   <FormControl fullWidth={true}>
                     <InputLabel id="demo-simple-select-helper-label">Adm</InputLabel>
                     <Select
-                      sx={{ minWidth: 240 }}
                       labelId="demo-simple-select-label"
                       id="demo-simple-select"
                       label="Adm"
+                      fullWidth={true}
                       {...field}
                     >
                       {admList.map((item, index) => (
@@ -147,19 +154,16 @@ export const SuperAdminForm = () => {
           <DialogContent>
             <DialogContentText id="alert-dialog-description">
               Você tem certeza que deseja excluir o(s) seguinte(s) dados:
-              {Object.keys(dataForm).map(key => {
-                return (
-                  <div key={key}>
-                    {key} : {dataForm[key]}
-                  </div>
-                )
-              })}
+              {dataForm?.band_id && <Box>Banda: {myBands.find(item => item.id === dataForm.band_id)?.name}</Box>}
+              {dataForm?.user_id && <Box>Banda: {myBands.find(item => item.id === dataForm.band_id)?.name}</Box>}
             </DialogContentText>
           </DialogContent>
           <DialogActions>
-            <Button onClick={handleClose}>Cancelar</Button>
-            <Button onClick={handleDelete} autoFocus color="error">
-              Continuar
+            <Button onClick={handleClose} autoFocus>
+              Cancelar
+            </Button>
+            <Button onClick={handleDelete} color="error">
+              Continua
             </Button>
           </DialogActions>
         </Dialog>

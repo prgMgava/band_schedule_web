@@ -10,6 +10,7 @@ interface BandContextProps {
   myBands: IBand[]
   getMyBands: (owner: GetMyBandsProps) => Promise<IResponse>
   createBand: ({ name, cellphone, email }: CreateBandProp) => Promise<IResponse>
+  deleteBand: (id: number) => Promise<IResponse>
 }
 const BandContext = createContext<BandContextProps>({} as BandContextProps)
 
@@ -91,7 +92,32 @@ const BandProvider = ({ children }: BandProviderProps) => {
       }
     }
   }, [])
-  return <BandContext.Provider value={{ myBands, getMyBands, createBand }}>{children}</BandContext.Provider>
+
+  const deleteBand = useCallback(async (id: number) => {
+    try {
+      if (superAdmin) {
+        await api.delete(`/band/${id}`, {
+          headers: { "x-access-token": accessToken },
+        })
+        setMyBands(old => old.filter(band => band.id !== id))
+        return {
+          success: true,
+          message: "Banda deletada com sucesso",
+        }
+      }
+      return {
+        success: false,
+        message: "Você não tem permissão de criar uma banda",
+      }
+    } catch (e) {
+      console.log(e)
+      return {
+        success: false,
+        message: e.response.data.error,
+      }
+    }
+  }, [])
+  return <BandContext.Provider value={{ myBands, getMyBands, createBand, deleteBand }}>{children}</BandContext.Provider>
 }
 
 export { useBand, BandProvider }
