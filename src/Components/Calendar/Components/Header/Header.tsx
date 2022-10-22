@@ -65,7 +65,7 @@ export const Header = ({ setAppointments }: any) => {
 
   const forms = {
     appointment: <AppointmentForm data={data} setAppointments={setAppointments} fromMenu={true} />,
-    band: <BandForm></BandForm>,
+    band: <BandForm toggleDrawer={toggleDrawer}></BandForm>,
     admin: <AdminForm />,
     superAdmin: <SuperAdmin />,
   }
@@ -170,7 +170,7 @@ export const Header = ({ setAppointments }: any) => {
                   <ListItemIcon>
                     <MusicNote fontSize="small" />
                   </ListItemIcon>
-                  Adicionar banda
+                  Adicionar/Editar banda
                 </MenuItem>
                 <MenuItem
                   onClick={() => {

@@ -3,7 +3,7 @@ export interface IBand {
   name: string
   email: string
   cellphone: string
-  createdAt: string
-  updatedAt: string
-  owner: 2
+  createdAt?: string
+  updatedAt?: string
+  owner?: 2
 }

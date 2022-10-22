@@ -11,6 +11,7 @@ interface BandContextProps {
   getMyBands: (owner: GetMyBandsProps) => Promise<IResponse>
   createBand: ({ name, cellphone, email }: CreateBandProp) => Promise<IResponse>
   deleteBand: (id: number) => Promise<IResponse>
+  updateBand: ({ name, cellphone, email, id }: CreateBandProp) => Promise<IResponse>
 }
 const BandContext = createContext<BandContextProps>({} as BandContextProps)
 
@@ -30,6 +31,7 @@ interface CreateBandProp {
   name: string
   email: string
   cellphone: string
+  id?: number
 }
 
 interface BandProviderProps {
@@ -117,7 +119,41 @@ const BandProvider = ({ children }: BandProviderProps) => {
       }
     }
   }, [])
-  return <BandContext.Provider value={{ myBands, getMyBands, createBand, deleteBand }}>{children}</BandContext.Provider>
+
+  const updateBand = useCallback(async ({ name, cellphone, email, id }: CreateBandProp) => {
+    try {
+      if (adm) {
+        const response: AxiosResponse = await api.patch(
+          `/band/${id}`,
+          { name, cellphone, email },
+          {
+            headers: { "x-access-token": accessToken },
+          }
+        )
+        setMyBands(old => [...old.filter(band => band.id !== id), { name, cellphone, id, email } as IBand])
+
+        return {
+          success: true,
+          message: "Banda atualizada com sucesso",
+        }
+      }
+      return {
+        success: false,
+        message: "Você não tem permissão de criar uma banda",
+      }
+    } catch (e) {
+      console.log(e)
+      return {
+        success: false,
+        message: e.response.data.error,
+      }
+    }
+  }, [])
+  return (
+    <BandContext.Provider value={{ myBands, getMyBands, createBand, deleteBand, updateBand }}>
+      {children}
+    </BandContext.Provider>
+  )
 }
 
 export { useBand, BandProvider }
