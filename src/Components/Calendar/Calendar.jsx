@@ -253,7 +253,7 @@ export const Demo = () => {
   }
 
   const CustomFormAppointment = data => {
-    return <CustomAppointmentForm data={data} setAppointments={() => 1} closeForm={closeForm} />
+    return <CustomAppointmentForm data={data} closeForm={closeForm} />
   }
 
   const HiddenButton = data => {

@@ -45,6 +45,7 @@ import { toast } from "react-toastify"
 import { useEffect } from "react"
 import { useMobile } from "../../../../Provider/Theme/Mobile"
 import { useBand } from "../../../../Provider/Band/Band"
+import { useAppointment } from "../../../../Provider/Appointment/Appointment"
 
 const schema = yup.object().shape({
   title: yup.string().required("Nome do evento é obrigatório").max(100, "Nome muito grande"),
@@ -58,8 +59,8 @@ const schema = yup.object().shape({
   address_complement: yup.string().max(150, "Complemento muito grande").nullable(),
   status: yup.string().default("agendado"),
   id_band: yup.number().required("Informe a banda que vai tocar no evento"),
-  startDate: yup.date().required("Data inicial obrigatória").required("Data inicial obrigatória"),
-  endDate: yup.date().required("Data final obrigatória").required("Data final obrigatória"),
+  start_date: yup.date().required("Data inicial obrigatória").required("Data inicial obrigatória"),
+  end_date: yup.date().required("Data final obrigatória").required("Data final obrigatória"),
 })
 
 // interface AppointmentProps {
@@ -68,11 +69,12 @@ const schema = yup.object().shape({
 //   fromMenu: boolean
 // }
 
-export const AppointmentForm = ({ data, setAppointments, fromMenu = false, closeForm = () => {} }) => {
+export const AppointmentForm = ({ data, fromMenu = false, closeForm = () => {} }) => {
   const { mobile } = useMobile()
   const { myBands } = useBand()
   const [maskedCellPhone, setMaskedCellPhone] = useState("")
   const { startDate, endDate, title } = data.appointmentData
+  const { createAppointment } = useAppointment()
   const [currentState, setCurrentState] = useState(data.appointmentData?.state)
   const [currenBand, setCurrentBand] = useState(data.appointmentData?.id_band)
   const [currentStatus, setCurrentStatus] = useState(data.appointmentData?.status)
@@ -88,8 +90,10 @@ export const AppointmentForm = ({ data, setAppointments, fromMenu = false, close
     new Date(endDate).toLocaleTimeString().substring(0, 5) === "00:00"
       ? new Date().toLocaleTimeString().substring(0, 5)
       : new Date(endDate).toLocaleTimeString().substring(0, 5)
-  const startDateFormatted = `${new Date(startDate).toISOString().substring(0, 11)}${hasHour}`
-  const endDateFormatted = `${new Date(endDate).toISOString().substring(0, 11)}${hasHourEnd}`
+  const startDateFormatted =
+    startDate && hasHour ? `${new Date(startDate).toISOString().substring(0, 11)}${hasHour}` : ""
+  const endDateFormatted =
+    endDate && hasHourEnd ? `${new Date(endDate).toISOString().substring(0, 11)}${hasHourEnd}` : ""
 
   console.log(data)
   const [reqStartDate, setreqStartDate] = useState(startDateFormatted)
@@ -113,16 +117,14 @@ export const AppointmentForm = ({ data, setAppointments, fromMenu = false, close
     formState: { errors },
   } = useForm({ resolver: yupResolver(schema), mode: "onSubmit" })
 
-  const submitForm = data => {
-    console.log(data)
-    toast.success("Evento adicionado com sucesso")
-    setAppointments(old => {
-      const anterior = old.filter(item => item.id !== data.id)
-      return [...anterior, data]
-    })
-    setCurrentEditingData(null)
-    reset()
-    closeForm(false)
+  const submitForm = async data => {
+    const response = await createAppointment(data)
+    toast[response.success ? "success" : "error"](response.message)
+    if (response.success) {
+      setCurrentEditingData(null)
+      reset()
+      closeForm(false)
+    }
   }
 
   React.useEffect(() => setValue("cellphone", maskedCellPhone), [maskedCellPhone])
@@ -339,7 +341,7 @@ export const AppointmentForm = ({ data, setAppointments, fromMenu = false, close
             <FormControl fullWidth={true}>
               <fieldset
                 style={{
-                  border: `${errors.startDate ? "1px #E34367 solid" : "1px #C0C0C0 solid"}`,
+                  border: `${errors.start_date ? "1px #E34367 solid" : "1px #C0C0C0 solid"}`,
                   borderRadius: "4px",
                 }}
               >
@@ -348,11 +350,11 @@ export const AppointmentForm = ({ data, setAppointments, fromMenu = false, close
                   <input
                     type={"datetime-local"}
                     defaultValue={reqStartDate}
-                    id="startDate"
-                    {...register("startDate")}
+                    id="start_date"
+                    {...register("start_date")}
                     style={{ height: "24px", border: "none", outline: "none", width: "100%" }}
                   ></input>
-                  {!!errors.startDate && (
+                  {!!errors.start_date && (
                     <FormHelperText sx={{ color: "#E34367" }}>Selecione uma data inicial</FormHelperText>
                   )}
                 </Box>
@@ -360,18 +362,21 @@ export const AppointmentForm = ({ data, setAppointments, fromMenu = false, close
             </FormControl>
             <FormControl fullWidth={true}>
               <fieldset
-                style={{ border: `${errors.endDate ? "1px #E34367 solid" : "1px #C0C0C0 solid"}`, borderRadius: "4px" }}
+                style={{
+                  border: `${errors.end_date ? "1px #E34367 solid" : "1px #C0C0C0 solid"}`,
+                  borderRadius: "4px",
+                }}
               >
                 <legend style={{ fontSize: "12px", color: "	#888888" }}>Data final</legend>
                 <Box>
                   <input
                     type={"datetime-local"}
                     defaultValue={reqEndDate}
-                    id="endDate"
-                    {...register("endDate")}
+                    id="end_date"
+                    {...register("end_date")}
                     style={{ height: "24px", border: "none", outline: "none", width: "100%" }}
                   ></input>
-                  {!!errors.endDate && (
+                  {!!errors.end_date && (
                     <FormHelperText sx={{ color: "#E34367" }}>Selecione uma data final</FormHelperText>
                   )}
                 </Box>
@@ -405,7 +410,6 @@ export const AppointmentForm = ({ data, setAppointments, fromMenu = false, close
                 </Box>
               )}
             />
-            {/* TODO: set bandName filtering the arrays */}
             <Controller
               name="id_band"
               control={control}
@@ -422,7 +426,7 @@ export const AppointmentForm = ({ data, setAppointments, fromMenu = false, close
                       {...field}
                     >
                       {myBands.map(band => (
-                        <MenuItem value={1} key={uuid()}>
+                        <MenuItem value={band.id} key={uuid()}>
                           {band.name}
                         </MenuItem>
                       ))}

@@ -43,6 +43,7 @@ const BandProvider = ({ children }: BandProviderProps) => {
   const [myBands, setMyBands] = useState<IBand[]>([])
 
   const getMyBands = useCallback(async () => {
+    //TODO: remove defaul user id
     try {
       if (adm) {
         console.log(adm, superAdmin)

@@ -10,6 +10,7 @@ import { addDays, subDays } from "date-fns"
 interface AppointmentContextProps {
   getAppointments: (date: Date) => Promise<IResponse>
   appointments: IAppointments[]
+  createAppointment: (payload: IAppointments) => Promise<IResponse>
 }
 const AppointmentContext = createContext<AppointmentContextProps>({} as AppointmentContextProps)
 
@@ -64,7 +65,6 @@ const AppointmentProvider = ({ children }: AppointmentProviderProps) => {
           headers: { "x-access-token": accessToken },
         }
       )
-      debugger
       setAppointments(data)
 
       return {
@@ -79,34 +79,31 @@ const AppointmentProvider = ({ children }: AppointmentProviderProps) => {
     }
   }, [])
 
-  //   const createAppointment = useCallback(async ({ name, cellphone, email }: CreateAppointmentProp) => {
-  //     try {
-  //       if (adm) {
-  //         const response: AxiosResponse = await api.post(
-  //           "/Appointment",
-  //           { name, cellphone, email },
-  //           {
-  //             headers: { "x-access-token": accessToken },
-  //           }
-  //         )
-  //         setMyAppointments(old => [...old, response.data])
-  //         return {
-  //           success: true,
-  //           message: "Appointmenta cadastrada com sucesso",
-  //         }
-  //       }
-  //       return {
-  //         success: false,
-  //         message: "Você não tem permissão de criar uma Appointmenta",
-  //       }
-  //     } catch (e) {
-  //       console.log(e)
-  //       return {
-  //         success: false,
-  //         message: e.response.data.error,
-  //       }
-  //     }
-  //   }, [])
+  const createAppointment = useCallback(async (payload: IAppointments) => {
+    try {
+      if (adm) {
+        debugger
+        const response: AxiosResponse = await api.post("/appointment", payload, {
+          headers: { "x-access-token": accessToken },
+        })
+        setAppointments(old => [...old, response.data])
+        return {
+          success: true,
+          message: "Compromisso agendado com sucesso",
+        }
+      }
+      return {
+        success: false,
+        message: "Você não tem permissão de criar um compromisso",
+      }
+    } catch (e) {
+      console.log(e)
+      return {
+        success: false,
+        message: e.response.data.error,
+      }
+    }
+  }, [])
 
   //   const deleteAppointment = useCallback(async (id: number) => {
   //     try {
@@ -162,7 +159,11 @@ const AppointmentProvider = ({ children }: AppointmentProviderProps) => {
   //       }
   //     }
   //   }, [])
-  return <AppointmentContext.Provider value={{ getAppointments, appointments }}>{children}</AppointmentContext.Provider>
+  return (
+    <AppointmentContext.Provider value={{ getAppointments, appointments, createAppointment }}>
+      {children}
+    </AppointmentContext.Provider>
+  )
 }
 
 export { useAppointment, AppointmentProvider }
