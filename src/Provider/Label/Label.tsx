@@ -9,11 +9,13 @@ import { IResponse, useAuth } from "../Auth/Auth"
 interface CreateLabelProp {
   title: string
   color: string
+  id?: number
 }
 
 interface LabelContextProps {
   labels: ILabel[]
   createLabel: ({ title, color }: CreateLabelProp) => Promise<IResponse>
+  updateLabel: ({ title, color, id }: CreateLabelProp) => Promise<IResponse>
   getLabels: () => Promise<IResponse>
 }
 const LabelContext = createContext<LabelContextProps>({} as LabelContextProps)
@@ -81,6 +83,36 @@ const LabelProvider = ({ children }: LabelProviderProps) => {
     }
   }, [])
 
+  const updateLabel = useCallback(async ({ title, color, id }: CreateLabelProp) => {
+    try {
+      if (superAdmin) {
+        const response: AxiosResponse = await api.patch(
+          `/Label/${id}`,
+          { title, color },
+          {
+            headers: { "x-access-token": accessToken },
+          }
+        )
+        setLabels(old => [...old.filter(Label => Label.id !== id), { title, color, id } as ILabel])
+
+        return {
+          success: true,
+          message: "Label atualizada com sucesso",
+        }
+      }
+      return {
+        success: false,
+        message: "Você não tem permissão de atualizar uma Label",
+      }
+    } catch (e) {
+      console.log(e)
+      return {
+        success: false,
+        message: e.response.data.error,
+      }
+    }
+  }, [])
+
   // const deleteLabel = useCallback(async (id: number) => {
   //   try {
   //     if (superAdmin) {
@@ -135,7 +167,9 @@ const LabelProvider = ({ children }: LabelProviderProps) => {
   //     }
   //   }
   // }, [])
-  return <LabelContext.Provider value={{ labels, createLabel, getLabels }}>{children}</LabelContext.Provider>
+  return (
+    <LabelContext.Provider value={{ labels, createLabel, getLabels, updateLabel }}>{children}</LabelContext.Provider>
+  )
 }
 
 export { useLabel, LabelProvider }

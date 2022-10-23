@@ -38,12 +38,10 @@ const schema = yup.object().shape({
 export const LabelForm = ({ toggleDrawer }: any) => {
   const { mobile } = useMobile()
   const [currentLabel, setCurrentLabel] = useState(0)
-  const { createLabel, labels } = useLabel()
+  const { createLabel, labels, updateLabel } = useLabel()
   const [color, setColor] = useState({} as any)
+  const [initialColor, setInitialColor] = useState("#009955")
 
-  useEffect(() => {
-    console.log(color.hex)
-  }, [color])
   const {
     handleSubmit,
     reset,
@@ -55,11 +53,11 @@ export const LabelForm = ({ toggleDrawer }: any) => {
 
   const submitForm: SubmitHandler<ILabel> = async (data: ILabel) => {
     if (currentLabel) {
-      //   const response = await updateLabel({ ...data, id: currentLabel })
-      //   toast[response.success ? "success" : "error"](response.message)
-      //   if (response.success) {
-      //     toggleDrawer()
-      //   }
+      const response = await updateLabel({ ...data, id: currentLabel })
+      toast[response.success ? "success" : "error"](response.message)
+      if (response.success) {
+        toggleDrawer()
+      }
     } else {
       const response = await createLabel(data)
       toast[response.success ? "success" : "error"](response.message)
@@ -75,13 +73,14 @@ export const LabelForm = ({ toggleDrawer }: any) => {
     setValue("color", color.hex)
   }
   React.useEffect(() => {
-    // if (currentLabel) {
-    //   const label = myLabels.find(item => item.id === currentLabel)
-    //   if (label) {
-    //     setValue("title", label.title)
-    //     setValue("cellphone", label.color)
-    //   }
-    // }
+    if (currentLabel) {
+      const label = labels.find(item => item.id === currentLabel)
+      if (label) {
+        setValue("title", label.title)
+        setValue("color", label.color)
+        setInitialColor(label.color)
+      }
+    }
   }, [currentLabel])
 
   return (
@@ -98,13 +97,12 @@ export const LabelForm = ({ toggleDrawer }: any) => {
               render={({ field }) => (
                 <TextField
                   {...field}
-                  autoComplete={"false"}
                   label="Título *"
                   error={!!errors.title}
                   helperText={errors?.title && errors?.title?.message}
                   fullWidth={true}
                   name="title"
-                  inputProps={{
+                  InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
                         <NewspaperOutlined />
@@ -118,7 +116,7 @@ export const LabelForm = ({ toggleDrawer }: any) => {
           <Stack direction={mobile ? "column" : "row"} spacing={2}>
             <Stack gap={1}>
               <label style={{ fontSize: "12px", color: "#505050" }}>Selecione uma cor: &nbsp; *</label>
-              <InputColor initialValue="#009955" onChange={selectColor}></InputColor>
+              <InputColor initialValue={initialColor} onChange={selectColor}></InputColor>
             </Stack>
           </Stack>
         </Stack>
