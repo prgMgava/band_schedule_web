@@ -322,7 +322,7 @@ export const Demo = () => {
           <EditingState onCommitChanges={commitChanges} onAddedAppointmentChange={commitChanges} />
           <IntegratedEditing />
 
-          <AppointmentTooltip showOpenButton showCloseButton showDeleteButton />
+          <AppointmentTooltip contentComponent={TooltipContent} showOpenButton showCloseButton showDeleteButton />
 
           <AppointmentForm
             messages={{ afterLabel: "meu deus", commitCommand: "Salvar" }}

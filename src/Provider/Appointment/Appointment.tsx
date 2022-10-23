@@ -63,6 +63,7 @@ const AppointmentProvider = ({ children }: AppointmentProviderProps) => {
   const createAppointment = useCallback(async (payload: IAppointments) => {
     try {
       if (adm) {
+        debugger
         const response: AxiosResponse = await api.post("/appointment", payload, {
           headers: { "x-access-token": accessToken },
         })

@@ -17,6 +17,7 @@ import classNames from "clsx"
 import { IAppointments } from "../../../Types/appointments.type"
 import { IResource } from "../../../Types/calendar.type"
 import { classes } from "../../Calendar/Calendar"
+import { useMobile } from "../../../Provider/Theme/Mobile"
 
 const StyledTooltipContent = styled("div")(({ theme: { spacing, typography, palette }, color }) => ({
   [`&.${classes.content}`]: {
@@ -79,8 +80,8 @@ interface TooltipProps {
 }
 
 export const Tooltip = ({ appointmentData, formatDate, appointmentResources }: TooltipProps) => {
+  const { mobile } = useMobile()
   const resource = appointmentResources[0]
-  console.log(appointmentData)
   return (
     <StyledTooltipContent className={classes.content} color={resource.color}>
       <Grid container alignItems="flex-start" className={classes.titleContainer}>
@@ -91,7 +92,7 @@ export const Tooltip = ({ appointmentData, formatDate, appointmentResources }: T
           <div>
             <div className={classNames(classes.title, classes.dateAndTitle)}>{appointmentData.title}</div>
             <div className={classNames(classes.text, classes.dateAndTitle)}>
-              {formatDate(appointmentData.startDate, { day: "numeric", weekday: "long" })}
+              {formatDate(appointmentData.start_date, { day: "numeric", weekday: "long" })}
             </div>
           </div>
         </Grid>
@@ -102,8 +103,8 @@ export const Tooltip = ({ appointmentData, formatDate, appointmentResources }: T
         </Grid>
         <Grid item xs={10}>
           <div className={classes.text}>
-            {`${formatDate(appointmentData.startDate, { hour: "numeric", minute: "numeric" })}
-				- ${formatDate(appointmentData.endDate, { hour: "numeric", minute: "numeric" })}`}
+            {`${formatDate(appointmentData.start_date, { hour: "numeric", minute: "numeric" })}
+				- ${formatDate(appointmentData.end_date, { hour: "numeric", minute: "numeric" })}`}
           </div>
         </Grid>
       </Grid>
@@ -114,7 +115,7 @@ export const Tooltip = ({ appointmentData, formatDate, appointmentResources }: T
         <Grid item xs={10}>
           <div className={classes.text}>
             {appointmentData.street && `${appointmentData.street}`}{" "}
-            {appointmentData.address_number && `n.º ${appointmentData.address_number}`}{" "}
+            {appointmentData.address_number && `n.º ${appointmentData.address_number}`} {mobile && <br />}
             {appointmentData.district && `, ${appointmentData.district}`}{" "}
             {appointmentData.city && `, ${appointmentData.city}`}{" "}
             {appointmentData.state && `- ${appointmentData.state}`}

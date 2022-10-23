@@ -1,3 +1,4 @@
+/* eslint-disable no-unreachable */
 /* eslint-disable react/prop-types */
 /* eslint-disable @typescript-eslint/no-empty-function */
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -48,6 +49,7 @@ import { useEffect } from "react"
 import { useMobile } from "../../../../Provider/Theme/Mobile"
 import { useBand } from "../../../../Provider/Band/Band"
 import { useAppointment } from "../../../../Provider/Appointment/Appointment"
+import { useLabel } from "../../../../Provider/Label/Label"
 
 const schema = yup.object().shape({
   title: yup.string().required("Nome do compromisso é obrigatório").max(100, "Nome muito grande"),
@@ -63,6 +65,7 @@ const schema = yup.object().shape({
   id_band: yup.number().required("Informe a banda que vai tocar no compromisso"),
   start_date: yup.date().required("Data inicial obrigatória").required("Data inicial obrigatória"),
   end_date: yup.date().required("Data final obrigatória").required("Data final obrigatória"),
+  id_label: yup.number().required("Label é obrigatório"),
 })
 
 // interface AppointmentProps {
@@ -74,11 +77,13 @@ const schema = yup.object().shape({
 export const AppointmentForm = ({ data, fromMenu = false, closeForm = () => {} }) => {
   const { mobile } = useMobile()
   const { myBands } = useBand()
+  const { labels } = useLabel()
   const [maskedCellPhone, setMaskedCellPhone] = useState("")
   const { startDate, endDate, title, id } = data.appointmentData
   const { createAppointment, updateAppointment } = useAppointment()
   const [currentState, setCurrentState] = useState(data.appointmentData?.state)
   const [currenBand, setCurrentBand] = useState(data.appointmentData?.id_band)
+  const [currenLabel, setCurrentLabel] = useState(data.appointmentData?.id_label)
   const [currentStatus, setCurrentStatus] = useState(data.appointmentData?.status)
   const [currentEditingData, setCurrentEditingData] = useState(data.appointmentData)
 
@@ -97,7 +102,6 @@ export const AppointmentForm = ({ data, fromMenu = false, closeForm = () => {} }
   const endDateFormatted =
     endDate && hasHourEnd ? `${new Date(endDate).toISOString().substring(0, 11)}${hasHourEnd}` : ""
 
-  console.log(startDateFormatted, endDateFormatted)
   const [reqStartDate, setreqStartDate] = useState(startDateFormatted)
   const [reqEndDate, setreqEndDate] = useState(endDateFormatted)
 
@@ -120,6 +124,7 @@ export const AppointmentForm = ({ data, fromMenu = false, closeForm = () => {} }
   } = useForm({ resolver: yupResolver(schema), mode: "onSubmit" })
 
   const submitForm = async data => {
+    data
     if (isEditing) {
       const response = await updateAppointment(data, id)
       toast[response.success ? "success" : "error"](response.message)
@@ -454,6 +459,36 @@ export const AppointmentForm = ({ data, fromMenu = false, closeForm = () => {} }
                       ))}
                     </Select>
                     {!!errors.id_band && <FormHelperText sx={{ color: "#E34367" }}>Selecione uma banda</FormHelperText>}
+                  </FormControl>
+                </Box>
+              )}
+            />
+          </Stack>
+          <Stack direction={mobile ? "column" : "row"} spacing={2}>
+            <Controller
+              name="id_label"
+              control={control}
+              render={({ field }) => (
+                <Box>
+                  <FormControl error={!!errors.id_label} fullWidth={true}>
+                    <InputLabel id="demo-simple-select-helper-label">Label *</InputLabel>
+                    <Select
+                      sx={{ minWidth: 270 }}
+                      labelId="demo-simple-select-error-label"
+                      id="demo-simple-select-error"
+                      label="Label"
+                      defaultValue={currenLabel}
+                      {...field}
+                    >
+                      {labels.map(label => (
+                        <MenuItem value={label.id} key={uuid()}>
+                          {label.title}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                    {!!errors.id_label && (
+                      <FormHelperText sx={{ color: "#E34367" }}>Selecione uma banda</FormHelperText>
+                    )}
                   </FormControl>
                 </Box>
               )}
