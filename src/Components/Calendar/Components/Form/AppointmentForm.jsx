@@ -367,7 +367,7 @@ export const AppointmentForm = ({ data, fromMenu = false, closeForm = () => {} }
                   borderRadius: "4px",
                 }}
               >
-                <legend style={{ fontSize: "12px", color: "	#888888" }}>Data inicial *</legend>
+                <legend style={{ fontSize: "12px", color: "#696969" }}>Data inicial *</legend>
                 <Box>
                   <input
                     type={"datetime-local"}

@@ -1,5 +1,6 @@
 import {
   Close,
+  ColorLens,
   EventAvailable,
   GroupAdd,
   Image,
@@ -13,7 +14,6 @@ import {
 import {
   Box,
   useMediaQuery,
-  useTheme,
   CardHeader,
   Menu,
   MenuItem,
@@ -35,6 +35,7 @@ import { AdminForm } from "../Form/AdminForm"
 import { SuperAdmin } from "../SuperAdmin/SuperAdmin"
 import { useMobile } from "../../../../Provider/Theme/Mobile"
 import { useAuth } from "../../../../Provider/Auth/Auth"
+import { LabelForm } from "../Form/LabelForm"
 
 export const Header = ({ setAppointments }: any) => {
   const { mobile } = useMobile()
@@ -69,6 +70,7 @@ export const Header = ({ setAppointments }: any) => {
     band: <BandForm toggleDrawer={toggleDrawer}></BandForm>,
     admin: <AdminForm toggleDrawer={toggleDrawer} />,
     superAdmin: <SuperAdmin toggleDrawer={toggleDrawer} />,
+    label: <LabelForm toggleDrawer={toggleDrawer} />,
   }
   return (
     <>
@@ -186,6 +188,18 @@ export const Header = ({ setAppointments }: any) => {
                     <PersonAddAlt fontSize="small" />
                   </ListItemIcon>
                   Adicionar administrador
+                </MenuItem>
+                <MenuItem
+                  onClick={() => {
+                    setCurrentForm("label")
+                    setOpenDrawer(true)
+                  }}
+                  disabled={!superAdmin}
+                >
+                  <ListItemIcon>
+                    <ColorLens fontSize="small" />
+                  </ListItemIcon>
+                  Adicionar label
                 </MenuItem>
                 <MenuItem onClick={() => signOut()}>
                   <ListItemIcon>

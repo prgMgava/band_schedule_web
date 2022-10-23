@@ -301,7 +301,7 @@ export const Demo = () => {
     <Stack justifyContent={"space-around"} direction="column" alignContent={"space-around"}>
       <Header setAppointments={() => 1} />
       <Paper style={{ position: "absolute", bottom: 100 }}>
-        <Scheduler data={filterTasks(appointments, currentPriority)} height={660} locale={"pt-BR"}>
+        <Scheduler data={filterTasks(appointments, currentPriority)} height={700} locale={"pt-BR"}>
           <ViewState
             currentDate={currentDate}
             currentViewName={currentViewName}

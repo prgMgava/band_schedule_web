@@ -1,19 +1,32 @@
+/* eslint-disable no-debugger */
 import * as React from "react"
 
-import { Button, Grid, InputAdornment, Link, Typography, useMediaQuery, useTheme } from "@mui/material"
+import {
+  Button,
+  Checkbox,
+  FormControlLabel,
+  FormGroup,
+  Grid,
+  InputAdornment,
+  Link,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material"
 
 import { useForm, SubmitHandler, Controller } from "react-hook-form"
 import { IAdminFields } from "../../../../Types/form.type"
 import { yupResolver } from "@hookform/resolvers/yup"
 import * as yup from "yup"
 import { TextField } from "@mui/material"
-import { NewspaperOutlined, PhoneOutlined, EmailOutlined, LockOpenOutlined } from "@mui/icons-material"
+import { NewspaperOutlined, PhoneOutlined, EmailOutlined, LockOpenOutlined, CheckBox } from "@mui/icons-material"
 import { Stack } from "@mui/system"
 import { useState } from "react"
 import { toast } from "react-toastify"
 import { useMobile } from "../../../../Provider/Theme/Mobile"
 import { useNavigate } from "react-router-dom"
 import { useAuth } from "../../../../Provider/Auth/Auth"
+import { isEditable } from "@testing-library/user-event/dist/utils"
 
 const schema = yup.object().shape({
   username: yup.string().required("Username é obrigatório").max(100, "Nome muito grande"),
@@ -22,11 +35,13 @@ const schema = yup.object().shape({
   password: yup.string().max(20, "Senha Muito grande").required("Senha obrigatória"),
 })
 
-export const AdminForm = ({ toggleDrawer, isSignup = false }: any) => {
+export const AdminForm = ({ toggleDrawer, isSignup = false, isUpdating = false }: any) => {
   const { mobile } = useMobile()
   const navigate = useNavigate()
-  const { signUp, createAdm } = useAuth()
+  const { signUp, createAdm, adminList, memberList, updateUser } = useAuth()
   const [maskedCellPhone, setMaskedCellPhone] = useState("")
+  const [allow, setAllow] = useState(false)
+  const [id, setId] = useState(0)
 
   const maskCellNumber = value => {
     value = value.replace(/\D/g, "")
@@ -40,15 +55,23 @@ export const AdminForm = ({ toggleDrawer, isSignup = false }: any) => {
     reset,
     control,
     setValue,
+    unregister,
     formState: { errors },
   } = useForm<IAdminFields>({ resolver: yupResolver(schema), reValidateMode: "onChange", mode: "onSubmit" })
 
   const submitForm: SubmitHandler<IAdminFields> = async (data: IAdminFields) => {
+    debugger
     if (isSignup) {
       const response = await signUp(data)
       toast[response.success ? "success" : "error"](response.message)
       if (response.success) {
         navigate("/")
+      }
+    } else if (isUpdating) {
+      const response = await updateUser(data as any, id)
+      toast[response.success ? "success" : "error"](response.message)
+      if (response.success) {
+        toggleDrawer()
       }
     } else {
       const response = await createAdm(data)
@@ -61,8 +84,23 @@ export const AdminForm = ({ toggleDrawer, isSignup = false }: any) => {
 
   React.useEffect(() => setValue("cellphone", maskedCellPhone), [maskedCellPhone])
 
+  React.useEffect(() => {
+    if (isUpdating) {
+      const updatedUser = [...memberList, ...adminList].find(
+        item => item.id == (localStorage.getItem("@BandSchedule:id") || 0)
+      )
+      if (updatedUser) {
+        setValue("username", updatedUser.username)
+        setValue("cellphone", updatedUser.cellphone)
+        setMaskedCellPhone(updatedUser.cellphone)
+        setValue("email", updatedUser.email)
+        setId(updatedUser.id)
+      }
+    }
+  }, [])
+
   return (
-    <Grid padding={mobile ? "" : 8}>
+    <Grid padding={mobile ? 8 : 8}>
       <form onSubmit={handleSubmit(submitForm)} autoComplete="off">
         <Stack spacing={3}>
           {!isSignup ? (
@@ -146,6 +184,7 @@ export const AdminForm = ({ toggleDrawer, isSignup = false }: any) => {
               )}
             />
           </Stack>
+
           <Stack direction={mobile ? "column" : "row"} spacing={2}>
             <Controller
               name="password"
@@ -157,7 +196,7 @@ export const AdminForm = ({ toggleDrawer, isSignup = false }: any) => {
                   autoComplete="new-password"
                   type={"password"}
                   error={!!errors.password}
-                  helperText={errors.password && errors.password.message}
+                  helperText={errors.password && isUpdating ? "Confirme sua senha" : errors?.password?.message}
                   fullWidth={true}
                   InputProps={{
                     startAdornment: (
@@ -175,7 +214,7 @@ export const AdminForm = ({ toggleDrawer, isSignup = false }: any) => {
         <Stack spacing={"10px"} mt={3}>
           <Button type="submit" variant="contained">
             {" "}
-            {isSignup ? "Cadastrar" : "Salvar"}
+            {isSignup ? "Cadastrar" : isUpdating ? "Atualizar" : "Salvar"}
           </Button>
         </Stack>
 

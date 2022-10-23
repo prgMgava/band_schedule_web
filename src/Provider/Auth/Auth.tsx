@@ -54,6 +54,7 @@ interface AuthContextData {
   memberList: IUser[]
   deleteAdmin: (id: number) => Promise<IResponse>
   getMembers: () => Promise<IResponse>
+  updateUser: (payload: IUser, id: number) => Promise<IResponse>
 }
 
 interface AuthProviderProps {
@@ -224,6 +225,21 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   }
 
+  const updateUser = useCallback(async (payload: IUser, id: number) => {
+    try {
+      await api.patch(`/user/${id}`, payload, { headers: { "x-access-token": data.accessToken } })
+      return {
+        success: true,
+        message: "Usuário atualizado com sucesso",
+      }
+    } catch (e) {
+      return {
+        success: false,
+        message: e.response.data.error,
+      }
+    }
+  }, [])
+
   return (
     <AuthContext.Provider
       value={{
@@ -243,6 +259,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
         deleteAdmin,
         getMembers,
         memberList,
+        updateUser,
       }}
     >
       {children}
