@@ -35,6 +35,7 @@ import { useAuth } from "../../Provider/Auth/Auth"
 import { useAppointment } from "../../Provider/Appointment/Appointment"
 import { IAppointments } from "../../Types/appointments.type"
 import { toast } from "react-toastify"
+import { useLabel } from "../../Provider/Label/Label"
 
 const filterTasks = (items, status) => {
   const appointmentsFiltered = items.filter(task => {
@@ -194,6 +195,7 @@ const changeEvent = data => {
 export const Demo = () => {
   const { id } = useAuth()
   const { getMyBands, myBands } = useBand()
+  const { getLabels } = useLabel()
   const { appointments, getAppointments, deleteAppointment } = useAppointment()
   const [currentViewName, setCurrentViewName] = React.useState("Mensal")
   const [currentPriority, setCurrentPriority] = React.useState(0)
@@ -238,13 +240,10 @@ export const Demo = () => {
   }
 
   const currentDateChange = currentDate => {
-    console.log(currentDate)
     setCurrentDate(currentDate)
   }
 
   const priorityChange = value => {
-    console.log(value)
-
     const nextResources = [
       {
         ...resources[0],
@@ -267,7 +266,6 @@ export const Demo = () => {
       setOpenDialog(true)
       setDeletedAppointment(deleted)
     }
-    console.log(added, changed, deleted, "aqui")
   }
 
   const CustomFormAppointment = data => {
@@ -281,6 +279,7 @@ export const Demo = () => {
   React.useEffect(() => {
     flexibleSpace.update()
     getMyBands(id)
+    getLabels()
   }, [])
 
   useEffect(() => {

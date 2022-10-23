@@ -14,6 +14,7 @@ interface CreateLabelProp {
 interface LabelContextProps {
   labels: ILabel[]
   createLabel: ({ title, color }: CreateLabelProp) => Promise<IResponse>
+  getLabels: () => Promise<IResponse>
 }
 const LabelContext = createContext<LabelContextProps>({} as LabelContextProps)
 
@@ -33,29 +34,24 @@ const LabelProvider = ({ children }: LabelProviderProps) => {
   const { id, accessToken, adm, superAdmin } = useAuth()
   const [labels, setLabels] = useState<ILabel[]>([])
 
-  // const getLabels = useCallback(async () => {
-  //   //TODO: remove defaul user id
-  //   try {
-  //     if (adm) {
-  //       console.log(adm, superAdmin)
-  //       const url = superAdmin ? "/Label" : `/Label/owner/${id}`
-  //       const { data }: AxiosResponse<ILabel[]> = await api.get(url, {
-  //         headers: { "x-access-token": accessToken },
-  //       })
+  const getLabels = useCallback(async () => {
+    try {
+      const { data }: AxiosResponse<ILabel[]> = await api.get("/label", {
+        headers: { "x-access-token": accessToken },
+      })
 
-  //       setLabels(data)
-  //     }
-  //     return {
-  //       success: true,
-  //       message: "OK",
-  //     }
-  //   } catch (e) {
-  //     return {
-  //       success: false,
-  //       message: e.response.data.error,
-  //     }
-  //   }
-  // }, [])
+      setLabels(data)
+      return {
+        success: true,
+        message: "OK",
+      }
+    } catch (e) {
+      return {
+        success: false,
+        message: e.response.data.error,
+      }
+    }
+  }, [])
 
   const createLabel = useCallback(async ({ title, color }: CreateLabelProp) => {
     try {
@@ -139,7 +135,7 @@ const LabelProvider = ({ children }: LabelProviderProps) => {
   //     }
   //   }
   // }, [])
-  return <LabelContext.Provider value={{ labels, createLabel }}>{children}</LabelContext.Provider>
+  return <LabelContext.Provider value={{ labels, createLabel, getLabels }}>{children}</LabelContext.Provider>
 }
 
 export { useLabel, LabelProvider }

@@ -146,11 +146,11 @@ export const LabelForm = ({ toggleDrawer }: any) => {
               setCurrentLabel(e.target.value as number)
             }}
           >
-            {/* {myLabels.map(Label => (
-              <MenuItem value={Label.id} key={uuid()}>
-                {Label.name}
+            {labels.map(label => (
+              <MenuItem value={label.id} key={uuid()}>
+                {label.title}
               </MenuItem>
-            ))} */}
+            ))}
           </Select>
         </FormControl>
       </Box>
