@@ -73,8 +73,8 @@ export const AppointmentForm = ({ data, fromMenu = false, closeForm = () => {} }
   const { mobile } = useMobile()
   const { myBands } = useBand()
   const [maskedCellPhone, setMaskedCellPhone] = useState("")
-  const { startDate, endDate, title } = data.appointmentData
-  const { createAppointment } = useAppointment()
+  const { startDate, endDate, title, id } = data.appointmentData
+  const { createAppointment, updateAppointment } = useAppointment()
   const [currentState, setCurrentState] = useState(data.appointmentData?.state)
   const [currenBand, setCurrentBand] = useState(data.appointmentData?.id_band)
   const [currentStatus, setCurrentStatus] = useState(data.appointmentData?.status)
@@ -118,6 +118,16 @@ export const AppointmentForm = ({ data, fromMenu = false, closeForm = () => {} }
   } = useForm({ resolver: yupResolver(schema), mode: "onSubmit" })
 
   const submitForm = async data => {
+    if (isEditing) {
+      const response = await updateAppointment(data, id)
+      toast[response.success ? "success" : "error"](response.message)
+      if (response.success) {
+        setCurrentEditingData(null)
+        reset()
+        closeForm(false)
+      }
+      return
+    }
     const response = await createAppointment(data)
     toast[response.success ? "success" : "error"](response.message)
     if (response.success) {
@@ -440,8 +450,7 @@ export const AppointmentForm = ({ data, fromMenu = false, closeForm = () => {} }
         </Stack>
         <Stack spacing={"10px"} mt={3}>
           <Button type="submit" variant="contained">
-            {" "}
-            Salvar
+            {isEditing ? "Editar" : "Salvar"}
           </Button>
         </Stack>
       </form>

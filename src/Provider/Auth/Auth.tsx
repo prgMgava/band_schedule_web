@@ -148,7 +148,6 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
         message: "Adm criado com sucesso faça seu login",
       }
     } catch (e) {
-      console.log(e)
       return {
         success: false,
         message: e.response.data.error,

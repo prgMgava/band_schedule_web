@@ -11,6 +11,7 @@ interface AppointmentContextProps {
   getAppointments: (date: Date) => Promise<IResponse>
   appointments: IAppointments[]
   createAppointment: (payload: IAppointments) => Promise<IResponse>
+  updateAppointment: (payload: IAppointments, id: number) => Promise<IResponse>
 }
 const AppointmentContext = createContext<AppointmentContextProps>({} as AppointmentContextProps)
 
@@ -82,7 +83,6 @@ const AppointmentProvider = ({ children }: AppointmentProviderProps) => {
   const createAppointment = useCallback(async (payload: IAppointments) => {
     try {
       if (adm) {
-        debugger
         const response: AxiosResponse = await api.post("/appointment", payload, {
           headers: { "x-access-token": accessToken },
         })
@@ -130,37 +130,33 @@ const AppointmentProvider = ({ children }: AppointmentProviderProps) => {
   //     }
   //   }, [])
 
-  //   const updateAppointment = useCallback(async ({ name, cellphone, email, id }: CreateAppointmentProp) => {
-  //     try {
-  //       if (adm) {
-  //         const response: AxiosResponse = await api.patch(
-  //           `/Appointment/${id}`,
-  //           { name, cellphone, email },
-  //           {
-  //             headers: { "x-access-token": accessToken },
-  //           }
-  //         )
-  //         setMyAppointments(old => [...old.filter(Appointment => Appointment.id !== id), { name, cellphone, id, email } as ])
+  const updateAppointment = useCallback(async (payload: IAppointments, id: number) => {
+    try {
+      if (adm) {
+        const response: AxiosResponse = await api.patch(`/appointment/${id}`, payload, {
+          headers: { "x-access-token": accessToken },
+        })
+        debugger
+        setAppointments(old => [...old.filter(Appointment => Appointment.id !== id), payload])
 
-  //         return {
-  //           success: true,
-  //           message: "Appointmenta atualizada com sucesso",
-  //         }
-  //       }
-  //       return {
-  //         success: false,
-  //         message: "Você não tem permissão de criar uma Appointmenta",
-  //       }
-  //     } catch (e) {
-  //       console.log(e)
-  //       return {
-  //         success: false,
-  //         message: e.response.data.error,
-  //       }
-  //     }
-  //   }, [])
+        return {
+          success: true,
+          message: "Compromisso atualizada com sucesso",
+        }
+      }
+      return {
+        success: false,
+        message: "Você não tem permissão de editar uma Compromisso",
+      }
+    } catch (e) {
+      return {
+        success: false,
+        message: e.response.data.error,
+      }
+    }
+  }, [])
   return (
-    <AppointmentContext.Provider value={{ getAppointments, appointments, createAppointment }}>
+    <AppointmentContext.Provider value={{ getAppointments, appointments, createAppointment, updateAppointment }}>
       {children}
     </AppointmentContext.Provider>
   )

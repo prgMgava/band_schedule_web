@@ -47,7 +47,7 @@ const BandProvider = ({ children }: BandProviderProps) => {
     try {
       if (adm) {
         console.log(adm, superAdmin)
-        const url = superAdmin ? "/band" : `/band/owner/${5}`
+        const url = superAdmin ? "/band" : `/band/owner/${id}`
         const { data }: AxiosResponse<IBand[]> = await api.get(url, {
           headers: { "x-access-token": accessToken },
         })
