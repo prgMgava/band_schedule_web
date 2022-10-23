@@ -8,6 +8,7 @@ import {
   Grid,
   InputAdornment,
   InputLabel,
+  ListItemIcon,
   MenuItem,
   Select,
   Typography,
@@ -18,7 +19,7 @@ import { useForm, SubmitHandler, Controller } from "react-hook-form"
 import { yupResolver } from "@hookform/resolvers/yup"
 import * as yup from "yup"
 import { TextField } from "@mui/material"
-import { NewspaperOutlined, PhoneOutlined, EmailOutlined, ColorLens } from "@mui/icons-material"
+import { NewspaperOutlined, PhoneOutlined, EmailOutlined, ColorLens, Circle } from "@mui/icons-material"
 import { Stack } from "@mui/system"
 import { useState } from "react"
 import { toast } from "react-toastify"
@@ -146,6 +147,9 @@ export const LabelForm = ({ toggleDrawer }: any) => {
           >
             {labels.map(label => (
               <MenuItem value={label.id} key={uuid()}>
+                <ListItemIcon>
+                  <Circle sx={{ color: label.color }} />
+                </ListItemIcon>
                 {label.title}
               </MenuItem>
             ))}

@@ -19,6 +19,7 @@ import {
   DialogContent,
   DialogContentText,
   DialogActions,
+  ListItemIcon,
 } from "@mui/material"
 
 import { useForm, SubmitHandler, Controller } from "react-hook-form"
@@ -26,7 +27,7 @@ import { IBandFields } from "../../../../Types/form.type"
 import { yupResolver } from "@hookform/resolvers/yup"
 import * as yup from "yup"
 import { TextField } from "@mui/material"
-import { NewspaperOutlined, PhoneOutlined, EmailOutlined, MapOutlined } from "@mui/icons-material"
+import { NewspaperOutlined, PhoneOutlined, EmailOutlined, MapOutlined, Circle } from "@mui/icons-material"
 import { Stack } from "@mui/system"
 import { useState } from "react"
 import { toast } from "react-toastify"
@@ -177,24 +178,25 @@ export const SuperAdminForm = ({ toggleDrawer }: any) => {
               name="label_id"
               control={control}
               render={({ field }) => (
-                <Box width={"100%"}>
-                  <FormControl fullWidth={true}>
-                    <InputLabel id="demo-simple-select-helper-label">Label</InputLabel>
-                    <Select
-                      labelId="demo-simple-select-label"
-                      id="demo-simple-select"
-                      label="Label"
-                      fullWidth={true}
-                      {...field}
-                    >
-                      {labels.map(item => (
-                        <MenuItem value={item.id} key={uuid()}>
-                          {item.title}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                </Box>
+                <FormControl fullWidth={true}>
+                  <InputLabel id="demo-simple-select-helper-label">Label</InputLabel>
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    label="Label"
+                    fullWidth={true}
+                    {...field}
+                  >
+                    {labels.map(label => (
+                      <MenuItem value={label.id} key={uuid()}>
+                        <ListItemIcon>
+                          <Circle sx={{ color: label.color }} />
+                        </ListItemIcon>
+                        {label.title}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
               )}
             />
           </Stack>

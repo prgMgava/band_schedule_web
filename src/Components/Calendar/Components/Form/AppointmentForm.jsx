@@ -16,6 +16,7 @@ import {
   IconButton,
   InputAdornment,
   InputLabel,
+  ListItemIcon,
   MenuItem,
   Select,
   Typography,
@@ -40,6 +41,7 @@ import {
   CalendarMonthOutlined,
   Block,
   Close,
+  Circle,
 } from "@mui/icons-material"
 import { Stack } from "@mui/system"
 import { useState } from "react"
@@ -482,6 +484,9 @@ export const AppointmentForm = ({ data, fromMenu = false, closeForm = () => {} }
                     >
                       {labels.map(label => (
                         <MenuItem value={label.id} key={uuid()}>
+                          <ListItemIcon>
+                            <Circle sx={{ color: label.color }} />
+                          </ListItemIcon>
                           {label.title}
                         </MenuItem>
                       ))}
