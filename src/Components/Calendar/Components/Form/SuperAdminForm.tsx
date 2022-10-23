@@ -33,15 +33,18 @@ import { toast } from "react-toastify"
 import { useMobile } from "../../../../Provider/Theme/Mobile"
 import { useBand } from "../../../../Provider/Band/Band"
 import { useAuth } from "../../../../Provider/Auth/Auth"
+import { useLabel } from "../../../../Provider/Label/Label"
 
 interface IDataForm {
   band_id?: number
   user_id?: number
   member_id?: number
+  label_id?: number
 }
 export const SuperAdminForm = ({ toggleDrawer }: any) => {
   const { mobile } = useMobile()
   const { myBands, deleteBand } = useBand()
+  const { labels, deleteLabel } = useLabel()
   const { getAdmins, adminList, deleteAdmin, getMembers, memberList } = useAuth()
   const [dataForm, setDataForm] = useState<IDataForm>({} as IDataForm)
   const {
@@ -73,6 +76,7 @@ export const SuperAdminForm = ({ toggleDrawer }: any) => {
     dataForm.band_id && (await deleteBand(dataForm.band_id))
     dataForm.user_id && (await deleteAdmin(dataForm.user_id))
     dataForm.member_id && (await deleteAdmin(dataForm.member_id))
+    dataForm.label_id && (await deleteLabel(dataForm.label_id))
 
     toggleDrawer()
     toast.error("Dados deletados com sucesso")
@@ -168,6 +172,32 @@ export const SuperAdminForm = ({ toggleDrawer }: any) => {
               )}
             />
           </Stack>
+          <Stack direction={mobile ? "column" : "row"} spacing={2} justifyContent={"center"}>
+            <Controller
+              name="label_id"
+              control={control}
+              render={({ field }) => (
+                <Box width={"100%"}>
+                  <FormControl fullWidth={true}>
+                    <InputLabel id="demo-simple-select-helper-label">Label</InputLabel>
+                    <Select
+                      labelId="demo-simple-select-label"
+                      id="demo-simple-select"
+                      label="Label"
+                      fullWidth={true}
+                      {...field}
+                    >
+                      {labels.map(item => (
+                        <MenuItem value={item.id} key={uuid()}>
+                          {item.title}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Box>
+              )}
+            />
+          </Stack>
         </Stack>
 
         <Stack spacing={"10px"} mt={3}>
@@ -201,6 +231,11 @@ export const SuperAdminForm = ({ toggleDrawer }: any) => {
               {dataForm?.member_id && (
                 <Box>
                   <b>Usuário: {memberList.find(item => item.id === dataForm.member_id)?.username}</b>
+                </Box>
+              )}
+              {dataForm?.label_id && (
+                <Box>
+                  <b>Label: {labels.find(item => item.id === dataForm.label_id)?.title}</b>
                 </Box>
               )}
             </DialogContentText>

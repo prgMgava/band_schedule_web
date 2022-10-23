@@ -16,6 +16,7 @@ interface LabelContextProps {
   labels: ILabel[]
   createLabel: ({ title, color }: CreateLabelProp) => Promise<IResponse>
   updateLabel: ({ title, color, id }: CreateLabelProp) => Promise<IResponse>
+  deleteLabel: (id: number) => Promise<IResponse>
   getLabels: () => Promise<IResponse>
 }
 const LabelContext = createContext<LabelContextProps>({} as LabelContextProps)
@@ -113,62 +114,34 @@ const LabelProvider = ({ children }: LabelProviderProps) => {
     }
   }, [])
 
-  // const deleteLabel = useCallback(async (id: number) => {
-  //   try {
-  //     if (superAdmin) {
-  //       await api.delete(`/Label/${id}`, {
-  //         headers: { "x-access-token": accessToken },
-  //       })
-  //       setLabels(old => old.filter(Label => Label.id !== id))
-  //       return {
-  //         success: true,
-  //         message: "Labela deletada com sucesso",
-  //       }
-  //     }
-  //     return {
-  //       success: false,
-  //       message: "Você não tem permissão de deletar uma Labela",
-  //     }
-  //   } catch (e) {
-  //     console.log(e)
-  //     return {
-  //       success: false,
-  //       message: e.response.data.error,
-  //     }
-  //   }
-  // }, [])
+  const deleteLabel = useCallback(async (id: number) => {
+    try {
+      if (superAdmin) {
+        await api.delete(`/label/${id}`, {
+          headers: { "x-access-token": accessToken },
+        })
+        setLabels(old => old.filter(Label => Label.id !== id))
+        return {
+          success: true,
+          message: "Label deletada com sucesso",
+        }
+      }
+      return {
+        success: false,
+        message: "Você não tem permissão de deletar uma Label",
+      }
+    } catch (e) {
+      return {
+        success: false,
+        message: e.response.data.error,
+      }
+    }
+  }, [])
 
-  // const updateLabel = useCallback(async ({ name, cellphone, email, id }: CreateLabelProp) => {
-  //   try {
-  //     if (adm) {
-  //       const response: AxiosResponse = await api.patch(
-  //         `/Label/${id}`,
-  //         { name, cellphone, email },
-  //         {
-  //           headers: { "x-access-token": accessToken },
-  //         }
-  //       )
-  //       setLabels(old => [...old.filter(Label => Label.id !== id), { name, cellphone, id, email } as ILabel])
-
-  //       return {
-  //         success: true,
-  //         message: "Labela atualizada com sucesso",
-  //       }
-  //     }
-  //     return {
-  //       success: false,
-  //       message: "Você não tem permissão de criar uma Labela",
-  //     }
-  //   } catch (e) {
-  //     console.log(e)
-  //     return {
-  //       success: false,
-  //       message: e.response.data.error,
-  //     }
-  //   }
-  // }, [])
   return (
-    <LabelContext.Provider value={{ labels, createLabel, getLabels, updateLabel }}>{children}</LabelContext.Provider>
+    <LabelContext.Provider value={{ labels, createLabel, getLabels, updateLabel, deleteLabel }}>
+      {children}
+    </LabelContext.Provider>
   )
 }
 
