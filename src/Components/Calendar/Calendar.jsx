@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { EditingState, IntegratedEditing, ViewState } from "@devexpress/dx-react-scheduler"
 import {
   Scheduler,
@@ -23,22 +23,34 @@ import Select from "@mui/material/Select"
 import Grid from "@mui/material/Grid"
 import FormControl from "@mui/material/FormControl"
 import { priorities } from "../../demo-data/tasks"
-import { data as tasks } from "../../demo-data/grouping"
-import { Tooltip } from "../../Components/Calendar/Components/Tooltip"
+import { Tooltip } from "./Components/Tooltip"
 import { AppointmentForm as CustomAppointmentForm } from "./Components/Form/AppointmentForm"
 import { useForm } from "react-hook-form"
 import { Header } from "./Components/Header/Header"
 import { Stack } from "@mui/material"
 import { useBand } from "../../Provider/Band/Band"
 import { useAuth } from "../../Provider/Auth/Auth"
+import { useAppointment } from "../../Provider/Appointment/Appointment"
+import { IAppointments } from "../../Types/appointments.type"
 
-const filterTasks = (items, status) =>
-  items.filter(task => {
-    if (status === 4) {
-      return task.id === status
+const filterTasks = (items, status) => {
+  const appointmentsFiltered = items.filter(task => {
+    if (status == "4") {
+      return task.status == status
     }
     return !status || task.status === status
   })
+
+  const appointmentsEdited = appointmentsFiltered.map(appointment => {
+    return {
+      ...appointment,
+      endDate: appointment.end_date,
+      startDate: appointment.start_date,
+    }
+  })
+
+  return appointmentsEdited
+}
 
 const PREFIX = "Demo"
 export const classes = {
@@ -179,8 +191,8 @@ const changeEvent = data => {
 export const Demo = () => {
   const { id } = useAuth()
   const { getMyBands, myBands } = useBand()
+  const { appointments, getAppointments } = useAppointment()
   const [currentViewName, setCurrentViewName] = React.useState("Mensal")
-  const [data, setData] = React.useState(tasks)
   const [currentPriority, setCurrentPriority] = React.useState(0)
   const [resources, setResources] = React.useState([
     {
@@ -212,6 +224,7 @@ export const Demo = () => {
   }
 
   const currentDateChange = currentDate => {
+    console.log(currentDate)
     setCurrentDate(currentDate)
   }
 
@@ -240,7 +253,7 @@ export const Demo = () => {
   }
 
   const CustomFormAppointment = data => {
-    return <CustomAppointmentForm data={data} setAppointments={setData} closeForm={closeForm} />
+    return <CustomAppointmentForm data={data} setAppointments={() => 1} closeForm={closeForm} />
   }
 
   const HiddenButton = data => {
@@ -252,11 +265,15 @@ export const Demo = () => {
     getMyBands(id)
   }, [])
 
+  useEffect(() => {
+    getAppointments(currentDate)
+  }, [currentDate])
+
   return (
     <Stack justifyContent={"space-around"} direction="column" alignContent={"space-around"}>
-      <Header setAppointments={setData} />
+      <Header setAppointments={() => 1} />
       <Paper style={{ position: "absolute", bottom: 100 }}>
-        <Scheduler data={filterTasks(data, currentPriority)} height={660} locale={"pt-BR"}>
+        <Scheduler data={filterTasks(appointments, currentPriority)} height={660} locale={"pt-BR"}>
           <ViewState
             currentDate={currentDate}
             currentViewName={currentViewName}

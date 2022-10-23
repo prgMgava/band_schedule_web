@@ -10,12 +10,12 @@ export interface IAppointments {
   place: string
   address_number: string
   address_complement: string
-  status: "agendado" | "concluido" | "cancelado" | "reagendado"
+  status: string
   createdAt: Date
   updatedAt: Date
   id_band: number
-  startDate: string
-  endDate: string
+  start_date: string
+  end_date: string
   band: {
     id: number
     name: string

@@ -3,6 +3,7 @@ import { AuthProvider } from "./Auth/Auth"
 import React from "react"
 import { MobileProvider } from "./Theme/Mobile"
 import { BandProvider } from "./Band/Band"
+import { AppointmentProvider } from "./Appointment/Appointment"
 
 interface AppProviderProps {
   children: ReactNode
@@ -11,7 +12,9 @@ interface AppProviderProps {
 export const AppProvider = ({ children }: AppProviderProps) => (
   <AuthProvider>
     <BandProvider>
-      <MobileProvider>{children}</MobileProvider>
+      <AppointmentProvider>
+        <MobileProvider>{children}</MobileProvider>
+      </AppointmentProvider>
     </BandProvider>
   </AuthProvider>
 )

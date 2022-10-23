@@ -38,9 +38,10 @@ import { useAuth } from "../../../../Provider/Auth/Auth"
 
 export const Header = ({ setAppointments }: any) => {
   const { mobile } = useMobile()
-  const { signOut, adm, superAdmin } = useAuth()
+  const { signOut, adm, superAdmin, adminList, memberList, id } = useAuth()
   const [anchorEl, setAnchorEl] = React.useState(null)
   const [currentForm, setCurrentForm] = useState("")
+  const allUsers = [...adminList, ...memberList]
   const open = Boolean(anchorEl)
   const handleClick = event => {
     setAnchorEl(event.currentTarget)
@@ -142,7 +143,9 @@ export const Header = ({ setAppointments }: any) => {
                     setOpenDrawer(true)
                   }}
                 >
-                  <Avatar /> Meu perfil
+                  <Avatar />{" "}
+                  {allUsers.find(user => user.id == (localStorage.getItem("@BandSchedule:id") || 0))?.username ||
+                    "Meu Perfil"}
                 </MenuItem>
                 <Divider />
                 <Typography component="h6" fontSize={"10px"} pl={1}>
