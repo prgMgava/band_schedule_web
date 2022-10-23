@@ -12,6 +12,7 @@ import {
   FormControl,
   FormHelperText,
   Grid,
+  IconButton,
   InputAdornment,
   InputLabel,
   MenuItem,
@@ -37,6 +38,7 @@ import {
   TextSnippetOutlined,
   CalendarMonthOutlined,
   Block,
+  Close,
 } from "@mui/icons-material"
 import { Stack } from "@mui/system"
 import { useState } from "react"
@@ -48,7 +50,7 @@ import { useBand } from "../../../../Provider/Band/Band"
 import { useAppointment } from "../../../../Provider/Appointment/Appointment"
 
 const schema = yup.object().shape({
-  title: yup.string().required("Nome do evento é obrigatório").max(100, "Nome muito grande"),
+  title: yup.string().required("Nome do compromisso é obrigatório").max(100, "Nome muito grande"),
   cellphone: yup.string().max(50, "Telefone muito grande").required("Telefone obrigatório"),
   street: yup.string().max(50, "Nome de rua muito grande").required("Informe uma rua"),
   district: yup.string().max(50, "Nome de bairro muito grande").required("Informe um bairro"),
@@ -58,7 +60,7 @@ const schema = yup.object().shape({
   address_number: yup.string().max(10, "Numero muito grande").nullable(),
   address_complement: yup.string().max(150, "Complemento muito grande").nullable(),
   status: yup.string().default("agendado"),
-  id_band: yup.number().required("Informe a banda que vai tocar no evento"),
+  id_band: yup.number().required("Informe a banda que vai tocar no compromisso"),
   start_date: yup.date().required("Data inicial obrigatória").required("Data inicial obrigatória"),
   end_date: yup.date().required("Data final obrigatória").required("Data final obrigatória"),
 })
@@ -95,7 +97,7 @@ export const AppointmentForm = ({ data, fromMenu = false, closeForm = () => {} }
   const endDateFormatted =
     endDate && hasHourEnd ? `${new Date(endDate).toISOString().substring(0, 11)}${hasHourEnd}` : ""
 
-  console.log(data)
+  console.log(startDateFormatted, endDateFormatted)
   const [reqStartDate, setreqStartDate] = useState(startDateFormatted)
   const [reqEndDate, setreqEndDate] = useState(endDateFormatted)
 
@@ -141,7 +143,7 @@ export const AppointmentForm = ({ data, fromMenu = false, closeForm = () => {} }
 
   useEffect(() => {
     if (isEditing && !!currentEditingData) {
-      const { startDate, endDate, ...rest } = currentEditingData
+      const { startDate, endDate, start_date, end_date, ...rest } = currentEditingData
       Object.keys(rest).map(item => {
         setValue(item, data.appointmentData[item])
       })
@@ -158,10 +160,20 @@ export const AppointmentForm = ({ data, fromMenu = false, closeForm = () => {} }
   }, [currentState, currenBand])
   return (
     <Grid padding={fromMenu ? "24px" : mobile ? "" : 8}>
+      <Box style={{ width: "100%", marginLeft: "8px", justifyContent: "end", display: "flex" }}>
+        <IconButton
+          onClick={() => closeForm(false)}
+          size="medium"
+          style={{ width: "25px", marginLeft: "8px", justifyContent: "end" }}
+        >
+          <Close alignmentBaseline="baseline"></Close>
+        </IconButton>
+      </Box>
+
       <form onSubmit={handleSubmit(submitForm)}>
         <Stack spacing={3}>
           <Stack>
-            <Typography variant="subtitle1">Preencha com as informações do evento</Typography>
+            <Typography variant="subtitle1">Preencha com as informações do compromisso</Typography>
           </Stack>
           <Stack direction={mobile ? "column" : "row"} spacing={2}>
             <Controller

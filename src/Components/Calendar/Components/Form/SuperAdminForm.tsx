@@ -30,7 +30,6 @@ import { NewspaperOutlined, PhoneOutlined, EmailOutlined, MapOutlined } from "@m
 import { Stack } from "@mui/system"
 import { useState } from "react"
 import { toast } from "react-toastify"
-import { admList, bandList } from "../../../../demo-data/grouping"
 import { useMobile } from "../../../../Provider/Theme/Mobile"
 import { useBand } from "../../../../Provider/Band/Band"
 import { useAuth } from "../../../../Provider/Auth/Auth"

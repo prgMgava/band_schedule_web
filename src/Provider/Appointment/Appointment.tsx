@@ -12,6 +12,7 @@ interface AppointmentContextProps {
   appointments: IAppointments[]
   createAppointment: (payload: IAppointments) => Promise<IResponse>
   updateAppointment: (payload: IAppointments, id: number) => Promise<IResponse>
+  deleteAppointment: (id: number) => Promise<IResponse>
 }
 const AppointmentContext = createContext<AppointmentContextProps>({} as AppointmentContextProps)
 
@@ -21,27 +22,6 @@ const useAppointment = () => {
     throw new Error("useAppointment must be used within an AppointmentProvider")
   }
   return context
-}
-
-interface GetMyAppointmentsProps {
-  owner: number
-}
-
-interface CreateAppointmentProp {
-  title: string
-  cellphone: string
-  street: string
-  district: string
-  state: string
-  city: string
-  place: string
-  address_number: string
-  address_complement: string
-  status: "agendado" | "concluido" | "cancelado" | "reagendado"
-  id_band: number
-  startDate: string
-  endDate: string
-  address: boolean
 }
 
 interface AppointmentProviderProps {
@@ -105,30 +85,30 @@ const AppointmentProvider = ({ children }: AppointmentProviderProps) => {
     }
   }, [])
 
-  //   const deleteAppointment = useCallback(async (id: number) => {
-  //     try {
-  //       if (superAdmin) {
-  //         await api.delete(`/Appointment/${id}`, {
-  //           headers: { "x-access-token": accessToken },
-  //         })
-  //         setMyAppointments(old => old.filter(Appointment => Appointment.id !== id))
-  //         return {
-  //           success: true,
-  //           message: "Appointmenta deletada com sucesso",
-  //         }
-  //       }
-  //       return {
-  //         success: false,
-  //         message: "Você não tem permissão de deletar uma Appointmenta",
-  //       }
-  //     } catch (e) {
-  //       console.log(e)
-  //       return {
-  //         success: false,
-  //         message: e.response.data.error,
-  //       }
-  //     }
-  //   }, [])
+  const deleteAppointment = useCallback(async (id: number) => {
+    try {
+      if (adm) {
+        await api.delete(`/appointment/${id}`, {
+          headers: { "x-access-token": accessToken },
+        })
+        setAppointments(old => old.filter(Appointment => Appointment.id !== id))
+        return {
+          success: true,
+          message: "Compromisso deletado com sucesso",
+        }
+      }
+      return {
+        success: false,
+        message: "Você não tem permissão de deletar um Compromisso",
+      }
+    } catch (e) {
+      console.log(e)
+      return {
+        success: false,
+        message: e.response.data.error,
+      }
+    }
+  }, [])
 
   const updateAppointment = useCallback(async (payload: IAppointments, id: number) => {
     try {
@@ -156,7 +136,9 @@ const AppointmentProvider = ({ children }: AppointmentProviderProps) => {
     }
   }, [])
   return (
-    <AppointmentContext.Provider value={{ getAppointments, appointments, createAppointment, updateAppointment }}>
+    <AppointmentContext.Provider
+      value={{ getAppointments, deleteAppointment, appointments, createAppointment, updateAppointment }}
+    >
       {children}
     </AppointmentContext.Provider>
   )

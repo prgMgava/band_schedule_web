@@ -65,7 +65,7 @@ export const Header = ({ setAppointments }: any) => {
   }
 
   const forms = {
-    appointment: <AppointmentForm data={data} setAppointments={setAppointments} fromMenu={true} />,
+    appointment: <AppointmentForm data={data} fromMenu={true} />,
     band: <BandForm toggleDrawer={toggleDrawer}></BandForm>,
     admin: <AdminForm toggleDrawer={toggleDrawer} />,
     superAdmin: <SuperAdmin toggleDrawer={toggleDrawer} />,
@@ -161,7 +161,7 @@ export const Header = ({ setAppointments }: any) => {
                   <ListItemIcon>
                     <EventAvailable fontSize="small" />
                   </ListItemIcon>
-                  Adicionar evento
+                  Adicionar compromisso
                 </MenuItem>
                 <MenuItem
                   onClick={() => {

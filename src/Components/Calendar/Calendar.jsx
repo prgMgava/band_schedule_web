@@ -1,3 +1,5 @@
+/* eslint-disable no-debugger */
+/* eslint-disable @typescript-eslint/no-empty-function */
 /* eslint-disable react/prop-types */
 import React, { useEffect, useState } from "react"
 import { EditingState, IntegratedEditing, ViewState } from "@devexpress/dx-react-scheduler"
@@ -27,11 +29,12 @@ import { Tooltip } from "./Components/Tooltip"
 import { AppointmentForm as CustomAppointmentForm } from "./Components/Form/AppointmentForm"
 import { useForm } from "react-hook-form"
 import { Header } from "./Components/Header/Header"
-import { Stack } from "@mui/material"
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Stack } from "@mui/material"
 import { useBand } from "../../Provider/Band/Band"
 import { useAuth } from "../../Provider/Auth/Auth"
 import { useAppointment } from "../../Provider/Appointment/Appointment"
 import { IAppointments } from "../../Types/appointments.type"
+import { toast } from "react-toastify"
 
 const filterTasks = (items, status) => {
   const appointmentsFiltered = items.filter(task => {
@@ -168,7 +171,7 @@ const FlexibleSpace = ({ priority, priorityChange, ...restProps }) => (
     <PrioritySelector priority={priority} priorityChange={priorityChange} />
   </StyledToolbarFlexibleSpace>
 )
-const TooltipContent = ({ appointmentData, formatDate, appointmentResources }) => {
+const TooltipContent = ({ appointmentData, formatDate, appointmentResources, ...rest }) => {
   return (
     <Tooltip appointmentData={appointmentData} formatDate={formatDate} appointmentResources={appointmentResources} />
   )
@@ -191,9 +194,11 @@ const changeEvent = data => {
 export const Demo = () => {
   const { id } = useAuth()
   const { getMyBands, myBands } = useBand()
-  const { appointments, getAppointments } = useAppointment()
+  const { appointments, getAppointments, deleteAppointment } = useAppointment()
   const [currentViewName, setCurrentViewName] = React.useState("Mensal")
   const [currentPriority, setCurrentPriority] = React.useState(0)
+  const [openDialog, setOpenDialog] = useState(false)
+  const [deletedAppointment, setDeletedAppointment] = useState(0)
   const [resources, setResources] = React.useState([
     {
       fieldName: "status",
@@ -215,12 +220,21 @@ export const Demo = () => {
   const [closedModal, setClosedModal] = useState(false)
   const [currentDate, setCurrentDate] = React.useState(new Date())
   const closeForm = e => {
-    console.log("mostrar", e)
     setClosedModal(e)
     return e
   }
   const currentViewNameChange = currentViewName => {
     setCurrentViewName(currentViewName)
+  }
+
+  const handleCloseDialog = () => {
+    setOpenDialog(old => !old)
+  }
+
+  const handleDelete = async () => {
+    const response = await deleteAppointment(deletedAppointment)
+    toast.error(response.message)
+    setOpenDialog(old => !old)
   }
 
   const currentDateChange = currentDate => {
@@ -249,7 +263,11 @@ export const Demo = () => {
   })
 
   const commitChanges = ({ added, changed, deleted }) => {
-    console.log(added, changed, deleted)
+    if (deleted) {
+      setOpenDialog(true)
+      setDeletedAppointment(deleted)
+    }
+    console.log(added, changed, deleted, "aqui")
   }
 
   const CustomFormAppointment = data => {
@@ -268,6 +286,16 @@ export const Demo = () => {
   useEffect(() => {
     getAppointments(currentDate)
   }, [currentDate])
+
+  useEffect(() => {}, [appointments])
+
+  const TextEditor = props => {
+    // eslint-disable-next-line react/destructuring-assignment
+    if (props.type === "multilineTextEditor") {
+      return null
+    }
+    return <AppointmentForm.TextEditor {...props} />
+  }
 
   return (
     <Stack justifyContent={"space-around"} direction="column" alignContent={"space-around"}>
@@ -294,9 +322,8 @@ export const Demo = () => {
           <DateNavigator />
           <EditingState onCommitChanges={commitChanges} onAddedAppointmentChange={commitChanges} />
           <IntegratedEditing />
-          <ConfirmationDialog />
 
-          <AppointmentTooltip contentComponent={TooltipContent} showOpenButton showCloseButton showDeleteButton />
+          <AppointmentTooltip showOpenButton showCloseButton showDeleteButton />
 
           <AppointmentForm
             messages={{ afterLabel: "meu deus", commitCommand: "Salvar" }}
@@ -304,9 +331,34 @@ export const Demo = () => {
             visible={closedModal}
             onVisibilityChange={closeForm}
             commandButtonComponent={HiddenButton}
+            textEditorComponent={TextEditor}
           />
         </Scheduler>
       </Paper>
+      <Dialog
+        open={openDialog}
+        onClose={handleCloseDialog}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">Esta ação não podera ser desfeita</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Você tem certeza que deseja excluir o(s) seguinte(s) dados:
+            <div>
+              <b>Evento: {appointments?.find(item => item.id === deletedAppointment)?.title}</b>
+            </div>
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDialog} autoFocus>
+            Cancelar
+          </Button>
+          <Button onClick={handleDelete} color="error">
+            Continua
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Stack>
   )
 }
