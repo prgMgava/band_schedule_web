@@ -1,5 +1,5 @@
 /* eslint-disable no-debugger */
-import React, { useContext, createContext, useState, ReactNode, useCallback, Dispatch } from "react"
+import React, { useContext, createContext, useState, ReactNode, useCallback } from "react"
 
 import { AxiosResponse } from "axios"
 import { api } from "../../Services/api"
@@ -44,6 +44,7 @@ const LabelProvider = ({ children }: LabelProviderProps) => {
       })
 
       setLabels(data)
+      localStorage.setItem("test", JSON.stringify(data))
       return {
         success: true,
         message: "OK",

@@ -15,25 +15,20 @@ import {
   Resources,
   AppointmentForm,
   MonthView,
-  ConfirmationDialog,
 } from "@devexpress/dx-react-scheduler-material-ui"
 import { connectProps } from "@devexpress/dx-react-core"
 import { styled } from "@mui/material/styles"
 import Paper from "@mui/material/Paper"
 import MenuItem from "@mui/material/MenuItem"
 import Select from "@mui/material/Select"
-import Grid from "@mui/material/Grid"
 import FormControl from "@mui/material/FormControl"
-import { priorities } from "../../demo-data/tasks"
 import { Tooltip } from "./Components/Tooltip"
 import { AppointmentForm as CustomAppointmentForm } from "./Components/Form/AppointmentForm"
-import { useForm } from "react-hook-form"
 import { Header } from "./Components/Header/Header"
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Stack } from "@mui/material"
 import { useBand } from "../../Provider/Band/Band"
 import { useAuth } from "../../Provider/Auth/Auth"
 import { useAppointment } from "../../Provider/Appointment/Appointment"
-import { IAppointments } from "../../Types/appointments.type"
 import { toast } from "react-toastify"
 import { useLabel } from "../../Provider/Label/Label"
 
@@ -105,7 +100,7 @@ const StyledFormControl = styled(FormControl)(({ theme: { spacing } }) => ({
 
 const StyledPrioritySelectorItem = styled("div")(({ theme: { palette, spacing }, color }) => ({
   [`& .${classes.bullet}`]: {
-    backgroundColor: color ? color[400] : palette.divider,
+    backgroundColor: color ? color : palette.divider,
     borderRadius: "50%",
     width: spacing(2),
     height: spacing(2),
@@ -142,81 +137,21 @@ const PrioritySelectorItem = ({ color, text: resourceTitle }) => {
   )
 }
 
-const PrioritySelector = ({ priorityChange, priority }) => {
-  const currentPriority = priorities.find(item => item.id === priority) || {}
-  return (
-    <StyledFormControl className={classes.prioritySelector} variant="standard">
-      <Select
-        disableUnderline
-        value={priority}
-        onChange={e => {
-          priorityChange(e.target.value)
-        }}
-        renderValue={() => <PrioritySelectorItem text={currentPriority.text} color={currentPriority.color} />}
-      >
-        <MenuItem value={0}>
-          <PrioritySelectorItem />
-        </MenuItem>
-        {priorities.map(({ id, color, text }) => (
-          <MenuItem value={id} key={id.toString()}>
-            <PrioritySelectorItem color={color} text={text} />
-          </MenuItem>
-        ))}
-      </Select>
-    </StyledFormControl>
-  )
-}
-
-const FlexibleSpace = ({ priority, priorityChange, ...restProps }) => (
-  <StyledToolbarFlexibleSpace {...restProps} className={classes.flexibleSpace}>
-    <PrioritySelector priority={priority} priorityChange={priorityChange} />
-  </StyledToolbarFlexibleSpace>
-)
-const TooltipContent = ({ appointmentData, formatDate, appointmentResources, ...rest }) => {
-  return (
-    <Tooltip appointmentData={appointmentData} formatDate={formatDate} appointmentResources={appointmentResources} />
-  )
-}
-
-const CustomButtonSubmit = data => {
-  console.log(data, "button")
-  return (
-    <>
-      <button>Salvei</button>
-      <button>fechar</button>
-    </>
-  )
-}
-
-const changeEvent = data => {
-  console.log("-----", data)
-}
-
 export const Demo = () => {
   const { id } = useAuth()
-  const { getMyBands, myBands } = useBand()
+  const { getMyBands } = useBand()
   const { getLabels } = useLabel()
   const { appointments, getAppointments, deleteAppointment } = useAppointment()
   const [currentViewName, setCurrentViewName] = React.useState("Mensal")
   const [currentPriority, setCurrentPriority] = React.useState(0)
   const [openDialog, setOpenDialog] = useState(false)
   const [deletedAppointment, setDeletedAppointment] = useState(0)
+  const labels = JSON.parse(localStorage.getItem("test"))
   const [resources, setResources] = React.useState([
     {
-      fieldName: "status",
+      fieldName: "id_label",
       title: "Priority",
-      instances: priorities,
-    },
-    {
-      fieldName: "id",
-      title: "Meus Eventos",
-      instances: [
-        {
-          id: "id",
-          text: "meus Eventos",
-          color: "#000000",
-        },
-      ],
+      instances: labels,
     },
   ])
   const [closedModal, setClosedModal] = useState(false)
@@ -247,11 +182,47 @@ export const Demo = () => {
     const nextResources = [
       {
         ...resources[0],
-        instances: value > 0 ? [priorities[value - 1]] : priorities,
+        instances: value > 0 ? [labels[value - 1]] : labels,
       },
     ]
     setCurrentPriority(value)
     setResources(nextResources)
+  }
+
+  const PrioritySelector = ({ priorityChange, priority }) => {
+    const currentPriority = labels.find(item => item.id === priority) || {}
+    return (
+      <StyledFormControl className={classes.prioritySelector} variant="standard">
+        <Select
+          disableUnderline
+          value={priority}
+          onChange={e => {
+            priorityChange(e.target.value)
+          }}
+          renderValue={() => <PrioritySelectorItem text={currentPriority.text} color={currentPriority.color} />}
+        >
+          <MenuItem value={0}>
+            <PrioritySelectorItem />
+          </MenuItem>
+          {labels.map(({ id, color, text }) => (
+            <MenuItem value={id} key={id.toString()}>
+              <PrioritySelectorItem color={color} text={text} />
+            </MenuItem>
+          ))}
+        </Select>
+      </StyledFormControl>
+    )
+  }
+
+  const FlexibleSpace = ({ priority, priorityChange, ...restProps }) => (
+    <StyledToolbarFlexibleSpace {...restProps} className={classes.flexibleSpace}>
+      <PrioritySelector priority={priority} priorityChange={priorityChange} />
+    </StyledToolbarFlexibleSpace>
+  )
+  const TooltipContent = ({ appointmentData, formatDate, appointmentResources, ...rest }) => {
+    return (
+      <Tooltip appointmentData={appointmentData} formatDate={formatDate} appointmentResources={appointmentResources} />
+    )
   }
 
   const flexibleSpace = connectProps(FlexibleSpace, () => {

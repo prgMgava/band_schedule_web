@@ -1,9 +1,10 @@
-import { Color } from "@mui/material";
+import { Color } from "@mui/material"
 
 export interface IResource {
-	id: number,
-	fieldName: string,
-	color: string
-	instances: any[]
-	text: string
+  id: number
+  fieldName: string
+  color: string
+  instances: any[]
+  title: string
+  text?: string
 }
