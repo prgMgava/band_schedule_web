@@ -78,8 +78,8 @@ export const LabelForm = ({ toggleDrawer }: any) => {
       const label = labels.find(item => item.id === currentLabel)
       if (label) {
         setValue("title", label.title)
-        setValue("color", label.color)
-        setInitialColor(label.color)
+        setValue("color", label?.color)
+        setInitialColor(label?.color)
       }
     }
   }, [currentLabel])
@@ -148,7 +148,7 @@ export const LabelForm = ({ toggleDrawer }: any) => {
             {labels.map(label => (
               <MenuItem value={label.id} key={uuid()}>
                 <ListItemIcon>
-                  <Circle sx={{ color: label.color }} />
+                  <Circle sx={{ color: label?.color }} />
                 </ListItemIcon>
                 {label.title}
               </MenuItem>

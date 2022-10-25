@@ -25,31 +25,24 @@ import FormControl from "@mui/material/FormControl"
 import { Tooltip } from "./Components/Tooltip"
 import { AppointmentForm as CustomAppointmentForm } from "./Components/Form/AppointmentForm"
 import { Header } from "./Components/Header/Header"
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Stack } from "@mui/material"
+import {
+  Box,
+  Button,
+  Card,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Stack,
+} from "@mui/material"
 import { useBand } from "../../Provider/Band/Band"
 import { useAuth } from "../../Provider/Auth/Auth"
 import { useAppointment } from "../../Provider/Appointment/Appointment"
 import { toast } from "react-toastify"
 import { useLabel } from "../../Provider/Label/Label"
-
-const filterTasks = (items, status) => {
-  const appointmentsFiltered = items.filter(task => {
-    if (status == "4") {
-      return task.status == status
-    }
-    return !status || task.status === status
-  })
-
-  const appointmentsEdited = appointmentsFiltered.map(appointment => {
-    return {
-      ...appointment,
-      endDate: appointment.end_date,
-      startDate: appointment.start_date,
-    }
-  })
-
-  return appointmentsEdited
-}
+import uuid from "react-uuid"
+import { Filter } from "@mui/icons-material"
 
 const PREFIX = "Demo"
 export const classes = {
@@ -124,7 +117,6 @@ const StyledPrioritySelectorItem = styled("div")(({ theme: { palette, spacing },
 }))
 
 const PrioritySelectorItem = ({ color, text: resourceTitle }) => {
-  console.log("resourc", resourceTitle)
   const text = resourceTitle || "Todos os eventos"
   const shortText = resourceTitle ? text.substring(0, 1) : "Todos"
 
@@ -138,6 +130,9 @@ const PrioritySelectorItem = ({ color, text: resourceTitle }) => {
 }
 
 export const Demo = () => {
+  const labels = JSON.parse(localStorage.getItem("@BandSchedule:labels")) || []
+  !labels?.length && localStorage.setItem("@BandSchedule:labels", "[]")
+
   const { id } = useAuth()
   const { getMyBands } = useBand()
   const { getLabels } = useLabel()
@@ -146,7 +141,6 @@ export const Demo = () => {
   const [currentPriority, setCurrentPriority] = React.useState(0)
   const [openDialog, setOpenDialog] = useState(false)
   const [deletedAppointment, setDeletedAppointment] = useState(0)
-  const labels = JSON.parse(localStorage.getItem("test"))
   const [resources, setResources] = React.useState([
     {
       fieldName: "id_label",
@@ -190,7 +184,8 @@ export const Demo = () => {
   }
 
   const PrioritySelector = ({ priorityChange, priority }) => {
-    const currentPriority = labels.find(item => item.id === priority) || {}
+    debugger
+    const currentPriority = labels?.find(item => item.id === priority) || {}
     return (
       <StyledFormControl className={classes.prioritySelector} variant="standard">
         <Select
@@ -199,12 +194,12 @@ export const Demo = () => {
           onChange={e => {
             priorityChange(e.target.value)
           }}
-          renderValue={() => <PrioritySelectorItem text={currentPriority.text} color={currentPriority.color} />}
+          renderValue={() => <PrioritySelectorItem text={currentPriority.text} color={currentPriority?.color} />}
         >
           <MenuItem value={0}>
             <PrioritySelectorItem />
           </MenuItem>
-          {labels.map(({ id, color, text }) => (
+          {labels?.map(({ id, color, text }) => (
             <MenuItem value={id} key={id.toString()}>
               <PrioritySelectorItem color={color} text={text} />
             </MenuItem>
@@ -214,11 +209,13 @@ export const Demo = () => {
     )
   }
 
-  const FlexibleSpace = ({ priority, priorityChange, ...restProps }) => (
-    <StyledToolbarFlexibleSpace {...restProps} className={classes.flexibleSpace}>
-      <PrioritySelector priority={priority} priorityChange={priorityChange} />
-    </StyledToolbarFlexibleSpace>
-  )
+  const FlexibleSpace = ({ priority, priorityChange, ...restProps }) => {
+    return (
+      <StyledToolbarFlexibleSpace {...restProps} className={classes.flexibleSpace}>
+        <PrioritySelector priority={priority} priorityChange={priorityChange} />
+      </StyledToolbarFlexibleSpace>
+    )
+  }
   const TooltipContent = ({ appointmentData, formatDate, appointmentResources, ...rest }) => {
     return (
       <Tooltip appointmentData={appointmentData} formatDate={formatDate} appointmentResources={appointmentResources} />
@@ -257,7 +254,7 @@ export const Demo = () => {
     getAppointments(currentDate)
   }, [currentDate])
 
-  useEffect(() => {}, [appointments])
+  useEffect(() => {}, [appointments, labels])
 
   const TextEditor = props => {
     // eslint-disable-next-line react/destructuring-assignment
@@ -267,68 +264,89 @@ export const Demo = () => {
     return <AppointmentForm.TextEditor {...props} />
   }
 
+  const filterTasks = (items, status) => {
+    const appointmentsFiltered = items.filter(task => {
+      if (status == "4") {
+        return task.id_label == status
+      }
+      return !status || task.id_label === status
+    })
+
+    const appointmentsEdited = appointmentsFiltered.map(appointment => {
+      return {
+        ...appointment,
+        endDate: appointment.end_date,
+        startDate: appointment.start_date,
+      }
+    })
+
+    return appointmentsEdited
+  }
+
   return (
-    <Stack justifyContent={"space-around"} direction="column" alignContent={"space-around"}>
-      <Header setAppointments={() => 1} />
-      <Paper style={{ position: "absolute", bottom: 100 }}>
-        <Scheduler data={filterTasks(appointments, currentPriority)} height={700} locale={"pt-BR"}>
-          <ViewState
-            currentDate={currentDate}
-            currentViewName={currentViewName}
-            onCurrentViewNameChange={currentViewNameChange}
-            onCurrentDateChange={currentDateChange}
-          />
+    <>
+      <Stack justifyContent={"space-around"} direction="column" alignContent={"space-around"}>
+        <Header setCurrentPriority={setCurrentPriority} />
+        <Box style={{ background: "white" }}>
+          <Scheduler data={filterTasks(appointments, currentPriority)} height={700} locale={"pt-BR"}>
+            <ViewState
+              currentDate={currentDate}
+              currentViewName={currentViewName}
+              onCurrentViewNameChange={currentViewNameChange}
+              onCurrentDateChange={currentDateChange}
+            />
 
-          <DayView intervalCount={2} name="Dia" />
-          <WeekView name="Semanal" />
+            <DayView intervalCount={2} name="Dia" />
+            <WeekView name="Semanal" />
 
-          <MonthView name="Mensal" />
+            <MonthView name="Mensal" />
 
-          <Appointments />
-          <Resources data={resources} />
+            <Appointments />
+            <Resources data={resources} />
 
-          <Toolbar flexibleSpaceComponent={flexibleSpace} />
-          <ViewSwitcher />
-          <DateNavigator />
-          <EditingState onCommitChanges={commitChanges} onAddedAppointmentChange={commitChanges} />
-          <IntegratedEditing />
+            <Toolbar />
+            <ViewSwitcher />
+            <DateNavigator />
+            <EditingState onCommitChanges={commitChanges} onAddedAppointmentChange={commitChanges} />
+            <IntegratedEditing />
 
-          <AppointmentTooltip contentComponent={TooltipContent} showOpenButton showCloseButton showDeleteButton />
+            <AppointmentTooltip contentComponent={TooltipContent} showOpenButton showCloseButton showDeleteButton />
 
-          <AppointmentForm
-            messages={{ afterLabel: "meu deus", commitCommand: "Salvar" }}
-            basicLayoutComponent={CustomFormAppointment}
-            visible={closedModal}
-            onVisibilityChange={closeForm}
-            commandButtonComponent={HiddenButton}
-            textEditorComponent={TextEditor}
-          />
-        </Scheduler>
-      </Paper>
-      <Dialog
-        open={openDialog}
-        onClose={handleCloseDialog}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">Esta ação não podera ser desfeita</DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            Você tem certeza que deseja excluir o(s) seguinte(s) dados:
-            <div>
-              <b>Evento: {appointments?.find(item => item.id === deletedAppointment)?.title}</b>
-            </div>
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseDialog} autoFocus>
-            Cancelar
-          </Button>
-          <Button onClick={handleDelete} color="error">
-            Continua
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </Stack>
+            <AppointmentForm
+              messages={{ afterLabel: "meu deus", commitCommand: "Salvar" }}
+              basicLayoutComponent={CustomFormAppointment}
+              visible={closedModal}
+              onVisibilityChange={closeForm}
+              commandButtonComponent={HiddenButton}
+              textEditorComponent={TextEditor}
+            />
+          </Scheduler>
+        </Box>
+        <Dialog
+          open={openDialog}
+          onClose={handleCloseDialog}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title">Esta ação não podera ser desfeita</DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+              Você tem certeza que deseja excluir o(s) seguinte(s) dados:
+              <div>
+                <b>Evento: {appointments?.find(item => item.id === deletedAppointment)?.title}</b>
+              </div>
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCloseDialog} autoFocus>
+              Cancelar
+            </Button>
+            <Button onClick={handleDelete} color="error">
+              Continua
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </Stack>
+    </>
   )
 }

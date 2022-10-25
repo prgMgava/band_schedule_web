@@ -1,5 +1,3 @@
-import { Color } from "@mui/material"
-
 export interface IResource {
   id: number
   fieldName: string

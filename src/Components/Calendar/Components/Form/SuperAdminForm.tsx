@@ -190,7 +190,7 @@ export const SuperAdminForm = ({ toggleDrawer }: any) => {
                     {labels.map(label => (
                       <MenuItem value={label.id} key={uuid()}>
                         <ListItemIcon>
-                          <Circle sx={{ color: label.color }} />
+                          <Circle sx={{ color: label?.color }} />
                         </ListItemIcon>
                         {label.title}
                       </MenuItem>

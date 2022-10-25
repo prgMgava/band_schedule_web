@@ -36,8 +36,13 @@ import { SuperAdmin } from "../SuperAdmin/SuperAdmin"
 import { useMobile } from "../../../../Provider/Theme/Mobile"
 import { useAuth } from "../../../../Provider/Auth/Auth"
 import { LabelForm } from "../Form/LabelForm"
+import { Filter } from "../Filter/Filter"
 
-export const Header = ({ setAppointments }: any) => {
+interface HeaderProps {
+  setCurrentPriority: React.Dispatch<React.SetStateAction<number>>
+}
+
+export const Header = ({ setCurrentPriority }: HeaderProps) => {
   const { mobile } = useMobile()
   const { signOut, adm, superAdmin, adminList, memberList, id } = useAuth()
   const [anchorEl, setAnchorEl] = React.useState(null)
@@ -83,7 +88,7 @@ export const Header = ({ setAppointments }: any) => {
         {forms[currentForm]}
         <Divider />
       </Drawer>
-      <Box width={"100%"} height={"75px"} boxShadow={2} bgcolor={"#0d1f35"} mb={5}>
+      <Box width={"100%"} height={"75px"} boxShadow={2} bgcolor={"#0d1f35"} mb={1}>
         <Stack direction={"row"} width={"100vw"} justifyContent={"space-between"}>
           <Box bgcolor={"green"} height="75px" width={"75px"} justifySelf={"flex-start"}>
             LOGO
@@ -212,6 +217,7 @@ export const Header = ({ setAppointments }: any) => {
           </Stack>
         </Stack>
       </Box>
+      <Filter setCurrentPriority={setCurrentPriority} />
     </>
   )
 }

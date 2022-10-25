@@ -63,7 +63,6 @@ const AppointmentProvider = ({ children }: AppointmentProviderProps) => {
   const createAppointment = useCallback(async (payload: IAppointments) => {
     try {
       if (adm) {
-        debugger
         const response: AxiosResponse = await api.post("/appointment", payload, {
           headers: { "x-access-token": accessToken },
         })
@@ -117,7 +116,6 @@ const AppointmentProvider = ({ children }: AppointmentProviderProps) => {
         const response: AxiosResponse = await api.patch(`/appointment/${id}`, payload, {
           headers: { "x-access-token": accessToken },
         })
-        debugger
         setAppointments(old => [...old.filter(Appointment => Appointment.id !== id), payload])
 
         return {

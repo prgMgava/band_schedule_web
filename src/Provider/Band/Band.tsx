@@ -46,7 +46,6 @@ const BandProvider = ({ children }: BandProviderProps) => {
     //TODO: remove defaul user id
     try {
       if (adm) {
-        console.log(adm, superAdmin)
         const url = superAdmin ? "/band" : `/band/owner/${id}`
         const { data }: AxiosResponse<IBand[]> = await api.get(url, {
           headers: { "x-access-token": accessToken },
@@ -112,7 +111,6 @@ const BandProvider = ({ children }: BandProviderProps) => {
         message: "Você não tem permissão de deletar uma banda",
       }
     } catch (e) {
-      console.log(e)
       return {
         success: false,
         message: e.response.data.error,
@@ -142,7 +140,6 @@ const BandProvider = ({ children }: BandProviderProps) => {
         message: "Você não tem permissão de criar uma banda",
       }
     } catch (e) {
-      console.log(e)
       return {
         success: false,
         message: e.response.data.error,

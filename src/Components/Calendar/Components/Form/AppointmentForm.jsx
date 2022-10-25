@@ -485,7 +485,7 @@ export const AppointmentForm = ({ data, fromMenu = false, closeForm = () => {} }
                       {labels.map(label => (
                         <MenuItem value={label.id} key={uuid()}>
                           <ListItemIcon>
-                            <Circle sx={{ color: label.color }} />
+                            <Circle sx={{ color: label?.color }} />
                           </ListItemIcon>
                           {label.title}
                         </MenuItem>

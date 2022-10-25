@@ -44,7 +44,13 @@ const LabelProvider = ({ children }: LabelProviderProps) => {
       })
 
       setLabels(data)
-      localStorage.setItem("test", JSON.stringify(data))
+      const newData = data.map(item => {
+        return {
+          ...item,
+          text: item.title,
+        }
+      })
+      localStorage.setItem("@BandSchedule:labels", JSON.stringify(newData))
       return {
         success: true,
         message: "OK",

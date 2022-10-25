@@ -60,7 +60,6 @@ export const AdminForm = ({ toggleDrawer, isSignup = false, isUpdating = false }
   } = useForm<IAdminFields>({ resolver: yupResolver(schema), reValidateMode: "onChange", mode: "onSubmit" })
 
   const submitForm: SubmitHandler<IAdminFields> = async (data: IAdminFields) => {
-    debugger
     if (isSignup) {
       const response = await signUp(data)
       toast[response.success ? "success" : "error"](response.message)

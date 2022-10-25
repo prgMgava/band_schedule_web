@@ -84,7 +84,7 @@ export const Tooltip = ({ appointmentData, formatDate, appointmentResources }: T
   const { mobile } = useMobile()
   const resource = appointmentResources[0]
   return (
-    <StyledTooltipContent className={classes.content} color={resource.color}>
+    <StyledTooltipContent className={classes.content} color={resource?.color}>
       <Grid container alignItems="flex-start" className={classes.titleContainer}>
         <Grid item xs={2} className={classNames(classes.textCenter)}>
           <Lens className={classNames(classes.lens, classes.colorfulContent)} />
