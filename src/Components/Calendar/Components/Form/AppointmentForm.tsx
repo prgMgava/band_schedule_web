@@ -93,6 +93,7 @@ export const AppointmentForm = ({
     new Date(startDate).toLocaleTimeString().substring(0, 5) === "00:00"
       ? new Date().toLocaleTimeString().substring(0, 5)
       : new Date(startDate).toLocaleTimeString().substring(0, 5)
+  //TODO: add one hour when create an appointment
   const hasHourEnd =
     new Date(endDate).toLocaleTimeString().substring(0, 5) === "00:00"
       ? new Date().toLocaleTimeString().substring(0, 5)

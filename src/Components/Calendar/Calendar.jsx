@@ -1,6 +1,9 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 //TODO: change file to TS
+//TODO: rename title to text - back end depends
+//TODO: loading ui experience
+
 import React, { useEffect, useState } from "react"
 import { EditingState, IntegratedEditing, ViewState } from "@devexpress/dx-react-scheduler"
 import {
@@ -117,12 +120,12 @@ const PrioritySelectorItem = ({ color, text: resourceTitle }) => {
 }
 
 export const Demo = () => {
-  const labels = JSON.parse(localStorage.getItem("@BandSchedule:labels")) || []
+  let labels = JSON.parse(localStorage.getItem("@BandSchedule:labels")) || []
   !labels?.length && localStorage.setItem("@BandSchedule:labels", "[]")
 
   const { id } = useAuth()
   const { getMyBands } = useBand()
-  const { getLabels } = useLabel()
+  const { getLabels, labels: labelsProvider } = useLabel()
   const { appointments, getAppointments, deleteAppointment } = useAppointment()
   const [currentViewName, setCurrentViewName] = React.useState("Mensal")
   const [currentPriority, setCurrentPriority] = React.useState(0)
@@ -241,8 +244,9 @@ export const Demo = () => {
   }, [currentDate])
 
   useEffect(() => {
-    // comment
-  }, [appointments, labels])
+    labels = labelsProvider
+    localStorage.setItem("@BandSchedule:labels", JSON.stringify(labelsProvider))
+  }, [labelsProvider])
 
   const TextEditor = props => {
     // eslint-disable-next-line react/destructuring-assignment

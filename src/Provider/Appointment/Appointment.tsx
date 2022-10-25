@@ -12,6 +12,7 @@ interface AppointmentContextProps {
   createAppointment: (payload: IAppointments) => Promise<IResponse>
   updateAppointment: (payload: IAppointments, id: number) => Promise<IResponse>
   deleteAppointment: (id: number) => Promise<IResponse>
+  updateAppointmentStatus: () => Promise<IResponse>
 }
 const AppointmentContext = createContext<AppointmentContextProps>({} as AppointmentContextProps)
 
@@ -28,7 +29,7 @@ interface AppointmentProviderProps {
 }
 
 const AppointmentProvider = ({ children }: AppointmentProviderProps) => {
-  const { accessToken, adm } = useAuth()
+  const { accessToken, adm, superAdmin } = useAuth()
   const [appointments, setAppointments] = useState<IAppointments[]>([])
 
   const getAppointments = useCallback(async (date: Date) => {
@@ -131,9 +132,45 @@ const AppointmentProvider = ({ children }: AppointmentProviderProps) => {
       }
     }
   }, [])
+
+  const updateAppointmentStatus = useCallback(async () => {
+    const currentDate = new Date().toISOString().substring(0, 10)
+    try {
+      if (superAdmin) {
+        const { data } = await api.patch(
+          `/appointment?current_date=${currentDate}`,
+          {},
+          {
+            headers: { "x-access-token": accessToken },
+          }
+        )
+
+        return {
+          success: true,
+          message: data.success,
+        }
+      }
+      return {
+        success: false,
+        message: "Você não tem permissão de editar uma Compromisso",
+      }
+    } catch (e) {
+      return {
+        success: false,
+        message: e.response.data.error,
+      }
+    }
+  }, [])
   return (
     <AppointmentContext.Provider
-      value={{ getAppointments, deleteAppointment, appointments, createAppointment, updateAppointment }}
+      value={{
+        getAppointments,
+        deleteAppointment,
+        appointments,
+        createAppointment,
+        updateAppointment,
+        updateAppointmentStatus,
+      }}
     >
       {children}
     </AppointmentContext.Provider>

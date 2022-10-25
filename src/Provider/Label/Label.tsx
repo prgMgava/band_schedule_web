@@ -93,7 +93,14 @@ const LabelProvider = ({ children }: LabelProviderProps) => {
   const updateLabel = useCallback(async ({ title, color, id }: CreateLabelProp) => {
     try {
       if (superAdmin) {
-        setLabels(old => [...old.filter(Label => Label.id !== id), { title, color, id } as ILabel])
+        await api.patch(
+          `/label/${id}`,
+          { color, title },
+          {
+            headers: { "x-access-token": accessToken },
+          }
+        )
+        setLabels(old => [...old.filter(label => label.id !== id), { title, color, id } as ILabel])
 
         return {
           success: true,

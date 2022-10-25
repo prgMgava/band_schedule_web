@@ -1,4 +1,4 @@
-import { Close, ColorLens, EventAvailable, Logout, MusicNote, PersonAddAlt } from "@mui/icons-material"
+import { Close, ColorLens, EventAvailable, Logout, MusicNote, PersonAddAlt, SyncOutlined } from "@mui/icons-material"
 import {
   Box,
   Menu,
@@ -18,10 +18,10 @@ import { AppointmentForm } from "../Form/AppointmentForm"
 import { BandForm } from "../Form/BandForm"
 import { AdminForm } from "../Form/AdminForm"
 import { SuperAdmin } from "../SuperAdmin/SuperAdmin"
-import { useMobile } from "../../../../Provider/Theme/Mobile"
 import { useAuth } from "../../../../Provider/Auth/Auth"
 import { LabelForm } from "../Form/LabelForm"
 import { Filter } from "../Filter/Filter"
+import { StatusHandler } from "../../StatusHandler"
 
 interface HeaderProps {
   setCurrentPriority: React.Dispatch<React.SetStateAction<number>>
@@ -59,6 +59,7 @@ export const Header = ({ setCurrentPriority }: HeaderProps) => {
     admin: <AdminForm toggleDrawer={toggleDrawer} />,
     superAdmin: <SuperAdmin toggleDrawer={toggleDrawer} />,
     label: <LabelForm toggleDrawer={toggleDrawer} />,
+    status: <StatusHandler toggleDrawer={toggleDrawer} />,
   }
   return (
     <>
@@ -187,6 +188,18 @@ export const Header = ({ setCurrentPriority }: HeaderProps) => {
                     <ColorLens fontSize="small" />
                   </ListItemIcon>
                   Adicionar label
+                </MenuItem>
+                <MenuItem
+                  onClick={() => {
+                    setCurrentForm("status")
+                    setOpenDrawer(true)
+                  }}
+                  disabled={!adm}
+                >
+                  <ListItemIcon>
+                    <SyncOutlined fontSize="small" />
+                  </ListItemIcon>
+                  Atualizar compromissos
                 </MenuItem>
                 <MenuItem onClick={() => signOut()}>
                   <ListItemIcon>
