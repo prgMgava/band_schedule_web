@@ -1,18 +1,6 @@
-/* eslint-disable no-debugger */
 import * as React from "react"
 
-import {
-  Button,
-  Checkbox,
-  FormControlLabel,
-  FormGroup,
-  Grid,
-  InputAdornment,
-  Link,
-  Typography,
-  useMediaQuery,
-  useTheme,
-} from "@mui/material"
+import { Button, Grid, InputAdornment, Link, Typography } from "@mui/material"
 
 import { useForm, SubmitHandler, Controller } from "react-hook-form"
 import { IAdminFields } from "../../../../Types/form.type"
@@ -26,7 +14,6 @@ import { toast } from "react-toastify"
 import { useMobile } from "../../../../Provider/Theme/Mobile"
 import { useNavigate } from "react-router-dom"
 import { useAuth } from "../../../../Provider/Auth/Auth"
-import { isEditable } from "@testing-library/user-event/dist/utils"
 
 const schema = yup.object().shape({
   username: yup.string().required("Username é obrigatório").max(100, "Nome muito grande"),
@@ -35,15 +22,20 @@ const schema = yup.object().shape({
   password: yup.string().max(20, "Senha Muito grande").required("Senha obrigatória"),
 })
 
-export const AdminForm = ({ toggleDrawer, isSignup = false, isUpdating = false }: any) => {
+interface AdminFormProps {
+  isSignup?: boolean
+  isUpdating?: boolean
+  toggleDrawer: () => void
+}
+
+export const AdminForm = ({ toggleDrawer, isSignup = false, isUpdating = false }: AdminFormProps) => {
   const { mobile } = useMobile()
   const navigate = useNavigate()
   const { signUp, createAdm, adminList, memberList, updateUser } = useAuth()
   const [maskedCellPhone, setMaskedCellPhone] = useState("")
-  const [allow, setAllow] = useState(false)
   const [id, setId] = useState(0)
 
-  const maskCellNumber = value => {
+  const maskCellNumber = (value: string) => {
     value = value.replace(/\D/g, "")
     value = value.replace(/(\d{2})(\d)/, "($1) $2")
     value = value.replace(/(\d{4,5})(\d)/, "$1-$2")
@@ -52,10 +44,8 @@ export const AdminForm = ({ toggleDrawer, isSignup = false, isUpdating = false }
 
   const {
     handleSubmit,
-    reset,
     control,
     setValue,
-    unregister,
     formState: { errors },
   } = useForm<IAdminFields>({ resolver: yupResolver(schema), reValidateMode: "onChange", mode: "onSubmit" })
 

@@ -1,4 +1,3 @@
-/* eslint-disable no-debugger */
 import React, { useContext, createContext, useState, ReactNode, useCallback } from "react"
 
 import { AxiosResponse } from "axios"
@@ -34,7 +33,7 @@ interface LabelProviderProps {
 }
 
 const LabelProvider = ({ children }: LabelProviderProps) => {
-  const { id, accessToken, adm, superAdmin } = useAuth()
+  const { accessToken, superAdmin } = useAuth()
   const [labels, setLabels] = useState<ILabel[]>([])
 
   const getLabels = useCallback(async () => {
@@ -94,13 +93,6 @@ const LabelProvider = ({ children }: LabelProviderProps) => {
   const updateLabel = useCallback(async ({ title, color, id }: CreateLabelProp) => {
     try {
       if (superAdmin) {
-        const response: AxiosResponse = await api.patch(
-          `/Label/${id}`,
-          { title, color },
-          {
-            headers: { "x-access-token": accessToken },
-          }
-        )
         setLabels(old => [...old.filter(Label => Label.id !== id), { title, color, id } as ILabel])
 
         return {
@@ -113,7 +105,6 @@ const LabelProvider = ({ children }: LabelProviderProps) => {
         message: "Você não tem permissão de atualizar uma Label",
       }
     } catch (e) {
-      console.log(e)
       return {
         success: false,
         message: e.response.data.error,

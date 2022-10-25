@@ -4,16 +4,11 @@ import {
   Box,
   Button,
   FormControl,
-  FormHelperText,
   Grid,
-  InputAdornment,
   InputLabel,
   MenuItem,
   Select,
   Typography,
-  useMediaQuery,
-  useTheme,
-  Modal,
   Dialog,
   DialogTitle,
   DialogContent,
@@ -23,11 +18,7 @@ import {
 } from "@mui/material"
 
 import { useForm, SubmitHandler, Controller } from "react-hook-form"
-import { IBandFields } from "../../../../Types/form.type"
-import { yupResolver } from "@hookform/resolvers/yup"
-import * as yup from "yup"
-import { TextField } from "@mui/material"
-import { NewspaperOutlined, PhoneOutlined, EmailOutlined, MapOutlined, Circle } from "@mui/icons-material"
+import { Circle } from "@mui/icons-material"
 import { Stack } from "@mui/system"
 import { useState } from "react"
 import { toast } from "react-toastify"
@@ -42,21 +33,19 @@ interface IDataForm {
   member_id?: number
   label_id?: number
 }
-export const SuperAdminForm = ({ toggleDrawer }: any) => {
+
+interface SuperAdminProps {
+  toggleDrawer: () => void
+}
+export const SuperAdminForm = ({ toggleDrawer }: SuperAdminProps) => {
   const { mobile } = useMobile()
   const { myBands, deleteBand } = useBand()
   const { labels, deleteLabel } = useLabel()
   const { getAdmins, adminList, deleteAdmin, getMembers, memberList } = useAuth()
   const [dataForm, setDataForm] = useState<IDataForm>({} as IDataForm)
-  const {
-    handleSubmit,
-    reset,
-    control,
-    setValue,
-    formState: { errors },
-  } = useForm<any>({ mode: "all" })
+  const { handleSubmit, control } = useForm<IDataForm>({ mode: "all" })
 
-  const submitForm: SubmitHandler<any> = (data: any) => {
+  const submitForm: SubmitHandler<IDataForm> = (data: IDataForm) => {
     if (Object.keys(data).find(key => !!data[key])) {
       setOpen(true)
       setDataForm(data)
@@ -64,10 +53,6 @@ export const SuperAdminForm = ({ toggleDrawer }: any) => {
   }
 
   const [open, setOpen] = React.useState(false)
-
-  const handleClickOpen = () => {
-    setOpen(true)
-  }
 
   const handleClose = () => {
     setOpen(false)
@@ -93,7 +78,7 @@ export const SuperAdminForm = ({ toggleDrawer }: any) => {
       <form onSubmit={handleSubmit(submitForm)} style={{ width: "100%" }}>
         <Stack spacing={3} width="100%">
           <Stack>
-            <Typography variant="subtitle1">Aqui você pode deletar bandas e administradores</Typography>
+            <Typography variant="subtitle1">Deseja deletar alguma informação? Selecione abaixo</Typography>
           </Stack>
           <Stack direction={mobile ? "column" : "row"} spacing={2} width="100%" justifyContent={"center"}>
             <Controller

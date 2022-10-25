@@ -12,35 +12,35 @@ import {
   MenuItem,
   Select,
   Typography,
-  useMediaQuery,
 } from "@mui/material"
 
 import { useForm, SubmitHandler, Controller } from "react-hook-form"
 import { yupResolver } from "@hookform/resolvers/yup"
 import * as yup from "yup"
 import { TextField } from "@mui/material"
-import { NewspaperOutlined, PhoneOutlined, EmailOutlined, ColorLens, Circle } from "@mui/icons-material"
+import { NewspaperOutlined, Circle } from "@mui/icons-material"
 import { Stack } from "@mui/system"
 import { useState } from "react"
 import { toast } from "react-toastify"
 import { useMobile } from "../../../../Provider/Theme/Mobile"
-//import { useLabel } from "../../../../Provider/Label/Label"
 import uuid from "react-uuid"
 import { ILabel } from "../../../../Types/label.type"
 import InputColor from "react-input-color"
-import { useEffect } from "react"
 import { useLabel } from "../../../../Provider/Label/Label"
 
 const schema = yup.object().shape({
   title: yup.string().required("Nome da Label é obrigatório").max(100, "Nome muito grande"),
-  color: yup.string().max(150, "Email muito grande").required("Cor da label é obrigatório"),
+  color: yup.string().max(20, "Cor muito grande").required("Cor da label é obrigatório"),
 })
 
-export const LabelForm = ({ toggleDrawer }: any) => {
+interface LabelProps {
+  toggleDrawer: () => void
+}
+
+export const LabelForm = ({ toggleDrawer }: LabelProps) => {
   const { mobile } = useMobile()
   const [currentLabel, setCurrentLabel] = useState(0)
   const { createLabel, labels, updateLabel } = useLabel()
-  const [color, setColor] = useState({} as any)
   const [initialColor, setInitialColor] = useState("#009955")
 
   const {
@@ -48,7 +48,6 @@ export const LabelForm = ({ toggleDrawer }: any) => {
     reset,
     control,
     setValue,
-    register,
     formState: { errors },
   } = useForm<ILabel>({ resolver: yupResolver(schema), mode: "all" })
 
@@ -70,7 +69,6 @@ export const LabelForm = ({ toggleDrawer }: any) => {
   }
 
   const selectColor = color => {
-    setColor(color)
     setValue("color", color.hex)
   }
   React.useEffect(() => {

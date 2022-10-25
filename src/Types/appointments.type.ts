@@ -16,6 +16,7 @@ export interface IAppointments {
   id_band: number
   start_date: string
   end_date: string
+  id_label: number
   band: {
     id: number
     name: string

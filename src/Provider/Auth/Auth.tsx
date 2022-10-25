@@ -1,4 +1,3 @@
-/* eslint-disable no-debugger */
 import React, { useContext, createContext, useState, ReactNode, useCallback, Dispatch } from "react"
 import jwt_decode from "jwt-decode"
 
@@ -45,7 +44,7 @@ interface AuthContextData {
   createAdm: (credentials: SignUpCredentials) => Promise<IResponse>
   signOut: () => void
   getUser: () => void
-  userData: any
+  userData: IUser
   setData: Dispatch<React.SetStateAction<AuthState>>
   superAdmin: boolean
   adm: boolean
@@ -76,7 +75,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   const [adminList, setAdminList] = useState<IUser[]>([])
   const [memberList, setMemberList] = useState<IUser[]>([])
 
-  const [userData, setUserData] = useState({} as any)
+  const [userData, setUserData] = useState({} as IUser)
   const signIn = useCallback(async ({ username, password }: SignInCredentials) => {
     try {
       const response = await api.post("/login", { username, password })
@@ -93,7 +92,6 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
         message: response.data.success,
       }
     } catch (e) {
-      console.log(e)
       return {
         success: false,
         message: e.response.data.error,
@@ -115,7 +113,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
       .get(`/users/${data.id}`, {
         headers: { Authorization: `Bearer ${data.accessToken}` },
       })
-      .then((response: AxiosResponse<any>) => setUserData(response.data))
+      .then((response: AxiosResponse<IUser>) => setUserData(response.data))
       .catch(err => console.log(err))
   }
 
@@ -127,7 +125,6 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
         message: "Usuário criado com sucesso faça seu login",
       }
     } catch (e) {
-      console.log(e)
       return {
         success: false,
         message: e.response.data.error,
@@ -195,7 +192,6 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
         message: "Você não tem permissão de deletar um admin",
       }
     } catch (e) {
-      console.log(e)
       return {
         success: false,
         message: e.response.data.error,

@@ -11,8 +11,6 @@ import {
   MenuItem,
   Select,
   Typography,
-  useMediaQuery,
-  useTheme,
 } from "@mui/material"
 
 import { useForm, SubmitHandler, Controller } from "react-hook-form"
@@ -34,12 +32,16 @@ const schema = yup.object().shape({
   cellphone: yup.string().max(50, "Telefone muito grande").nullable(),
 })
 
-export const BandForm = ({ toggleDrawer }: any) => {
+interface BandProps {
+  toggleDrawer: () => void
+}
+
+export const BandForm = ({ toggleDrawer }: BandProps) => {
   const { mobile } = useMobile()
   const { createBand, myBands, updateBand } = useBand()
   const [maskedCellPhone, setMaskedCellPhone] = useState("")
   const [currentBand, setCurrentBand] = useState(0)
-  const maskCellNumber = value => {
+  const maskCellNumber = (value: string) => {
     value = value.replace(/\D/g, "")
     value = value.replace(/(\d{2})(\d)/, "($1) $2")
     value = value.replace(/(\d{4,5})(\d)/, "$1-$2")

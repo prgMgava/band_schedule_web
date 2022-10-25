@@ -1,21 +1,18 @@
-/* eslint-disable no-debugger */
-import { Card, Box, Stack, Link } from "@mui/material"
+import { Card, Stack, Link } from "@mui/material"
 import React, { useEffect } from "react"
-import { AdminForm } from "../Components/Calendar/Components/Form/AdminForm"
 
-import { Button, Grid, InputAdornment, Typography, useMediaQuery, useTheme } from "@mui/material"
+import { Button, Grid, InputAdornment } from "@mui/material"
 
 import { useForm, SubmitHandler, Controller } from "react-hook-form"
 import { yupResolver } from "@hookform/resolvers/yup"
 import * as yup from "yup"
 import { TextField } from "@mui/material"
-import { NewspaperOutlined, PhoneOutlined, EmailOutlined, LockOpenOutlined } from "@mui/icons-material"
-import { useState } from "react"
+import { NewspaperOutlined, LockOpenOutlined } from "@mui/icons-material"
 import { toast } from "react-toastify"
 import { ILoginFields } from "../Types/form.type"
 import { useMobile } from "../Provider/Theme/Mobile"
 import { useAuth } from "../Provider/Auth/Auth"
-import { Navigate, useLocation, useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 
 const schema = yup.object().shape({
   username: yup.string().required("Nome da Banda é obrigatório").max(100, "Nome muito grande"),
@@ -30,7 +27,6 @@ export const Login = () => {
     handleSubmit,
     reset,
     control,
-    setValue,
     formState: { errors },
   } = useForm<ILoginFields>({ resolver: yupResolver(schema), mode: "all" })
 

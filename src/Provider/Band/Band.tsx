@@ -1,5 +1,4 @@
-/* eslint-disable no-debugger */
-import React, { useContext, createContext, useState, ReactNode, useCallback, Dispatch } from "react"
+import React, { useContext, createContext, useState, ReactNode, useCallback } from "react"
 
 import { AxiosResponse } from "axios"
 import { api } from "../../Services/api"
@@ -43,7 +42,6 @@ const BandProvider = ({ children }: BandProviderProps) => {
   const [myBands, setMyBands] = useState<IBand[]>([])
 
   const getMyBands = useCallback(async () => {
-    //TODO: remove defaul user id
     try {
       if (adm) {
         const url = superAdmin ? "/band" : `/band/owner/${id}`
@@ -86,7 +84,6 @@ const BandProvider = ({ children }: BandProviderProps) => {
         message: "Você não tem permissão de criar uma banda",
       }
     } catch (e) {
-      console.log(e)
       return {
         success: false,
         message: e.response.data.error,
@@ -121,7 +118,7 @@ const BandProvider = ({ children }: BandProviderProps) => {
   const updateBand = useCallback(async ({ name, cellphone, email, id }: CreateBandProp) => {
     try {
       if (adm) {
-        const response: AxiosResponse = await api.patch(
+        await api.patch(
           `/band/${id}`,
           { name, cellphone, email },
           {

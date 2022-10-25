@@ -1,14 +1,10 @@
-/* eslint-disable no-unreachable */
-/* eslint-disable react/prop-types */
-/* eslint-disable @typescript-eslint/no-empty-function */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable no-debugger */
 import * as React from "react"
 
 import {
   Box,
   Button,
-  createTheme,
   Divider,
   FormControl,
   FormHelperText,
@@ -20,26 +16,21 @@ import {
   MenuItem,
   Select,
   Typography,
-  useMediaQuery,
-  useTheme,
 } from "@mui/material"
 
 import uuid from "react-uuid"
 
-import { useForm, SubmitHandler, Controller, useWatch } from "react-hook-form"
+import { useForm, Controller, SubmitHandler } from "react-hook-form"
 import { yupResolver } from "@hookform/resolvers/yup"
 import * as yup from "yup"
 import { TextField } from "@mui/material"
 import {
-  AccountCircle,
   PlaceOutlined,
   NewspaperOutlined,
   PhoneOutlined,
   MapOutlined,
   Looks3Outlined,
   TextSnippetOutlined,
-  CalendarMonthOutlined,
-  Block,
   Close,
   Circle,
 } from "@mui/icons-material"
@@ -52,6 +43,7 @@ import { useMobile } from "../../../../Provider/Theme/Mobile"
 import { useBand } from "../../../../Provider/Band/Band"
 import { useAppointment } from "../../../../Provider/Appointment/Appointment"
 import { useLabel } from "../../../../Provider/Label/Label"
+import { IAppointments } from "../../../../Types/appointments.type"
 
 const schema = yup.object().shape({
   title: yup.string().required("Nome do compromisso é obrigatório").max(100, "Nome muito grande"),
@@ -70,13 +62,19 @@ const schema = yup.object().shape({
   id_label: yup.number().required("Label é obrigatório"),
 })
 
-// interface AppointmentProps {
-//   data: IAppointmentFields
-//   setAppointments: any
-//   fromMenu: boolean
-// }
+interface AppointmentFormProps {
+  data: any
+  fromMenu?: boolean
+  closeForm?: (value: boolean) => void
+}
 
-export const AppointmentForm = ({ data, fromMenu = false, closeForm = () => {} }) => {
+export const AppointmentForm = ({
+  data,
+  fromMenu = false,
+  closeForm = () => {
+    null
+  },
+}: AppointmentFormProps) => {
   const { mobile } = useMobile()
   const { myBands } = useBand()
   const { labels } = useLabel()
@@ -117,16 +115,14 @@ export const AppointmentForm = ({ data, fromMenu = false, closeForm = () => {} }
   const {
     register,
     handleSubmit,
-    watch,
     reset,
     control,
     setValue,
     getValues,
     formState: { errors },
-  } = useForm({ resolver: yupResolver(schema), mode: "onSubmit" })
+  } = useForm<IAppointments>({ resolver: yupResolver(schema), mode: "onSubmit" })
 
-  const submitForm = async data => {
-    data
+  const submitForm: SubmitHandler<IAppointments> = async data => {
     if (isEditing) {
       const response = await updateAppointment(data, id)
       toast[response.success ? "success" : "error"](response.message)
@@ -152,7 +148,7 @@ export const AppointmentForm = ({ data, fromMenu = false, closeForm = () => {} }
     if (isEditing && !!currentEditingData) {
       const { startDate, endDate, start_date, end_date, ...rest } = currentEditingData
       Object.keys(rest).map(item => {
-        setValue(item, data.appointmentData[item])
+        setValue(item as keyof IAppointments, data.appointmentData[item])
       })
     }
     setMaskedCellPhone(data.appointmentData?.cellphone)
@@ -163,7 +159,7 @@ export const AppointmentForm = ({ data, fromMenu = false, closeForm = () => {} }
   }, [])
 
   useEffect(() => {
-    console.log()
+    // update component
   }, [currentState, currenBand])
   return (
     <Grid padding={fromMenu ? "24px" : mobile ? "" : 8}>

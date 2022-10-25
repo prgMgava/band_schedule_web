@@ -1,20 +1,6 @@
-import {
-  Close,
-  ColorLens,
-  EventAvailable,
-  GroupAdd,
-  Image,
-  Logout,
-  MusicNote,
-  Person,
-  PersonAdd,
-  PersonAddAlt,
-  Settings,
-} from "@mui/icons-material"
+import { Close, ColorLens, EventAvailable, Logout, MusicNote, PersonAddAlt } from "@mui/icons-material"
 import {
   Box,
-  useMediaQuery,
-  CardHeader,
   Menu,
   MenuItem,
   Avatar,
@@ -23,7 +9,6 @@ import {
   Tooltip,
   IconButton,
   Typography,
-  Modal,
   Drawer,
 } from "@mui/material"
 import { Stack } from "@mui/system"
@@ -43,7 +28,6 @@ interface HeaderProps {
 }
 
 export const Header = ({ setCurrentPriority }: HeaderProps) => {
-  const { mobile } = useMobile()
   const { signOut, adm, superAdmin, adminList, memberList, id } = useAuth()
   const [anchorEl, setAnchorEl] = React.useState(null)
   const [currentForm, setCurrentForm] = useState("")
@@ -55,11 +39,10 @@ export const Header = ({ setCurrentPriority }: HeaderProps) => {
   const handleClose = () => {
     setAnchorEl(null)
   }
-  // Appointment Form
+
   const [openDrawer, setOpenDrawer] = useState(false)
 
   const toggleDrawer = () => {
-    console.log("aloha")
     setOpenDrawer(old => !old)
   }
 
@@ -84,7 +67,6 @@ export const Header = ({ setCurrentPriority }: HeaderProps) => {
           <Close alignmentBaseline="baseline"></Close>
         </IconButton>
         <Divider />
-
         {forms[currentForm]}
         <Divider />
       </Drawer>

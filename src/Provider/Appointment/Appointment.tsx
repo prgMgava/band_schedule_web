@@ -1,5 +1,4 @@
-/* eslint-disable no-debugger */
-import React, { useContext, createContext, useState, ReactNode, useCallback, Dispatch } from "react"
+import React, { useContext, createContext, useState, ReactNode, useCallback } from "react"
 
 import { AxiosResponse } from "axios"
 import { api } from "../../Services/api"
@@ -29,7 +28,7 @@ interface AppointmentProviderProps {
 }
 
 const AppointmentProvider = ({ children }: AppointmentProviderProps) => {
-  const { id, accessToken, adm, superAdmin } = useAuth()
+  const { accessToken, adm } = useAuth()
   const [appointments, setAppointments] = useState<IAppointments[]>([])
 
   const getAppointments = useCallback(async (date: Date) => {
@@ -77,7 +76,6 @@ const AppointmentProvider = ({ children }: AppointmentProviderProps) => {
         message: "Você não tem permissão de criar um compromisso",
       }
     } catch (e) {
-      console.log(e)
       return {
         success: false,
         message: e.response.data.error,
@@ -102,7 +100,6 @@ const AppointmentProvider = ({ children }: AppointmentProviderProps) => {
         message: "Você não tem permissão de deletar um Compromisso",
       }
     } catch (e) {
-      console.log(e)
       return {
         success: false,
         message: e.response.data.error,
@@ -113,7 +110,7 @@ const AppointmentProvider = ({ children }: AppointmentProviderProps) => {
   const updateAppointment = useCallback(async (payload: IAppointments, id: number) => {
     try {
       if (adm) {
-        const response: AxiosResponse = await api.patch(`/appointment/${id}`, payload, {
+        await api.patch(`/appointment/${id}`, payload, {
           headers: { "x-access-token": accessToken },
         })
         setAppointments(old => [...old.filter(Appointment => Appointment.id !== id), payload])

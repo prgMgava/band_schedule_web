@@ -1,7 +1,5 @@
-import React, { useContext, createContext, useState, ReactNode, useCallback, Dispatch } from "react"
+import React, { useContext, createContext, ReactNode } from "react"
 
-import { AxiosResponse } from "axios"
-import { api } from "../../Services/api"
 import { useMediaQuery, useTheme } from "@mui/material"
 interface MobileContextProps {
   mobile: boolean

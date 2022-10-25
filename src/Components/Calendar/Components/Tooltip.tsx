@@ -18,7 +18,6 @@ import { IAppointments } from "../../../Types/appointments.type"
 import { IResource } from "../../../Types/calendar.type"
 import { classes } from "../../Calendar/Calendar"
 import { useMobile } from "../../../Provider/Theme/Mobile"
-import { useLabel } from "../../../Provider/Label/Label"
 
 const StyledTooltipContent = styled("div")(({ theme: { spacing, typography, palette }, color }) => ({
   [`&.${classes.content}`]: {
@@ -74,6 +73,7 @@ const StyledTooltipContent = styled("div")(({ theme: { spacing, typography, pale
   },
 }))
 
+//TODO: type formatDate
 interface TooltipProps {
   appointmentData: IAppointments
   formatDate: any
@@ -140,12 +140,12 @@ export const Tooltip = ({ appointmentData, formatDate, appointmentResources }: T
         </Grid>
       </Grid>
       <Grid container alignItems="center" key={`${resource.fieldName}_${resource.id}`}>
-        <Grid className={classNames(classes.contentItemIcon, classes.icon, classes.colorfulContent)} item xs={2}>
+        <Grid className={classNames(classes.contentItemIcon, classes.icon)} item xs={2}>
           <EventOutlined />
         </Grid>
         <Grid item xs={10}>
-          <span className={classNames(classes.text, classes.colorfulContent)}>
-            <b>{`${resource.text?.charAt(0).toUpperCase()}${resource.text?.slice(1)}`}</b>
+          <span className={classNames(classes.text)}>
+            <b>{`${appointmentData.status?.charAt(0).toUpperCase()}${appointmentData.status?.slice(1)}`}</b>
           </span>
         </Grid>
       </Grid>

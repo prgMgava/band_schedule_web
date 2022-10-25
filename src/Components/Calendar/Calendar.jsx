@@ -1,6 +1,6 @@
-/* eslint-disable no-debugger */
-/* eslint-disable @typescript-eslint/no-empty-function */
 /* eslint-disable react/prop-types */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+//TODO: change file to TS
 import React, { useEffect, useState } from "react"
 import { EditingState, IntegratedEditing, ViewState } from "@devexpress/dx-react-scheduler"
 import {
@@ -18,31 +18,18 @@ import {
 } from "@devexpress/dx-react-scheduler-material-ui"
 import { connectProps } from "@devexpress/dx-react-core"
 import { styled } from "@mui/material/styles"
-import Paper from "@mui/material/Paper"
 import MenuItem from "@mui/material/MenuItem"
 import Select from "@mui/material/Select"
 import FormControl from "@mui/material/FormControl"
 import { Tooltip } from "./Components/Tooltip"
 import { AppointmentForm as CustomAppointmentForm } from "./Components/Form/AppointmentForm"
 import { Header } from "./Components/Header/Header"
-import {
-  Box,
-  Button,
-  Card,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  Stack,
-} from "@mui/material"
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Stack } from "@mui/material"
 import { useBand } from "../../Provider/Band/Band"
 import { useAuth } from "../../Provider/Auth/Auth"
 import { useAppointment } from "../../Provider/Appointment/Appointment"
 import { toast } from "react-toastify"
 import { useLabel } from "../../Provider/Label/Label"
-import uuid from "react-uuid"
-import { Filter } from "@mui/icons-material"
 
 const PREFIX = "Demo"
 export const classes = {
@@ -184,7 +171,6 @@ export const Demo = () => {
   }
 
   const PrioritySelector = ({ priorityChange, priority }) => {
-    debugger
     const currentPriority = labels?.find(item => item.id === priority) || {}
     return (
       <StyledFormControl className={classes.prioritySelector} variant="standard">
@@ -216,7 +202,7 @@ export const Demo = () => {
       </StyledToolbarFlexibleSpace>
     )
   }
-  const TooltipContent = ({ appointmentData, formatDate, appointmentResources, ...rest }) => {
+  const TooltipContent = ({ appointmentData, formatDate, appointmentResources }) => {
     return (
       <Tooltip appointmentData={appointmentData} formatDate={formatDate} appointmentResources={appointmentResources} />
     )
@@ -254,7 +240,9 @@ export const Demo = () => {
     getAppointments(currentDate)
   }, [currentDate])
 
-  useEffect(() => {}, [appointments, labels])
+  useEffect(() => {
+    // comment
+  }, [appointments, labels])
 
   const TextEditor = props => {
     // eslint-disable-next-line react/destructuring-assignment
@@ -328,7 +316,7 @@ export const Demo = () => {
           aria-labelledby="alert-dialog-title"
           aria-describedby="alert-dialog-description"
         >
-          <DialogTitle id="alert-dialog-title">Esta ação não podera ser desfeita</DialogTitle>
+          <DialogTitle id="alert-dialog-title">Esta ação não poderá ser desfeita</DialogTitle>
           <DialogContent>
             <DialogContentText id="alert-dialog-description">
               Você tem certeza que deseja excluir o(s) seguinte(s) dados:
