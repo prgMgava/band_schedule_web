@@ -1,3 +1,4 @@
+/* eslint-disable no-debugger */
 import * as React from "react"
 
 import {
@@ -55,6 +56,7 @@ export const LabelForm = ({ toggleDrawer }: LabelProps) => {
     if (currentLabel) {
       const response = await updateLabel({ ...data, id: currentLabel })
       toast[response.success ? "success" : "error"](response.message)
+
       if (response.success) {
         toggleDrawer()
       }
@@ -64,8 +66,8 @@ export const LabelForm = ({ toggleDrawer }: LabelProps) => {
       if (response.success) {
         toggleDrawer()
       }
+      window.location.reload()
     }
-    reset()
   }
 
   const selectColor = color => {
@@ -83,7 +85,7 @@ export const LabelForm = ({ toggleDrawer }: LabelProps) => {
   }, [currentLabel])
 
   return (
-    <Grid padding={8}>
+    <Grid padding={mobile ? 2 : 8}>
       <form onSubmit={handleSubmit(submitForm)}>
         <Stack spacing={3}>
           <Stack>
@@ -143,14 +145,19 @@ export const LabelForm = ({ toggleDrawer }: LabelProps) => {
               setCurrentLabel(e.target.value as number)
             }}
           >
-            {labels.map(label => (
-              <MenuItem value={label.id} key={uuid()}>
-                <ListItemIcon>
-                  <Circle sx={{ color: label?.color }} />
-                </ListItemIcon>
-                {label.title}
-              </MenuItem>
-            ))}
+            {labels.map(label => {
+              if (!label.is_deleted) {
+                return (
+                  <MenuItem value={label.id} key={uuid()}>
+                    <ListItemIcon>
+                      <Circle sx={{ color: label?.color }} />
+                    </ListItemIcon>
+                    {label.title}
+                  </MenuItem>
+                )
+              }
+              return <></>
+            })}
           </Select>
         </FormControl>
       </Box>

@@ -6,4 +6,5 @@ export interface IBand {
   createdAt?: string
   updatedAt?: string
   owner?: 2
+  is_deleted: boolean
 }

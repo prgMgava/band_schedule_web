@@ -129,7 +129,6 @@ export const AppointmentForm = ({
       toast[response.success ? "success" : "error"](response.message)
       if (response.success) {
         setCurrentEditingData(null)
-        reset()
         closeForm(false)
       }
       return
@@ -138,7 +137,6 @@ export const AppointmentForm = ({
     toast[response.success ? "success" : "error"](response.message)
     if (response.success) {
       setCurrentEditingData(null)
-      reset()
       closeForm(false)
     }
   }
@@ -164,15 +162,17 @@ export const AppointmentForm = ({
   }, [currentState, currenBand])
   return (
     <Grid padding={fromMenu ? "24px" : mobile ? "" : 8}>
-      <Box style={{ width: "100%", marginLeft: "8px", justifyContent: "end", display: "flex" }}>
-        <IconButton
-          onClick={() => closeForm(false)}
-          size="medium"
-          style={{ width: "25px", marginLeft: "8px", justifyContent: "end" }}
-        >
-          <Close alignmentBaseline="baseline"></Close>
-        </IconButton>
-      </Box>
+      {!fromMenu && (
+        <Box style={{ width: "100%", marginLeft: "8px", justifyContent: "end", display: "flex" }}>
+          <IconButton
+            onClick={() => closeForm(false)}
+            size="medium"
+            style={{ width: "25px", marginLeft: "8px", justifyContent: "end" }}
+          >
+            <Close alignmentBaseline="baseline"></Close>
+          </IconButton>
+        </Box>
+      )}
 
       <form onSubmit={handleSubmit(submitForm)}>
         <Stack spacing={3}>
@@ -451,11 +451,16 @@ export const AppointmentForm = ({
                       defaultValue={currenBand}
                       {...field}
                     >
-                      {myBands.map(band => (
-                        <MenuItem value={band.id} key={uuid()}>
-                          {band.name}
-                        </MenuItem>
-                      ))}
+                      {myBands.map(band => {
+                        if (!band.is_deleted) {
+                          return (
+                            <MenuItem value={band.id} key={uuid()}>
+                              {band.name}
+                            </MenuItem>
+                          )
+                        }
+                        return <></>
+                      })}
                     </Select>
                     {!!errors.id_band && <FormHelperText sx={{ color: "#E34367" }}>Selecione uma banda</FormHelperText>}
                   </FormControl>
@@ -479,14 +484,19 @@ export const AppointmentForm = ({
                       defaultValue={currenLabel}
                       {...field}
                     >
-                      {labels.map(label => (
-                        <MenuItem value={label.id} key={uuid()}>
-                          <ListItemIcon>
-                            <Circle sx={{ color: label?.color }} />
-                          </ListItemIcon>
-                          {label.title}
-                        </MenuItem>
-                      ))}
+                      {labels.map(label => {
+                        if (!label.is_deleted) {
+                          return (
+                            <MenuItem value={label.id} key={uuid()}>
+                              <ListItemIcon>
+                                <Circle sx={{ color: label?.color }} />
+                              </ListItemIcon>
+                              {label.title}
+                            </MenuItem>
+                          )
+                        }
+                        return <></>
+                      })}
                     </Select>
                     {!!errors.id_label && (
                       <FormHelperText sx={{ color: "#E34367" }}>Selecione uma banda</FormHelperText>

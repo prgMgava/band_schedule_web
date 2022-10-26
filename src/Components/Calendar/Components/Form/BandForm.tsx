@@ -70,7 +70,6 @@ export const BandForm = ({ toggleDrawer }: BandProps) => {
         toggleDrawer()
       }
     }
-    reset()
   }
 
   React.useEffect(() => setValue("cellphone", maskedCellPhone), [maskedCellPhone])
@@ -88,7 +87,7 @@ export const BandForm = ({ toggleDrawer }: BandProps) => {
   }, [currentBand])
 
   return (
-    <Grid padding={mobile ? "" : 8}>
+    <Grid padding={mobile ? 2 : 8}>
       <form onSubmit={handleSubmit(submitForm)}>
         <Stack spacing={3}>
           <Stack>
@@ -193,11 +192,16 @@ export const BandForm = ({ toggleDrawer }: BandProps) => {
               setCurrentBand(e.target.value as number)
             }}
           >
-            {myBands.map(band => (
-              <MenuItem value={band.id} key={uuid()}>
-                {band.name}
-              </MenuItem>
-            ))}
+            {myBands.map(band => {
+              if (!band.is_deleted) {
+                return (
+                  <MenuItem value={band.id} key={uuid()}>
+                    {band.name}
+                  </MenuItem>
+                )
+              }
+              return <></>
+            })}
           </Select>
         </FormControl>
       </Box>

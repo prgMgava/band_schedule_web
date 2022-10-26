@@ -7,7 +7,10 @@ import { IResponse, useAuth } from "../Auth/Auth"
 
 interface BandContextProps {
   myBands: IBand[]
-  getMyBands: (owner: GetMyBandsProps) => Promise<IResponse>
+  bands: IBand[]
+  getBands: () => Promise<IResponse>
+
+  getMyBands: () => Promise<IResponse>
   createBand: ({ name, cellphone, email }: CreateBandProp) => Promise<IResponse>
   deleteBand: (id: number) => Promise<IResponse>
   updateBand: ({ name, cellphone, email, id }: CreateBandProp) => Promise<IResponse>
@@ -40,6 +43,26 @@ interface BandProviderProps {
 const BandProvider = ({ children }: BandProviderProps) => {
   const { id, accessToken, adm, superAdmin } = useAuth()
   const [myBands, setMyBands] = useState<IBand[]>([])
+  const [bands, setBands] = useState<IBand[]>([])
+
+  const getBands = useCallback(async () => {
+    try {
+      const { data }: AxiosResponse<IBand[]> = await api.get("/band", {
+        headers: { "x-access-token": accessToken },
+      })
+
+      setBands(data)
+      return {
+        success: true,
+        message: "OK",
+      }
+    } catch (e) {
+      return {
+        success: false,
+        message: e.response.data.error,
+      }
+    }
+  }, [])
 
   const getMyBands = useCallback(async () => {
     try {
@@ -144,7 +167,7 @@ const BandProvider = ({ children }: BandProviderProps) => {
     }
   }, [])
   return (
-    <BandContext.Provider value={{ myBands, getMyBands, createBand, deleteBand, updateBand }}>
+    <BandContext.Provider value={{ getBands, bands, myBands, getMyBands, createBand, deleteBand, updateBand }}>
       {children}
     </BandContext.Provider>
   )

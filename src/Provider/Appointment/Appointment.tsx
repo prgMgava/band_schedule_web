@@ -118,12 +118,12 @@ const AppointmentProvider = ({ children }: AppointmentProviderProps) => {
 
         return {
           success: true,
-          message: "Compromisso atualizada com sucesso",
+          message: "Compromisso atualizado com sucesso",
         }
       }
       return {
         success: false,
-        message: "Você não tem permissão de editar uma Compromisso",
+        message: "Você não tem permissão de editar um Compromisso",
       }
     } catch (e) {
       return {
@@ -136,7 +136,7 @@ const AppointmentProvider = ({ children }: AppointmentProviderProps) => {
   const updateAppointmentStatus = useCallback(async () => {
     const currentDate = new Date().toISOString().substring(0, 10)
     try {
-      if (superAdmin) {
+      if (adm) {
         const { data } = await api.patch(
           `/appointment?current_date=${currentDate}`,
           {},
@@ -152,7 +152,7 @@ const AppointmentProvider = ({ children }: AppointmentProviderProps) => {
       }
       return {
         success: false,
-        message: "Você não tem permissão de editar uma Compromisso",
+        message: "Você não tem permissão de editar um Compromisso",
       }
     } catch (e) {
       return {

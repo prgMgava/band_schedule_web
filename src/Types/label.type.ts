@@ -1,5 +1,6 @@
 export interface ILabel {
-  id?: number
+  id: number
   title: string
   color: string
+  is_deleted: boolean
 }

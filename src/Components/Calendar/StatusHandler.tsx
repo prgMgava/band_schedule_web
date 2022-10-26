@@ -20,6 +20,7 @@ export const StatusHandler = ({ toggleDrawer }: StatusProps) => {
     if (response.success) {
       toggleDrawer()
     }
+    window.location.reload()
   }
 
   return (

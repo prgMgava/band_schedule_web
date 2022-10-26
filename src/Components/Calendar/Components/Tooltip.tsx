@@ -18,6 +18,7 @@ import { IAppointments } from "../../../Types/appointments.type"
 import { IResource } from "../../../Types/calendar.type"
 import { classes } from "../../Calendar/Calendar"
 import { useMobile } from "../../../Provider/Theme/Mobile"
+import { useBand } from "../../../Provider/Band/Band"
 
 const StyledTooltipContent = styled("div")(({ theme: { spacing, typography, palette }, color }) => ({
   [`&.${classes.content}`]: {
@@ -82,7 +83,13 @@ interface TooltipProps {
 
 export const Tooltip = ({ appointmentData, formatDate, appointmentResources }: TooltipProps) => {
   const { mobile } = useMobile()
+  const { bands, getBands } = useBand()
   const resource = appointmentResources[0]
+
+  React.useEffect(() => {
+    getBands()
+  })
+
   return (
     <StyledTooltipContent className={classes.content} color={resource?.color}>
       <Grid container alignItems="flex-start" className={classes.titleContainer}>
@@ -128,7 +135,7 @@ export const Tooltip = ({ appointmentData, formatDate, appointmentResources }: T
           <MusicNoteOutlined className={classes.icon} />
         </Grid>
         <Grid item xs={10}>
-          <div className={classes.text}>{appointmentData.band?.name}</div>
+          <div className={classes.text}>{bands.find(band => band.id == appointmentData.id_band)?.name}</div>
         </Grid>
       </Grid>
       <Grid container alignItems="center" className={classes.contentContainer}>

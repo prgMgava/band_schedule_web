@@ -56,7 +56,7 @@ export const Header = ({ setCurrentPriority }: HeaderProps) => {
   const forms = {
     appointment: <AppointmentForm data={data} fromMenu={true} />,
     band: <BandForm toggleDrawer={toggleDrawer}></BandForm>,
-    admin: <AdminForm toggleDrawer={toggleDrawer} />,
+    admin: <AdminForm toggleDrawer={toggleDrawer} isUpdating />,
     superAdmin: <SuperAdmin toggleDrawer={toggleDrawer} />,
     label: <LabelForm toggleDrawer={toggleDrawer} />,
     status: <StatusHandler toggleDrawer={toggleDrawer} />,
@@ -133,9 +133,7 @@ export const Header = ({ setCurrentPriority }: HeaderProps) => {
                     setOpenDrawer(true)
                   }}
                 >
-                  <Avatar />{" "}
-                  {allUsers.find(user => user.id == (localStorage.getItem("@BandSchedule:id") || 0))?.username ||
-                    "Meu Perfil"}
+                  <Avatar /> Meu Perfil
                 </MenuItem>
                 <Divider />
                 <Typography component="h6" fontSize={"10px"} pl={1}>
@@ -146,7 +144,7 @@ export const Header = ({ setCurrentPriority }: HeaderProps) => {
                     setCurrentForm("appointment")
                     setOpenDrawer(true)
                   }}
-                  disabled={!adm || !superAdmin}
+                  disabled={!adm}
                 >
                   <ListItemIcon>
                     <EventAvailable fontSize="small" />

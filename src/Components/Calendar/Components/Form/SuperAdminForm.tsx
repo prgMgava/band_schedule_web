@@ -78,7 +78,7 @@ export const SuperAdminForm = ({ toggleDrawer }: SuperAdminProps) => {
       <form onSubmit={handleSubmit(submitForm)} style={{ width: "100%" }}>
         <Stack spacing={3} width="100%">
           <Stack>
-            <Typography variant="subtitle1">Deseja deletar alguma informação? Selecione abaixo</Typography>
+            <Typography variant="subtitle1">Deseja inativar alguma informação? Selecione abaixo</Typography>
           </Stack>
           <Stack direction={mobile ? "column" : "row"} spacing={2} width="100%" justifyContent={"center"}>
             <Controller
@@ -95,11 +95,17 @@ export const SuperAdminForm = ({ toggleDrawer }: SuperAdminProps) => {
                       label="States"
                       {...field}
                     >
-                      {myBands.map(item => (
-                        <MenuItem value={item.id} key={uuid()}>
-                          {item.name}
-                        </MenuItem>
-                      ))}
+                      {myBands.map(item => {
+                        if (!item.is_deleted) {
+                          return (
+                            <MenuItem value={item.id} key={uuid()}>
+                              {item.name}
+                            </MenuItem>
+                          )
+                        }
+
+                        return <></>
+                      })}
                     </Select>
                   </FormControl>
                 </Box>
@@ -121,11 +127,16 @@ export const SuperAdminForm = ({ toggleDrawer }: SuperAdminProps) => {
                       fullWidth={true}
                       {...field}
                     >
-                      {adminList.map(item => (
-                        <MenuItem value={item.id} key={uuid()}>
-                          {item.username}
-                        </MenuItem>
-                      ))}
+                      {adminList.map(item => {
+                        if (!item.is_deleted) {
+                          return (
+                            <MenuItem value={item.id} key={uuid()}>
+                              {item.username}
+                            </MenuItem>
+                          )
+                        }
+                        return <></>
+                      })}
                     </Select>
                   </FormControl>
                 </Box>
@@ -147,11 +158,16 @@ export const SuperAdminForm = ({ toggleDrawer }: SuperAdminProps) => {
                       fullWidth={true}
                       {...field}
                     >
-                      {memberList.map(item => (
-                        <MenuItem value={item.id} key={uuid()}>
-                          {item.username}
-                        </MenuItem>
-                      ))}
+                      {memberList.map(item => {
+                        if (!item.is_deleted) {
+                          return (
+                            <MenuItem value={item.id} key={uuid()}>
+                              {item.username}
+                            </MenuItem>
+                          )
+                        }
+                        return <></>
+                      })}
                     </Select>
                   </FormControl>
                 </Box>
@@ -172,14 +188,19 @@ export const SuperAdminForm = ({ toggleDrawer }: SuperAdminProps) => {
                     fullWidth={true}
                     {...field}
                   >
-                    {labels.map(label => (
-                      <MenuItem value={label.id} key={uuid()}>
-                        <ListItemIcon>
-                          <Circle sx={{ color: label?.color }} />
-                        </ListItemIcon>
-                        {label.title}
-                      </MenuItem>
-                    ))}
+                    {labels.map(label => {
+                      if (!label.is_deleted) {
+                        return (
+                          <MenuItem value={label.id} key={uuid()}>
+                            <ListItemIcon>
+                              <Circle sx={{ color: label?.color }} />
+                            </ListItemIcon>
+                            {label.title}
+                          </MenuItem>
+                        )
+                      }
+                      return <></>
+                    })}
                   </Select>
                 </FormControl>
               )}

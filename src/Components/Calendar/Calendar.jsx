@@ -33,6 +33,7 @@ import { useAuth } from "../../Provider/Auth/Auth"
 import { useAppointment } from "../../Provider/Appointment/Appointment"
 import { toast } from "react-toastify"
 import { useLabel } from "../../Provider/Label/Label"
+import { api } from "../../Services/api"
 
 const PREFIX = "Demo"
 export const classes = {
@@ -120,12 +121,10 @@ const PrioritySelectorItem = ({ color, text: resourceTitle }) => {
 }
 
 export const Demo = () => {
-  let labels = JSON.parse(localStorage.getItem("@BandSchedule:labels")) || []
-  !labels?.length && localStorage.setItem("@BandSchedule:labels", "[]")
-
-  const { id } = useAuth()
+  const [labels, setLabels] = useState(JSON.parse(localStorage.getItem("@BandSchedule:labels")) || [])
+  const { id, accessToken, getAdmins, getMembers } = useAuth()
   const { getMyBands } = useBand()
-  const { getLabels, labels: labelsProvider } = useLabel()
+  const { getLabels } = useLabel()
   const { appointments, getAppointments, deleteAppointment } = useAppointment()
   const [currentViewName, setCurrentViewName] = React.useState("Mensal")
   const [currentPriority, setCurrentPriority] = React.useState(0)
@@ -237,6 +236,8 @@ export const Demo = () => {
     flexibleSpace.update()
     getMyBands(id)
     getLabels()
+    getMembers()
+    getAdmins()
   }, [])
 
   useEffect(() => {
@@ -244,9 +245,33 @@ export const Demo = () => {
   }, [currentDate])
 
   useEffect(() => {
-    labels = labelsProvider
-    localStorage.setItem("@BandSchedule:labels", JSON.stringify(labelsProvider))
-  }, [labelsProvider])
+    try {
+      api
+        .get("/label", {
+          headers: { "x-access-token": accessToken },
+        })
+        .then(res => {
+          const newData = res.data.map(item => {
+            return {
+              ...item,
+              text: item.title,
+            }
+          })
+          localStorage.setItem("@BandSchedule:labels", JSON.stringify(newData))
+          setLabels(newData)
+        })
+    } catch (e) {
+      1
+    }
+  }, [])
+
+  useEffect(() => {
+    // comment
+  }, [labels])
+
+  useEffect(() => {
+    // comment
+  }, [labels])
 
   const TextEditor = props => {
     // eslint-disable-next-line react/destructuring-assignment

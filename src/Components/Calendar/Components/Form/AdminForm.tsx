@@ -17,8 +17,8 @@ import { useAuth } from "../../../../Provider/Auth/Auth"
 
 const schema = yup.object().shape({
   username: yup.string().required("Username é obrigatório").max(100, "Nome muito grande"),
-  email: yup.string().max(150, "Email muito grande"),
-  cellphone: yup.string().max(50, "Telefone muito grande"),
+  email: yup.string().max(150, "Email muito grande").nullable(),
+  cellphone: yup.string().max(50, "Telefone muito grande").nullable(),
   password: yup.string().max(20, "Senha Muito grande").required("Senha obrigatória"),
 })
 
@@ -31,9 +31,11 @@ interface AdminFormProps {
 export const AdminForm = ({ toggleDrawer, isSignup = false, isUpdating = false }: AdminFormProps) => {
   const { mobile } = useMobile()
   const navigate = useNavigate()
-  const { signUp, createAdm, adminList, memberList, updateUser } = useAuth()
+  const { signUp, createAdm, adminList, memberList, updateUser, id: userId } = useAuth()
   const [maskedCellPhone, setMaskedCellPhone] = useState("")
   const [id, setId] = useState(0)
+
+  console.log(memberList)
 
   const maskCellNumber = (value: string) => {
     value = value.replace(/\D/g, "")
@@ -75,9 +77,8 @@ export const AdminForm = ({ toggleDrawer, isSignup = false, isUpdating = false }
 
   React.useEffect(() => {
     if (isUpdating) {
-      const updatedUser = [...memberList, ...adminList].find(
-        item => item.id == (localStorage.getItem("@BandSchedule:id") || 0)
-      )
+      const updatedUser = [...memberList, ...adminList].find(item => item.id == parseInt(userId))
+      console.log(updatedUser, userId)
       if (updatedUser) {
         setValue("username", updatedUser.username)
         setValue("cellphone", updatedUser.cellphone)

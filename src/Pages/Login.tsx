@@ -15,7 +15,7 @@ import { useAuth } from "../Provider/Auth/Auth"
 import { useNavigate } from "react-router-dom"
 
 const schema = yup.object().shape({
-  username: yup.string().required("Nome da Banda é obrigatório").max(100, "Nome muito grande"),
+  username: yup.string().required("Username é obrigatório").max(100, "Nome muito grande"),
   password: yup.string().max(20, "Senha Muito grande").required("Senha obrigatória"),
 })
 
@@ -25,7 +25,6 @@ export const Login = () => {
   const navigate = useNavigate()
   const {
     handleSubmit,
-    reset,
     control,
     formState: { errors },
   } = useForm<ILoginFields>({ resolver: yupResolver(schema), mode: "all" })
@@ -34,7 +33,6 @@ export const Login = () => {
     const response = await signIn({ password, username })
 
     toast[response.success ? "success" : "error"](response.message)
-    reset()
   }
 
   useEffect(() => {
@@ -45,7 +43,7 @@ export const Login = () => {
   return (
     <Stack justifyContent={"center"} height={"100vh"} alignItems="center">
       <Card style={{ maxWidth: "500px" }}>
-        <Grid padding={mobile ? "" : 8}>
+        <Grid padding={8}>
           <form onSubmit={handleSubmit(submitForm)} autoComplete="off">
             <Stack spacing={3}>
               <Stack direction={mobile ? "column" : "row"} spacing={2}>

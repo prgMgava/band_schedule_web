@@ -16,7 +16,7 @@ const useAuth = () => {
 
 interface AuthState {
   accessToken: string
-  id: () => string
+  id: string
   adm: boolean
   superAdmin: boolean
 }
@@ -37,7 +37,7 @@ export interface IResponse {
 }
 
 interface AuthContextData {
-  id: () => string
+  id: string
   accessToken: string
   signIn: (credentials: SignInCredentials) => Promise<IResponse>
   signUp: (credentials: SignUpCredentials) => Promise<IResponse>
@@ -103,15 +103,16 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     localStorage.removeItem("@BandSchedule:accessToken")
     localStorage.removeItem("@BandSchedule:id")
     localStorage.removeItem("@BandSchedule:adm")
-    localStorage.removeItem("@BandSchedule:superAdmin")
+    localStorage.removeItem("@BandSchedule:super_admin")
+    localStorage.removeItem("@BandSchedule:labels")
 
     setData({} as AuthState)
   }, [])
 
   const getUser = () => {
     api
-      .get(`/users/${data.id}`, {
-        headers: { Authorization: `Bearer ${data.accessToken}` },
+      .get(`/user/${data.id}`, {
+        headers: { "x-access-token": data.accessToken },
       })
       .then((response: AxiosResponse<IUser>) => setUserData(response.data))
       .catch(err => console.log(err))
@@ -122,7 +123,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
       await api.post("/user/member", { username, password, cellphone, email })
       return {
         success: true,
-        message: "Usuário criado com sucesso faça seu login",
+        message: "Usuário criado com sucesso",
       }
     } catch (e) {
       return {
@@ -155,7 +156,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const getAdmins = async () => {
     try {
-      if (data.superAdmin) {
+      if (data.adm) {
         const { data: list }: AxiosResponse<IUser[]> = await api.get(`/user/adm`, {
           headers: { "x-access-token": data.accessToken },
         })
@@ -201,13 +202,11 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const getMembers = async () => {
     try {
-      if (data.superAdmin) {
-        const { data: list }: AxiosResponse<IUser[]> = await api.get(`/user/member`, {
-          headers: { "x-access-token": data.accessToken },
-        })
+      const { data: list }: AxiosResponse<IUser[]> = await api.get(`/user/member`, {
+        headers: { "x-access-token": data.accessToken },
+      })
 
-        setMemberList(list)
-      }
+      setMemberList(list)
 
       return {
         success: true,

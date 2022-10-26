@@ -8,4 +8,5 @@ export interface IUser {
   super_admin: boolean
   createdAt: string
   updatedAt: string
+  is_deleted: boolean
 }
