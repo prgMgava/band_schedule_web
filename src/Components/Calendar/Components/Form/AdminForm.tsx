@@ -35,8 +35,6 @@ export const AdminForm = ({ toggleDrawer, isSignup = false, isUpdating = false }
   const [maskedCellPhone, setMaskedCellPhone] = useState("")
   const [id, setId] = useState(0)
 
-  console.log(memberList)
-
   const maskCellNumber = (value: string) => {
     value = value.replace(/\D/g, "")
     value = value.replace(/(\d{2})(\d)/, "($1) $2")
@@ -78,7 +76,6 @@ export const AdminForm = ({ toggleDrawer, isSignup = false, isUpdating = false }
   React.useEffect(() => {
     if (isUpdating) {
       const updatedUser = [...memberList, ...adminList].find(item => item.id == parseInt(userId))
-      console.log(updatedUser, userId)
       if (updatedUser) {
         setValue("username", updatedUser.username)
         setValue("cellphone", updatedUser.cellphone)

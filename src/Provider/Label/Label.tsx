@@ -80,7 +80,7 @@ const LabelProvider = ({ children }: LabelProviderProps) => {
       }
       return {
         success: false,
-        message: "Você não tem permissão de criar uma Label",
+        message: "Você não tem permissão de criar uma label",
       }
     } catch (e) {
       return {
@@ -109,7 +109,7 @@ const LabelProvider = ({ children }: LabelProviderProps) => {
       }
       return {
         success: false,
-        message: "Você não tem permissão de atualizar uma Label",
+        message: "Você não tem permissão de atualizar uma label",
       }
     } catch (e) {
       return {
@@ -133,7 +133,7 @@ const LabelProvider = ({ children }: LabelProviderProps) => {
       }
       return {
         success: false,
-        message: "Você não tem permissão de deletar uma Label",
+        message: "Você não tem permissão de deletar uma label",
       }
     } catch (e) {
       return {

@@ -29,7 +29,7 @@ interface AppointmentProviderProps {
 }
 
 const AppointmentProvider = ({ children }: AppointmentProviderProps) => {
-  const { accessToken, adm, superAdmin } = useAuth()
+  const { accessToken, adm } = useAuth()
   const [appointments, setAppointments] = useState<IAppointments[]>([])
 
   const getAppointments = useCallback(async (date: Date) => {
@@ -98,7 +98,7 @@ const AppointmentProvider = ({ children }: AppointmentProviderProps) => {
       }
       return {
         success: false,
-        message: "Você não tem permissão de deletar um Compromisso",
+        message: "Você não tem permissão de deletar um compromisso",
       }
     } catch (e) {
       return {
@@ -123,7 +123,7 @@ const AppointmentProvider = ({ children }: AppointmentProviderProps) => {
       }
       return {
         success: false,
-        message: "Você não tem permissão de editar um Compromisso",
+        message: "Você não tem permissão de editar um compromisso",
       }
     } catch (e) {
       return {
@@ -152,7 +152,7 @@ const AppointmentProvider = ({ children }: AppointmentProviderProps) => {
       }
       return {
         success: false,
-        message: "Você não tem permissão de editar um Compromisso",
+        message: "Você não tem permissão de editar um compromisso",
       }
     } catch (e) {
       return {

@@ -144,7 +144,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
       }
       return {
         success: true,
-        message: "Adm criado com sucesso faça seu login",
+        message: "Admin criado com sucesso",
       }
     } catch (e) {
       return {
