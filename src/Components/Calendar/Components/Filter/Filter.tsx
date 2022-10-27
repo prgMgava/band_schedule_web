@@ -20,7 +20,6 @@ export const Filter = ({ setCurrentPriority }: FilterProps) => {
     localStorage.setItem("@BandSchedule:first_time", "true")
   }
 
-  console.log(!!firstTime)
   return (
     <Box
       style={{ background: "transparent", minHeight: 100 }}
