@@ -11,12 +11,16 @@ interface FilterProps {
 }
 
 export const Filter = ({ setCurrentPriority }: FilterProps) => {
-  const [openModal, setOpenModal] = useState(!labels.length)
+  const firstTime = localStorage.getItem("@BandSchedule:first_time") || ""
+  const [openModal, setOpenModal] = useState(!firstTime)
   const { labels: labelsProvider } = useLabel()
   const handleClose = () => {
     window.location.reload()
     setOpenModal(false)
+    localStorage.setItem("@BandSchedule:first_time", "true")
   }
+
+  console.log(!!firstTime)
   return (
     <Box
       style={{ background: "transparent", minHeight: 100 }}
@@ -54,24 +58,23 @@ export const Filter = ({ setCurrentPriority }: FilterProps) => {
         }
         return <></>
       })}
-      {true && (
-        <Dialog onClose={handleClose} open={openModal}>
-          <Card style={{ padding: "8px" }}>
-            <Stack>
-              <Box component={"span"} key={uuid()} onClick={() => window.location.reload()} borderRadius={1}>
-                <b>Seja bem vindo.</b>
-                <br />
-                <br /> Hum vi que é primeira vez que esta acessando nossa agenda por este dispositivo.
-                <br /> É só <b onClick={handleClose}>clicar</b> no botão abaixo que vamos buscar toas as informações
-                para você!
-              </Box>
-            </Stack>
-            <Button onClick={handleClose} variant={"contained"}>
-              Vamos lá!
-            </Button>
-          </Card>
-        </Dialog>
-      )}
+      <Dialog onClose={handleClose} open={openModal}>
+        <Card style={{ padding: "8px", display: "flex", flexDirection: "column" }}>
+          <Stack>
+            <Box component={"span"} key={uuid()} onClick={() => window.location.reload()} borderRadius={1}>
+              <b>Seja bem vindo.</b>
+              <br />
+              <br /> Hum vi que é primeira vez que você esta acessando ou você acabou de logar nossa agenda por este
+              dispositivo.
+              <br /> É só <b onClick={handleClose}>clicar</b> no botão abaixo que vamos buscar toas as informações para
+              você!
+            </Box>
+          </Stack>
+          <Button onClick={handleClose} variant={"contained"} style={{ marginTop: "32px" }}>
+            Vamos lá!
+          </Button>
+        </Card>
+      </Dialog>
     </Box>
   )
 }

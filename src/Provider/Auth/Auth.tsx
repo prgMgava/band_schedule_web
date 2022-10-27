@@ -105,6 +105,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     localStorage.removeItem("@BandSchedule:adm")
     localStorage.removeItem("@BandSchedule:super_admin")
     localStorage.removeItem("@BandSchedule:labels")
+    localStorage.removeItem("@BandSchedule:first_time")
 
     setData({} as AuthState)
   }, [])
