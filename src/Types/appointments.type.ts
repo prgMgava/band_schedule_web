@@ -33,4 +33,5 @@ export interface IAppointments {
   emphasis: string
   observations: string
   event_type: string
+  bilheteria: string
 }

@@ -8,13 +8,17 @@ import {
   Button,
   Divider,
   FormControl,
+  FormControlLabel,
   FormHelperText,
+  FormLabel,
   Grid,
   IconButton,
   InputAdornment,
   InputLabel,
   ListItemIcon,
   MenuItem,
+  Radio,
+  RadioGroup,
   Select,
   Typography,
 } from "@mui/material"
@@ -74,6 +78,7 @@ const schema = yup.object().shape({
   emphasis: yup.string().max(500, "Descrição destaque muito grande").nullable(),
   observations: yup.string().max(5000, "Descrição destaque muito grande").nullable(),
   event_type: yup.string().max(5000, "Descrição destaque muito grande").nullable(),
+  bilheteria: yup.string().nullable(),
 })
 
 interface AppointmentFormProps {
@@ -104,7 +109,6 @@ export const AppointmentForm = ({
   const isEditing = !!title
 
   const addHour = (date: Date) => {
-    debugger
     return date.setHours(date.getHours() + 1)
   }
 
@@ -384,6 +388,39 @@ export const AppointmentForm = ({
               )}
             />
           </Stack>
+          <Stack direction={mobile ? "column" : "row"} spacing={2}>
+            <FormControl component="fieldset">
+              <FormLabel component="legend">Evento:</FormLabel>
+
+              <Controller
+                name="event_type"
+                control={control}
+                render={({ field }) => (
+                  <RadioGroup {...field} row>
+                    <FormControlLabel value="Corporativo" control={<Radio />} label="Corporativo" />
+                    <FormControlLabel value="Show" control={<Radio />} label="Show" />
+                    <FormControlLabel value="Participação" control={<Radio />} label="Participação" />
+                  </RadioGroup>
+                )}
+              />
+            </FormControl>
+          </Stack>
+          <Stack direction={mobile ? "column" : "row"} spacing={2}>
+            <FormControl component="fieldset">
+              <FormLabel component="legend">Ingresso:</FormLabel>
+
+              <Controller
+                name="bilheteria"
+                control={control}
+                render={({ field }) => (
+                  <RadioGroup {...field} row>
+                    <FormControlLabel value="Bilheteria" control={<Radio />} label="Bilheteria" />
+                    <FormControlLabel value="Cachê" control={<Radio />} label="Cachê" />
+                  </RadioGroup>
+                )}
+              />
+            </FormControl>
+          </Stack>
           <Divider variant="inset" />
           <Stack>
             <Typography variant="subtitle1">Preencha as datas e horários</Typography>
@@ -418,7 +455,7 @@ export const AppointmentForm = ({
                   borderRadius: "4px",
                 }}
               >
-                <legend style={{ fontSize: "12px", color: "	#888888" }}>Data final</legend>
+                <legend style={{ fontSize: "12px", color: "	#888888" }}>Data final *</legend>
                 <Box>
                   <input
                     type={"datetime-local"}
