@@ -1,3 +1,4 @@
+/* eslint-disable no-debugger */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import * as React from "react"
@@ -33,6 +34,11 @@ import {
   TextSnippetOutlined,
   Close,
   Circle,
+  BusinessCenterOutlined,
+  Person2Outlined,
+  BusinessOutlined,
+  EmailOutlined,
+  PermContactCalendarOutlined,
 } from "@mui/icons-material"
 import { Stack } from "@mui/system"
 import { useState } from "react"
@@ -47,12 +53,12 @@ import { IAppointments } from "../../../../Types/appointments.type"
 
 const schema = yup.object().shape({
   title: yup.string().required("Nome do compromisso é obrigatório").max(100, "Nome muito grande"),
-  cellphone: yup.string().max(50, "Telefone muito grande").required("Telefone obrigatório"),
-  street: yup.string().max(50, "Nome de rua muito grande").required("Informe uma rua"),
-  district: yup.string().max(50, "Nome de bairro muito grande").required("Informe um bairro"),
-  state: yup.string().required("Informe um estado"),
-  city: yup.string().max(50, "Nome de cidade muito grande").required("Informe uma cidade"),
-  place: yup.string().max(50, "Nome muito grande"),
+  cellphone: yup.string().max(50, "Telefone muito grande").nullable(),
+  street: yup.string().max(50, "Nome de rua muito grande").nullable(),
+  district: yup.string().max(50, "Nome de bairro muito grande").nullable(),
+  state: yup.string().nullable(),
+  city: yup.string().max(50, "Nome de cidade muito grande").nullable(),
+  place: yup.string().max(50, "Nome muito grande").nullable(),
   address_number: yup.string().max(10, "Numero muito grande").nullable(),
   address_complement: yup.string().max(150, "Complemento muito grande").nullable(),
   status: yup.string().default("agendado"),
@@ -60,6 +66,14 @@ const schema = yup.object().shape({
   start_date: yup.date().required("Data inicial obrigatória").required("Data inicial obrigatória"),
   end_date: yup.date().required("Data final obrigatória").required("Data final obrigatória"),
   id_label: yup.number().required("Label é obrigatório"),
+  company_name: yup.string().max(150, "Nome de empresa muito grande").nullable(),
+  company_contractor: yup.string().max(150, "Nome de contratante muito grande").nullable(),
+  company_cellphone: yup.string().max(150, "Telefone muito grande").nullable(),
+  company_contact: yup.string().max(150, "Contato muito grande").nullable(),
+  company_email: yup.string().max(150, "email muito grande").nullable(),
+  emphasis: yup.string().max(500, "Descrição destaque muito grande").nullable(),
+  observations: yup.string().max(5000, "Descrição destaque muito grande").nullable(),
+  event_type: yup.string().max(5000, "Descrição destaque muito grande").nullable(),
 })
 
 interface AppointmentFormProps {
@@ -89,19 +103,30 @@ export const AppointmentForm = ({
 
   const isEditing = !!title
 
+  const addHour = (date: Date) => {
+    debugger
+    return date.setHours(date.getHours() + 1)
+  }
+
+  const endHourPlusOne =
+    new Date(endDate).toLocaleTimeString().substring(0, 5) === "00:00"
+      ? new Date(!isEditing ? addHour(new Date()) : 0).toLocaleTimeString().substring(0, 5)
+      : new Date(!isEditing ? addHour(new Date(startDate)) : endDate).toLocaleTimeString().substring(0, 5)
+
   const hasHour =
     new Date(startDate).toLocaleTimeString().substring(0, 5) === "00:00"
       ? new Date().toLocaleTimeString().substring(0, 5)
       : new Date(startDate).toLocaleTimeString().substring(0, 5)
   //TODO: add one hour when create an appointment
-  const hasHourEnd =
-    new Date(endDate).toLocaleTimeString().substring(0, 5) === "00:00"
-      ? new Date().toLocaleTimeString().substring(0, 5)
-      : new Date(endDate).toLocaleTimeString().substring(0, 5)
+  const hasHourEnd = endHourPlusOne
+  console.log(hasHourEnd)
+
   const startDateFormatted =
     startDate && hasHour ? `${new Date(startDate).toISOString().substring(0, 11)}${hasHour}` : ""
   const endDateFormatted =
-    endDate && hasHourEnd ? `${new Date(endDate).toISOString().substring(0, 11)}${hasHourEnd}` : ""
+    endDate && hasHourEnd
+      ? `${new Date(!isEditing ? startDate : endDate).toISOString().substring(0, 11)}${hasHourEnd}`
+      : ""
 
   const [reqStartDate, setreqStartDate] = useState(startDateFormatted)
   const [reqEndDate, setreqEndDate] = useState(endDateFormatted)
@@ -207,7 +232,7 @@ export const AppointmentForm = ({
               render={({ field: { onChange, ...rest } }) => (
                 <TextField
                   {...rest}
-                  label="Telefone *"
+                  label="Telefone"
                   error={!!errors.cellphone}
                   helperText={errors.cellphone && errors.cellphone.message}
                   onChange={e => maskCellNumber(e.currentTarget.value)}
@@ -234,7 +259,7 @@ export const AppointmentForm = ({
               render={({ field }) => (
                 <TextField
                   {...field}
-                  label="Rua *"
+                  label="Rua"
                   error={!!errors.street}
                   helperText={errors.street && errors.street.message}
                   fullWidth={true}
@@ -254,7 +279,7 @@ export const AppointmentForm = ({
               render={({ field }) => (
                 <TextField
                   {...field}
-                  label="Bairro *"
+                  label="Bairro"
                   error={!!errors.district}
                   helperText={errors.district && errors.district.message}
                   fullWidth={true}
@@ -276,7 +301,7 @@ export const AppointmentForm = ({
               render={({ field }) => (
                 <Box>
                   <FormControl error={!!errors.state} fullWidth={true}>
-                    <InputLabel id="demo-simple-select-helper-label">Estado *</InputLabel>
+                    <InputLabel id="demo-simple-select-helper-label">Estado</InputLabel>
                     <Select
                       sx={{ minWidth: 240 }}
                       labelId="demo-simple-select-label"
@@ -302,7 +327,7 @@ export const AppointmentForm = ({
               render={({ field }) => (
                 <TextField
                   {...field}
-                  label="Cidade *"
+                  label="Cidade"
                   error={!!errors.city}
                   helperText={errors.city && errors.city.message}
                   fullWidth={true}
@@ -503,6 +528,130 @@ export const AppointmentForm = ({
                     )}
                   </FormControl>
                 </Box>
+              )}
+            />
+          </Stack>
+          <Divider variant="inset" />
+          <Stack>
+            <Typography variant="subtitle1">Informações do contratante</Typography>
+          </Stack>
+          <Stack direction={mobile ? "column" : "row"} spacing={2}>
+            <Controller
+              name="company_name"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  label="Empresa"
+                  error={!!errors.company_name}
+                  helperText={errors.company_name && errors.company_name.message}
+                  name="company_name"
+                  fullWidth={true}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <BusinessOutlined />
+                      </InputAdornment>
+                    ),
+                  }}
+                ></TextField>
+              )}
+            />
+          </Stack>
+          <Stack direction={mobile ? "column" : "row"} spacing={2}>
+            <Controller
+              name="company_contractor"
+              control={control}
+              render={({ field: { onChange, ...rest } }) => (
+                <TextField
+                  {...rest}
+                  label="Contratante"
+                  error={!!errors.company_contractor}
+                  helperText={errors.company_contractor && errors.company_contractor.message}
+                  onChange={e => maskCellNumber(e.currentTarget.value)}
+                  fullWidth={true}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <Person2Outlined />
+                      </InputAdornment>
+                    ),
+                  }}
+                  inputProps={{
+                    maxLength: 15,
+                  }}
+                ></TextField>
+              )}
+            />
+            <Controller
+              name="company_contact"
+              control={control}
+              render={({ field: { onChange, ...rest } }) => (
+                <TextField
+                  {...rest}
+                  label="Contato"
+                  error={!!errors.company_contact}
+                  helperText={errors.company_contact && errors.company_contact.message}
+                  onChange={e => maskCellNumber(e.currentTarget.value)}
+                  fullWidth={true}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <PermContactCalendarOutlined />
+                      </InputAdornment>
+                    ),
+                  }}
+                  inputProps={{
+                    maxLength: 15,
+                  }}
+                ></TextField>
+              )}
+            />
+          </Stack>
+          <Stack direction={mobile ? "column" : "row"} spacing={2}>
+            <Controller
+              name="company_email"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  label="Email"
+                  error={!!errors.company_email}
+                  helperText={errors.company_email && errors.company_email.message}
+                  name="company_email"
+                  fullWidth={true}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <EmailOutlined />
+                      </InputAdornment>
+                    ),
+                  }}
+                ></TextField>
+              )}
+            />
+            <Controller
+              name="company_cellphone"
+              control={control}
+              render={({ field: { onChange, ...rest } }) => (
+                <TextField
+                  {...rest}
+                  label="Telefone"
+                  error={!!errors.company_cellphone}
+                  helperText={errors.company_cellphone && errors.company_cellphone.message}
+                  onChange={e => maskCellNumber(e.currentTarget.value)}
+                  fullWidth={true}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <Person2Outlined />
+                      </InputAdornment>
+                    ),
+                  }}
+                  inputProps={{
+                    maxLength: 15,
+                  }}
+                ></TextField>
               )}
             />
           </Stack>
