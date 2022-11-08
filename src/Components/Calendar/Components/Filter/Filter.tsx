@@ -1,5 +1,5 @@
 import { Close } from "@mui/icons-material"
-import { Box, Button, Card, Dialog, Divider, Drawer, IconButton, Modal, Stack } from "@mui/material"
+import { Box, Button, Card, Dialog, Divider, Drawer, IconButton, Stack } from "@mui/material"
 import React, { useState } from "react"
 import uuid from "react-uuid"
 import { useAppointment } from "../../../../Provider/Appointment/Appointment"
@@ -7,8 +7,6 @@ import { useLabel } from "../../../../Provider/Label/Label"
 import { hexToRgb } from "../../../../Utils/colors"
 import { AppointmentForm } from "../Form/AppointmentForm"
 import { FilterByBand } from "./FilterByBand"
-const local = localStorage.getItem("@BandSchedule:labels") || "[]"
-const labels = JSON.parse(local) || []
 
 interface FilterProps {
   setCurrentPriority: React.Dispatch<React.SetStateAction<number>>
@@ -17,7 +15,7 @@ interface FilterProps {
 export const Filter = ({ setCurrentPriority }: FilterProps) => {
   const firstTime = localStorage.getItem("@BandSchedule:first_time") || ""
   const [openModal, setOpenModal] = useState(!firstTime)
-  const { labels: labelsProvider } = useLabel()
+  const { labels: labelsProvider, setCurrentLabel, currentLabel } = useLabel()
   const [openDrawer, setOpenDrawer] = useState(false)
   const { getAppointments, currentDate } = useAppointment()
   const handleClose = () => {
@@ -35,6 +33,11 @@ export const Filter = ({ setCurrentPriority }: FilterProps) => {
 
   const toggleDrawer = () => {
     setOpenDrawer(old => !old)
+  }
+
+  const filterByLabel = (idLabel: number) => {
+    setCurrentPriority(idLabel)
+    setCurrentLabel(idLabel)
   }
 
   return (
@@ -68,7 +71,7 @@ export const Filter = ({ setCurrentPriority }: FilterProps) => {
 
       <Box style={{ background: "transparent" }} display={"flex"} flexWrap={"wrap"} gap={2} padding="0 4px">
         <Box
-          onClick={() => setCurrentPriority(0)}
+          onClick={() => filterByLabel(0)}
           display={"flex"}
           gap="5px"
           style={{ height: "min-content", width: "130px", cursor: "pointer" }}
@@ -80,13 +83,22 @@ export const Filter = ({ setCurrentPriority }: FilterProps) => {
             border={"1px #000 solid"}
             display="inline-block"
           ></Box>
-          <span style={{ lineHeight: "22px", lineBreak: "anywhere", fontSize: "12px" }}>TODOS</span>
+          <span
+            style={{
+              lineHeight: "22px",
+              lineBreak: "anywhere",
+              fontSize: "12px",
+              borderBottom: currentLabel == 0 ? "3px solid #000" : "3px solid transparent",
+            }}
+          >
+            TODOS
+          </span>
         </Box>
         {labelsProvider.map(label => {
           if (!label.is_deleted) {
             return (
               <Box
-                onClick={() => setCurrentPriority(label?.id)}
+                onClick={() => filterByLabel(label?.id)}
                 display={"flex"}
                 gap="5px"
                 key={uuid()}
@@ -105,7 +117,14 @@ export const Filter = ({ setCurrentPriority }: FilterProps) => {
                   display="inline-block"
                   border={"1px #000 solid"}
                 ></Box>
-                <span style={{ lineHeight: "22px", lineBreak: "anywhere", fontSize: "12px" }}>
+                <span
+                  style={{
+                    lineHeight: "22px",
+                    lineBreak: "anywhere",
+                    fontSize: "12px",
+                    borderBottom: currentLabel == label.id ? "3px solid #000" : "3px solid transparent",
+                  }}
+                >
                   {label.title?.toUpperCase()}
                 </span>
               </Box>

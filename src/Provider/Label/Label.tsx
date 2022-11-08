@@ -1,4 +1,4 @@
-import React, { useContext, createContext, useState, ReactNode, useCallback } from "react"
+import React, { useContext, createContext, useState, ReactNode, useCallback, Dispatch } from "react"
 
 import { AxiosResponse } from "axios"
 import { api } from "../../Services/api"
@@ -17,6 +17,8 @@ interface LabelContextProps {
   updateLabel: ({ title, color, id }: CreateLabelProp) => Promise<IResponse>
   deleteLabel: (id: number) => Promise<IResponse>
   getLabels: () => Promise<IResponse>
+  currentLabel: number
+  setCurrentLabel: Dispatch<React.SetStateAction<number>>
 }
 const LabelContext = createContext<LabelContextProps>({} as LabelContextProps)
 
@@ -35,6 +37,7 @@ interface LabelProviderProps {
 const LabelProvider = ({ children }: LabelProviderProps) => {
   const { accessToken, superAdmin } = useAuth()
   const [labels, setLabels] = useState<ILabel[]>([])
+  const [currentLabel, setCurrentLabel] = useState(0)
 
   const getLabels = useCallback(async () => {
     try {
@@ -144,7 +147,9 @@ const LabelProvider = ({ children }: LabelProviderProps) => {
   }, [])
 
   return (
-    <LabelContext.Provider value={{ labels, createLabel, getLabels, updateLabel, deleteLabel }}>
+    <LabelContext.Provider
+      value={{ labels, createLabel, getLabels, updateLabel, deleteLabel, currentLabel, setCurrentLabel }}
+    >
       {children}
     </LabelContext.Provider>
   )
