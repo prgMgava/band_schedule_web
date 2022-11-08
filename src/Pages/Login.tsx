@@ -1,4 +1,4 @@
-import { Card, Stack, Link } from "@mui/material"
+import { Card, Stack, Link, Box } from "@mui/material"
 import React, { useEffect } from "react"
 
 import { Button, Grid, InputAdornment } from "@mui/material"
@@ -41,9 +41,12 @@ export const Login = () => {
     }
   }, [accessToken])
   return (
-    <Stack justifyContent={"center"} height={"100vh"} alignItems="center">
+    <Stack justifyContent={"center"} height={"100vh"} alignItems="center" bgcolor={"#DDDDDD"}>
       <Card style={{ maxWidth: "500px" }}>
-        <Grid padding={8}>
+        <Box height="80px" justifySelf={"flex-start"} textAlign="center" mt={2}>
+          <img src={require("../assets/logo.png")} alt="logo" style={{ height: "90%" }} />
+        </Box>
+        <Grid padding={"16px 64px 64px 64px"}>
           <form onSubmit={handleSubmit(submitForm)} autoComplete="off">
             <Stack spacing={3}>
               <Stack direction={mobile ? "column" : "row"} spacing={2}>
@@ -105,19 +108,19 @@ export const Login = () => {
               </Button>
             </Stack>
 
-            <Stack mt={3} fontSize={12} direction="row">
+            {/* <Stack mt={3} fontSize={12} direction="row">
               Não tem cadastro faça seu &nbsp;
               <Link
                 underline="none"
                 onClick={() => navigate("/signup")}
                 component="button"
-                color={"green"}
+                color={"#EB3136"}
                 fontSize={12}
                 fontWeight={800}
               >
                 CADASTRO
               </Link>
-            </Stack>
+            </Stack> */}
           </form>
         </Grid>
       </Card>
