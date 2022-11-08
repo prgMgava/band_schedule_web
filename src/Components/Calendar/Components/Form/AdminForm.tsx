@@ -1,13 +1,13 @@
 import * as React from "react"
 
-import { Button, Grid, InputAdornment, Link, Typography } from "@mui/material"
+import { Button, Grid, InputAdornment, Typography } from "@mui/material"
 
 import { useForm, SubmitHandler, Controller } from "react-hook-form"
 import { IAdminFields } from "../../../../Types/form.type"
 import { yupResolver } from "@hookform/resolvers/yup"
 import * as yup from "yup"
 import { TextField } from "@mui/material"
-import { NewspaperOutlined, PhoneOutlined, EmailOutlined, LockOpenOutlined, CheckBox } from "@mui/icons-material"
+import { NewspaperOutlined, PhoneOutlined, EmailOutlined, LockOpenOutlined } from "@mui/icons-material"
 import { Stack } from "@mui/system"
 import { useState } from "react"
 import { toast } from "react-toastify"
@@ -25,15 +25,16 @@ const schema = yup.object().shape({
 interface AdminFormProps {
   isSignup?: boolean
   isUpdating?: boolean
-  toggleDrawer: () => void
+  toggleDrawer?: () => void
 }
 
-export const AdminForm = ({ toggleDrawer, isSignup = false, isUpdating = false }: AdminFormProps) => {
+export const AdminForm = ({ toggleDrawer = () => null, isSignup = false, isUpdating = false }: AdminFormProps) => {
   const { mobile } = useMobile()
   const navigate = useNavigate()
   const { signUp, createAdm, adminList, memberList, updateUser, id: userId } = useAuth()
   const [maskedCellPhone, setMaskedCellPhone] = useState("")
   const [id, setId] = useState(0)
+  const { superAdmin } = useAuth()
 
   const maskCellNumber = (value: string) => {
     value = value.replace(/\D/g, "")
@@ -92,7 +93,9 @@ export const AdminForm = ({ toggleDrawer, isSignup = false, isUpdating = false }
         <Stack spacing={3}>
           {!isSignup ? (
             <Stack>
-              <Typography variant="subtitle1">Preencha com as informações do administrador</Typography>
+              <Typography variant="subtitle1">
+                {superAdmin ? "Preencha com as informações do administrador" : "Preencha com as informações do músico"}
+              </Typography>
             </Stack>
           ) : (
             <></>
@@ -205,7 +208,7 @@ export const AdminForm = ({ toggleDrawer, isSignup = false, isUpdating = false }
           </Button>
         </Stack>
 
-        {isSignup ? (
+        {/* {isSignup ? (
           <Stack mt={3} fontSize={12} direction="row">
             Não tem cadastro faça seu &nbsp;
             <Link
@@ -221,7 +224,7 @@ export const AdminForm = ({ toggleDrawer, isSignup = false, isUpdating = false }
           </Stack>
         ) : (
           <></>
-        )}
+        )} */}
       </form>
     </Grid>
   )

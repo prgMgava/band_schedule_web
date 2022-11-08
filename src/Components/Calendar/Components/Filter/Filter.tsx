@@ -3,6 +3,7 @@ import { Box, Button, Card, Dialog, Divider, Drawer, IconButton, Stack } from "@
 import React, { useState } from "react"
 import uuid from "react-uuid"
 import { useAppointment } from "../../../../Provider/Appointment/Appointment"
+import { useBand } from "../../../../Provider/Band/Band"
 import { useLabel } from "../../../../Provider/Label/Label"
 import { hexToRgb } from "../../../../Utils/colors"
 import { AppointmentForm } from "../Form/AppointmentForm"
@@ -18,6 +19,7 @@ export const Filter = ({ setCurrentPriority }: FilterProps) => {
   const { labels: labelsProvider, setCurrentLabel, currentLabel } = useLabel()
   const [openDrawer, setOpenDrawer] = useState(false)
   const { getAppointments, currentDate } = useAppointment()
+  const { setCurrentBand } = useBand()
   const handleClose = () => {
     window.location.reload()
     setOpenModal(false)
@@ -59,7 +61,15 @@ export const Filter = ({ setCurrentPriority }: FilterProps) => {
         pt={"8px"}
         color="#fff"
       >
-        <Button id="basic-button" aria-haspopup="true" color="inherit" onClick={() => getAppointments(currentDate)}>
+        <Button
+          id="basic-button"
+          aria-haspopup="true"
+          color="inherit"
+          onClick={() => {
+            getAppointments(currentDate)
+            setCurrentBand("")
+          }}
+        >
           Todos os artistas
         </Button>
         <Button id="basic-button" aria-haspopup="true" color="inherit" onClick={() => setOpenDrawer(true)}>

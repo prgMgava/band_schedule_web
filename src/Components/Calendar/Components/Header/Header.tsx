@@ -29,10 +29,9 @@ interface HeaderProps {
 }
 
 export const Header = ({ setCurrentPriority }: HeaderProps) => {
-  const { signOut, adm, superAdmin, adminList, memberList, id } = useAuth()
+  const { signOut, adm, superAdmin } = useAuth()
   const [anchorEl, setAnchorEl] = React.useState(null)
   const [currentForm, setCurrentForm] = useState("")
-  const allUsers = [...adminList, ...memberList]
   const { mobile } = useMobile()
   const open = Boolean(anchorEl)
   const { currentBand } = useBand()
@@ -63,6 +62,7 @@ export const Header = ({ setCurrentPriority }: HeaderProps) => {
     superAdmin: <SuperAdmin toggleDrawer={toggleDrawer} />,
     label: <LabelForm toggleDrawer={toggleDrawer} />,
     status: <StatusHandler toggleDrawer={toggleDrawer} />,
+    musician: <AdminForm toggleDrawer={toggleDrawer} isSignup />,
   }
   return (
     <>
@@ -197,15 +197,14 @@ export const Header = ({ setCurrentPriority }: HeaderProps) => {
                   </MenuItem>
                   <MenuItem
                     onClick={() => {
-                      setCurrentForm("admin")
+                      setCurrentForm(superAdmin ? "admin" : "musician")
                       setOpenDrawer(true)
                     }}
-                    disabled={!superAdmin}
                   >
                     <ListItemIcon>
                       <PersonAddAlt fontSize="small" />
                     </ListItemIcon>
-                    Adicionar administrador
+                    {superAdmin ? "Adicionar administrador" : "Adicionar músico"}
                   </MenuItem>
                   <MenuItem
                     onClick={() => {
