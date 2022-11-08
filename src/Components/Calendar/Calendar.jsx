@@ -122,10 +122,11 @@ const PrioritySelectorItem = ({ color, text: resourceTitle }) => {
 
 export const Demo = () => {
   const [labels, setLabels] = useState(JSON.parse(localStorage.getItem("@BandSchedule:labels")) || [])
-  const { id, accessToken, getAdmins, getMembers } = useAuth()
+  const { id, accessToken, getAdmins, getMembers, superAdmin, bandVisibility, adm } = useAuth()
   const { getMyBands } = useBand()
   const { getLabels } = useLabel()
-  const { appointments, getAppointments, deleteAppointment, currentDate, setCurrentDate } = useAppointment()
+  const { appointments, getAppointments, deleteAppointment, currentDate, setCurrentDate, getMyAppointments } =
+    useAppointment()
   const [currentViewName, setCurrentViewName] = React.useState("Mensal")
   const [currentPriority, setCurrentPriority] = React.useState(0)
   const [openDialog, setOpenDialog] = useState(false)
@@ -240,7 +241,15 @@ export const Demo = () => {
   }, [])
 
   useEffect(() => {
-    getAppointments(currentDate)
+    if (superAdmin) {
+      getAppointments(currentDate)
+    } else {
+      if (adm) {
+        getMyAppointments(currentDate, id)
+      } else {
+        getMyAppointments(currentDate, bandVisibility)
+      }
+    }
   }, [currentDate])
 
   useEffect(() => {

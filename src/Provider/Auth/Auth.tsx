@@ -4,6 +4,7 @@ import jwt_decode from "jwt-decode"
 import { AxiosResponse } from "axios"
 import { api } from "../../Services/api"
 import { IUser } from "../../Types/user.type"
+import { useBand } from "../Band/Band"
 const AuthContext = createContext<AuthContextData>({} as AuthContextData)
 
 const useAuth = () => {
@@ -19,6 +20,7 @@ interface AuthState {
   id: string
   adm: boolean
   superAdmin: boolean
+  bandVisibility: number
 }
 
 interface SignInCredentials {
@@ -54,6 +56,7 @@ interface AuthContextData {
   deleteAdmin: (id: number) => Promise<IResponse>
   getMembers: () => Promise<IResponse>
   updateUser: (payload: IUser, id: number) => Promise<IResponse>
+  bandVisibility: number | null
 }
 
 interface AuthProviderProps {
@@ -66,9 +69,15 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     const id = localStorage.getItem("@BandSchedule:id") || ""
     const adm = localStorage.getItem("@BandSchedule:adm") || ""
     const superAdmin = localStorage.getItem("@BandSchedule:super_admin") || ""
-
+    const bandVisibility = localStorage.getItem("@BandSchedule:band_visibility") || ""
     if (accessToken && id) {
-      return { accessToken, id: JSON.parse(id), adm: adm === "true", superAdmin: superAdmin === "true" }
+      return {
+        accessToken,
+        id: JSON.parse(id),
+        adm: adm === "true",
+        superAdmin: superAdmin === "true",
+        bandVisibility: JSON.parse(bandVisibility),
+      }
     }
     return {} as AuthState
   })
@@ -81,12 +90,15 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
       const response = await api.post("/login", { username, password })
       const { token: accessToken } = response.data
 
-      const { id, adm, super_admin: superAdmin } = jwt_decode<any>(accessToken)
+      const { id, adm, super_admin: superAdmin, band_visibility: bandVisibility } = jwt_decode<any>(accessToken)
       localStorage.setItem("@BandSchedule:accessToken", accessToken)
       localStorage.setItem("@BandSchedule:id", JSON.stringify(id))
       localStorage.setItem("@BandSchedule:adm", adm?.toString())
       localStorage.setItem("@BandSchedule:super_admin", superAdmin?.toString())
-      setData({ accessToken, id, adm, superAdmin })
+      localStorage.setItem("@BandSchedule:band_visibility", JSON.stringify(bandVisibility))
+
+      setData({ accessToken, id, adm, superAdmin, bandVisibility })
+
       return {
         success: true,
         message: response.data.success,
@@ -106,6 +118,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     localStorage.removeItem("@BandSchedule:super_admin")
     localStorage.removeItem("@BandSchedule:labels")
     localStorage.removeItem("@BandSchedule:first_time")
+    localStorage.removeItem("@BandSchedule:band_visibility")
 
     setData({} as AuthState)
   }, [])
@@ -256,6 +269,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
         getMembers,
         memberList,
         updateUser,
+        bandVisibility: data.bandVisibility,
       }}
     >
       {children}

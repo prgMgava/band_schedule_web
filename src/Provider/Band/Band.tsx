@@ -26,10 +26,6 @@ const useBand = () => {
   return context
 }
 
-interface GetMyBandsProps {
-  owner: number
-}
-
 interface CreateBandProp {
   name: string
   email: string
@@ -42,7 +38,7 @@ interface BandProviderProps {
 }
 
 const BandProvider = ({ children }: BandProviderProps) => {
-  const { id, accessToken, adm, superAdmin } = useAuth()
+  const { id, accessToken, adm, superAdmin, bandVisibility } = useAuth()
   const [myBands, setMyBands] = useState<IBand[]>([])
   const [bands, setBands] = useState<IBand[]>([])
   const [currentBand, setCurrentBand] = useState("")
@@ -68,14 +64,12 @@ const BandProvider = ({ children }: BandProviderProps) => {
 
   const getMyBands = useCallback(async () => {
     try {
-      if (adm) {
-        const url = superAdmin ? "/band" : `/band/owner/${id}`
-        const { data }: AxiosResponse<IBand[]> = await api.get(url, {
-          headers: { "x-access-token": accessToken },
-        })
+      const url = superAdmin ? "/band" : `/band/owner/${bandVisibility || id}`
+      const { data }: AxiosResponse<IBand[]> = await api.get(url, {
+        headers: { "x-access-token": accessToken },
+      })
 
-        setMyBands(data)
-      }
+      setMyBands(data)
       return {
         success: true,
         message: "OK",
@@ -170,7 +164,17 @@ const BandProvider = ({ children }: BandProviderProps) => {
   }, [])
   return (
     <BandContext.Provider
-      value={{ getBands, bands, myBands, getMyBands, createBand, deleteBand, updateBand, currentBand, setCurrentBand }}
+      value={{
+        getBands,
+        bands,
+        myBands,
+        getMyBands,
+        createBand,
+        deleteBand,
+        updateBand,
+        currentBand,
+        setCurrentBand,
+      }}
     >
       {children}
     </BandContext.Provider>

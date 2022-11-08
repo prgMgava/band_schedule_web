@@ -9,6 +9,7 @@ import { addDays, subDays } from "date-fns"
 interface AppointmentContextProps {
   getAppointments: (date: Date) => Promise<IResponse>
   getAppointmentsByBand: (date: Date, idBand: number) => Promise<IResponse>
+  getMyAppointments: (date: Date, owner: number) => Promise<IResponse>
   appointments: IAppointments[]
   currentDate: Date
   setCurrentDate: Dispatch<React.SetStateAction<Date>>
@@ -50,6 +51,36 @@ const AppointmentProvider = ({ children }: AppointmentProviderProps) => {
           headers: { "x-access-token": accessToken },
         }
       )
+
+      setAppointments(data)
+
+      return {
+        success: true,
+        message: "OK",
+      }
+    } catch (e) {
+      return {
+        success: false,
+        message: e.response.data.error,
+      }
+    }
+  }, [])
+
+  const getMyAppointments = useCallback(async (date: Date, owner: number) => {
+    try {
+      const startDateAux = subDays(date, 40)
+      const endDateAux = addDays(date, 40)
+
+      const startDate = new Date(startDateAux).toISOString().substring(0, 10)
+      const endDate = new Date(endDateAux).toISOString().substring(0, 10)
+
+      const { data }: AxiosResponse<IAppointments[]> = await api.get(
+        `/appointment/owner/${owner}?start_date=${startDate}&end_date=${endDate}`,
+        {
+          headers: { "x-access-token": accessToken },
+        }
+      )
+
       setAppointments(data)
 
       return {
@@ -205,6 +236,7 @@ const AppointmentProvider = ({ children }: AppointmentProviderProps) => {
         currentDate,
         setCurrentDate,
         getAppointmentsByBand,
+        getMyAppointments,
       }}
     >
       {children}
