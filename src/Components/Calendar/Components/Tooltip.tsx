@@ -8,6 +8,7 @@ import {
   PhoneOutlined,
   EventOutlined,
   Lens,
+  AppsOutage,
 } from "@mui/icons-material"
 
 import Grid from "@mui/material/Grid"
@@ -19,6 +20,7 @@ import { IResource } from "../../../Types/calendar.type"
 import { classes } from "../../Calendar/Calendar"
 import { useMobile } from "../../../Provider/Theme/Mobile"
 import { useBand } from "../../../Provider/Band/Band"
+import { Divider } from "@mui/material"
 
 const StyledTooltipContent = styled("div")(({ theme: { spacing, typography, palette }, color }) => ({
   [`&.${classes.content}`]: {
@@ -105,6 +107,16 @@ export const Tooltip = ({ appointmentData, formatDate, appointmentResources }: T
           </div>
         </Grid>
       </Grid>
+
+      {appointmentData.emphasis && (
+        <>
+          <Grid container alignItems="center" key={`${resource.fieldName}_${resource.id}`} mb={2} ml={2.5}>
+            <div>
+              <Grid>{appointmentData.emphasis}</Grid>
+            </div>
+          </Grid>
+        </>
+      )}
       <Grid container alignItems="center" className={classes.contentContainer}>
         <Grid item xs={2} className={classes.textCenter}>
           <AccessTime className={classes.icon} />
@@ -116,20 +128,26 @@ export const Tooltip = ({ appointmentData, formatDate, appointmentResources }: T
           </div>
         </Grid>
       </Grid>
-      <Grid container alignItems="center" className={classes.contentContainer}>
-        <Grid item xs={2} className={classes.textCenter}>
-          <LocationOnOutlined className={classes.icon} />
+      {(appointmentData.street ||
+        appointmentData.address_number ||
+        appointmentData.district ||
+        appointmentData.city ||
+        appointmentData.state) && (
+        <Grid container alignItems="center" className={classes.contentContainer}>
+          <Grid item xs={2} className={classes.textCenter}>
+            <LocationOnOutlined className={classes.icon} />
+          </Grid>
+          <Grid item xs={10}>
+            <div className={classes.text}>
+              {appointmentData.street && `${appointmentData.street}`}{" "}
+              {appointmentData.address_number && `n.º ${appointmentData.address_number}`} {mobile && <br />}
+              {appointmentData.district && `, ${appointmentData.district}`}{" "}
+              {appointmentData.city && `, ${appointmentData.city}`}{" "}
+              {appointmentData.state && `- ${appointmentData.state}`}
+            </div>
+          </Grid>
         </Grid>
-        <Grid item xs={10}>
-          <div className={classes.text}>
-            {appointmentData.street && `${appointmentData.street}`}{" "}
-            {appointmentData.address_number && `n.º ${appointmentData.address_number}`} {mobile && <br />}
-            {appointmentData.district && `, ${appointmentData.district}`}{" "}
-            {appointmentData.city && `, ${appointmentData.city}`}{" "}
-            {appointmentData.state && `- ${appointmentData.state}`}
-          </div>
-        </Grid>
-      </Grid>
+      )}
       <Grid container alignItems="center" className={classes.contentContainer}>
         <Grid item xs={2} className={classes.textCenter}>
           <MusicNoteOutlined className={classes.icon} />
@@ -138,14 +156,17 @@ export const Tooltip = ({ appointmentData, formatDate, appointmentResources }: T
           <div className={classes.text}>{bands.find(band => band.id == appointmentData.id_band)?.name}</div>
         </Grid>
       </Grid>
-      <Grid container alignItems="center" className={classes.contentContainer}>
-        <Grid item xs={2} className={classes.textCenter}>
-          <PhoneOutlined className={classes.icon} />
+      {appointmentData.cellphone && (
+        <Grid container alignItems="center" className={classes.contentContainer}>
+          <Grid item xs={2} className={classes.textCenter}>
+            <PhoneOutlined className={classes.icon} />
+          </Grid>
+          <Grid item xs={10}>
+            <div className={classes.text}>{appointmentData.cellphone}</div>
+          </Grid>
         </Grid>
-        <Grid item xs={10}>
-          <div className={classes.text}>{appointmentData.cellphone}</div>
-        </Grid>
-      </Grid>
+      )}
+
       <Grid container alignItems="center" key={`${resource.fieldName}_${resource.id}`}>
         <Grid className={classNames(classes.contentItemIcon, classes.icon)} item xs={2}>
           <EventOutlined />

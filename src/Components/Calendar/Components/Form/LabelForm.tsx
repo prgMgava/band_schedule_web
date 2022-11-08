@@ -88,7 +88,7 @@ export const LabelForm = ({ toggleDrawer }: LabelProps) => {
       <form onSubmit={handleSubmit(submitForm)}>
         <Stack spacing={3}>
           <Stack>
-            <Typography variant="subtitle1">Preencha com as informações da Label</Typography>
+            <Typography variant="subtitle1">Preencha com as informações da categoria</Typography>
           </Stack>
           <Stack direction={mobile ? "column" : "row"} spacing={2}>
             <Controller
@@ -129,16 +129,16 @@ export const LabelForm = ({ toggleDrawer }: LabelProps) => {
       </form>
       <Divider style={{ marginTop: "16px" }} />
       <Stack mt={2}>
-        <Typography variant="subtitle1">Escolha uma Label caso queira editar</Typography>
+        <Typography variant="subtitle1">Escolha uma categoria caso queira editar</Typography>
       </Stack>
       <Box>
         <FormControl fullWidth={true}>
-          <InputLabel>Label *</InputLabel>
+          <InputLabel>Categoria *</InputLabel>
           <Select
             sx={{ minWidth: 270 }}
             labelId="demo-simple-select-error-label"
             id="demo-simple-select-error"
-            label="Label"
+            label="Categoria"
             value={currentLabel}
             onChange={e => {
               setCurrentLabel(e.target.value as number)

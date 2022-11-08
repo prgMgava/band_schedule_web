@@ -77,8 +77,8 @@ const schema = yup.object().shape({
   company_email: yup.string().max(150, "email muito grande").nullable(),
   emphasis: yup.string().max(500, "Descrição destaque muito grande").nullable(),
   observations: yup.string().max(5000, "Descrição destaque muito grande").nullable(),
-  event_type: yup.string().max(5000, "Descrição destaque muito grande").nullable(),
-  bilheteria: yup.string().nullable(),
+  event: yup.string().max(5000, "Descrição destaque muito grande").nullable(),
+  money: yup.string().nullable(),
 })
 
 interface AppointmentFormProps {
@@ -393,7 +393,7 @@ export const AppointmentForm = ({
               <FormLabel component="legend">Evento:</FormLabel>
 
               <Controller
-                name="event_type"
+                name="event"
                 control={control}
                 render={({ field }) => (
                   <RadioGroup {...field} row>
@@ -410,7 +410,7 @@ export const AppointmentForm = ({
               <FormLabel component="legend">Ingresso:</FormLabel>
 
               <Controller
-                name="bilheteria"
+                name="money"
                 control={control}
                 render={({ field }) => (
                   <RadioGroup {...field} row>
@@ -537,12 +537,12 @@ export const AppointmentForm = ({
               render={({ field }) => (
                 <Box>
                   <FormControl error={!!errors.id_label} fullWidth={true}>
-                    <InputLabel id="demo-simple-select-helper-label">Label *</InputLabel>
+                    <InputLabel id="demo-simple-select-helper-label">Categoria *</InputLabel>
                     <Select
                       sx={{ minWidth: 270 }}
                       labelId="demo-simple-select-error-label"
                       id="demo-simple-select-error"
-                      label="Label"
+                      label="Categoria"
                       defaultValue={currenLabel}
                       {...field}
                     >

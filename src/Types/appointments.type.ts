@@ -32,6 +32,6 @@ export interface IAppointments {
   company_email: string
   emphasis: string
   observations: string
-  event_type: string
-  bilheteria: string
+  event: string
+  money: string
 }

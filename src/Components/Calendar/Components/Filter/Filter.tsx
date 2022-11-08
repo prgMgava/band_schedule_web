@@ -1,11 +1,12 @@
 import { Close } from "@mui/icons-material"
-import { Box, Button, Card, Dialog, Divider, Drawer, IconButton, Stack } from "@mui/material"
+import { Box, Button, Card, Dialog, Divider, Drawer, IconButton, Modal, Stack, Typography } from "@mui/material"
 import React, { useState } from "react"
 import uuid from "react-uuid"
 import { useAppointment } from "../../../../Provider/Appointment/Appointment"
 import { useBand } from "../../../../Provider/Band/Band"
 import { useLabel } from "../../../../Provider/Label/Label"
 import { hexToRgb } from "../../../../Utils/colors"
+import { Events } from "../Events/Events"
 import { AppointmentForm } from "../Form/AppointmentForm"
 import { FilterByBand } from "./FilterByBand"
 
@@ -20,11 +21,16 @@ export const Filter = ({ setCurrentPriority }: FilterProps) => {
   const [openDrawer, setOpenDrawer] = useState(false)
   const { getAppointments, currentDate } = useAppointment()
   const { setCurrentBand } = useBand()
+  const [isOpen, setIsOpen] = useState(false)
   const handleClose = () => {
     window.location.reload()
     setOpenModal(false)
     localStorage.setItem("@BandSchedule:first_time", "true")
   }
+
+  const [open, setOpen] = React.useState(isOpen)
+  const handleOpen = () => setOpen(true)
+  const handleCloseModal = () => setOpen(false)
 
   const data = {
     appointmentData: {
@@ -75,7 +81,17 @@ export const Filter = ({ setCurrentPriority }: FilterProps) => {
         <Button id="basic-button" aria-haspopup="true" color="inherit" onClick={() => setOpenDrawer(true)}>
           Novo Evento
         </Button>
-        <Box pb="6px">Eventos</Box>
+        <Button onClick={handleOpen} color="inherit">
+          Eventos
+        </Button>
+        <Modal
+          open={open}
+          onClose={handleCloseModal}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <Events />
+        </Modal>
         <FilterByBand />
       </Box>
 

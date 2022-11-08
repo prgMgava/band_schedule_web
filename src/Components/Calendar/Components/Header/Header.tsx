@@ -200,6 +200,7 @@ export const Header = ({ setCurrentPriority }: HeaderProps) => {
                       setCurrentForm(superAdmin ? "admin" : "musician")
                       setOpenDrawer(true)
                     }}
+                    disabled={!adm}
                   >
                     <ListItemIcon>
                       <PersonAddAlt fontSize="small" />
@@ -216,7 +217,7 @@ export const Header = ({ setCurrentPriority }: HeaderProps) => {
                     <ListItemIcon>
                       <ColorLens fontSize="small" />
                     </ListItemIcon>
-                    Adicionar label
+                    Adicionar categoria
                   </MenuItem>
                   <MenuItem
                     onClick={() => {
