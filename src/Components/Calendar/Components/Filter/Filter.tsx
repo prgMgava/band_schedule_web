@@ -2,6 +2,7 @@ import { Close } from "@mui/icons-material"
 import { Box, Button, Card, Dialog, Divider, Drawer, IconButton, Modal, Stack } from "@mui/material"
 import React, { useState } from "react"
 import uuid from "react-uuid"
+import { useAppointment } from "../../../../Provider/Appointment/Appointment"
 import { useLabel } from "../../../../Provider/Label/Label"
 import { hexToRgb } from "../../../../Utils/colors"
 import { AppointmentForm } from "../Form/AppointmentForm"
@@ -18,6 +19,7 @@ export const Filter = ({ setCurrentPriority }: FilterProps) => {
   const [openModal, setOpenModal] = useState(!firstTime)
   const { labels: labelsProvider } = useLabel()
   const [openDrawer, setOpenDrawer] = useState(false)
+  const { getAppointments, currentDate } = useAppointment()
   const handleClose = () => {
     window.location.reload()
     setOpenModal(false)
@@ -29,10 +31,6 @@ export const Filter = ({ setCurrentPriority }: FilterProps) => {
       endDate: new Date(),
       startDate: new Date(),
     },
-  }
-
-  const openAppointmentForm = () => {
-    return
   }
 
   const toggleDrawer = () => {
@@ -58,7 +56,9 @@ export const Filter = ({ setCurrentPriority }: FilterProps) => {
         pt={"8px"}
         color="#fff"
       >
-        <Box pb="6px">Todos artistas</Box>
+        <Button id="basic-button" aria-haspopup="true" color="inherit" onClick={() => getAppointments(currentDate)}>
+          Todos os artistas
+        </Button>
         <Button id="basic-button" aria-haspopup="true" color="inherit" onClick={() => setOpenDrawer(true)}>
           Novo Evento
         </Button>
