@@ -181,7 +181,7 @@ export const Header = ({ setCurrentPriority }: HeaderProps) => {
                     <ListItemIcon>
                       <EventAvailable fontSize="small" />
                     </ListItemIcon>
-                    Adicionar compromisso
+                    Adicionar evento
                   </MenuItem>
                   <MenuItem
                     onClick={() => {
@@ -229,7 +229,7 @@ export const Header = ({ setCurrentPriority }: HeaderProps) => {
                     <ListItemIcon>
                       <SyncOutlined fontSize="small" />
                     </ListItemIcon>
-                    Atualizar compromissos
+                    Atualizar eventos
                   </MenuItem>
                   <MenuItem onClick={() => signOut()}>
                     <ListItemIcon>

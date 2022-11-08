@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 import { Box, Button, Divider, Menu, MenuItem } from "@mui/material"
-import { ArrowDownward, ArrowDownwardOutlined } from "@mui/icons-material"
+import { ArrowDownward, ArrowDownwardOutlined, ArrowUpwardOutlined } from "@mui/icons-material"
 import { useBand } from "../../../../Provider/Band/Band"
 import uuid from "react-uuid"
 import { IBand } from "../../../../Types/band.type"
@@ -29,7 +29,7 @@ export const FilterByBand = () => {
         aria-haspopup="true"
         aria-expanded={open ? "true" : undefined}
         onClick={handleClick}
-        endIcon={<ArrowDownwardOutlined />}
+        endIcon={open ? <ArrowUpwardOutlined /> : <ArrowDownwardOutlined />}
         color="inherit"
       >
         Artistas

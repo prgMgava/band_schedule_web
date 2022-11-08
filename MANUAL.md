@@ -12,15 +12,15 @@ O usuário super admin deve logar com as credencias corretas para ter total aces
 
 ### 1.2 Cadastrar Admins
 
-O SuperAdmin deve cadastrar novos administradores para os mesmo criarem suas bandas e compromissos. No menu _Cadastrar administrador_
+O SuperAdmin deve cadastrar novos administradores para os mesmo criarem suas bandas e eventos. No menu _Cadastrar administrador_
 
 ### 1.3 Desabilitar Admins, Bandas, Usuários e Labels
 
 O SuperAdmin pode desativar o acesso de um admin. Na menu _Meu Perfil_
 
-### 1.4 Adicionar/Editar/Deletar/Visualizar um compromisso
+### 1.4 Adicionar/Editar/Deletar/Visualizar um evento
 
-O SuperAdmin pode cadastrar novos compromissos porem é necessário a criação prévia da banda e das labels. No menu _Adicionar compromisso_
+O SuperAdmin pode cadastrar novos eventos porem é necessário a criação prévia da banda e das labels. No menu _Adicionar evento_
 
 ### 1.5 Adicionar/Editar uma banda
 
@@ -30,9 +30,9 @@ O SuperAdmin pode cadastrar novas bandas porem não é recomendado, pois a banda
 
 O SuperAdmin pode cadastrar novas labels . No menu _Adicionar label_
 
-### 1.7 Atualizar compromissos
+### 1.7 Atualizar eventos
 
-O SuperAdmin pode atualizar os status dos compromissos agendados para concluido de acordado com a data atual _Atualizar compromissos_
+O SuperAdmin pode atualizar os status dos eventos agendados para concluido de acordado com a data atual _Atualizar eventos_
 
 ### 1.8 Atualizar seus dados
 
@@ -48,13 +48,13 @@ O Admin pode atualizar seus dados. No menu _Meu Perfil_
 
 O Admin pode cadastrar suas bandas. No menu _Adicionar banda_
 
-### 2.3 Atualizar compromissos
+### 2.3 Atualizar eventos
 
-O Admin pode atualizar os status dos compromissos agendados para concluido de acordado com a data atual _Atualizar compromissos_
+O Admin pode atualizar os status dos eventos agendados para concluido de acordado com a data atual _Atualizar eventos_
 
-### 1.4 Adicionar/Editar/Deletar seu PRÓPRIO compromisso
+### 1.4 Adicionar/Editar/Deletar seu PRÓPRIO evento
 
-O Admin pode cadastrar novos compromissos porem é necessário a criação prévia da banda e das labels. No menu _Adicionar compromisso_
+O Admin pode cadastrar novos eventos porem é necessário a criação prévia da banda e das labels. No menu _Adicionar evento_
 
 ## 3 Member
 
@@ -62,6 +62,6 @@ O Admin pode cadastrar novos compromissos porem é necessário a criação prév
 
 O Member pode atualizar seus dados. No menu _Meu Perfil_
 
-### 3.2 Visualizar compromisso
+### 3.2 Visualizar evento
 
-O Member só pode visualizar os compromissos
+O Member só pode visualizar os eventos

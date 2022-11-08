@@ -56,7 +56,7 @@ import { useLabel } from "../../../../Provider/Label/Label"
 import { IAppointments } from "../../../../Types/appointments.type"
 
 const schema = yup.object().shape({
-  title: yup.string().required("Nome do compromisso é obrigatório").max(100, "Nome muito grande"),
+  title: yup.string().required("Nome do evento é obrigatório").max(100, "Nome muito grande"),
   cellphone: yup.string().max(50, "Telefone muito grande").nullable(),
   street: yup.string().max(50, "Nome de rua muito grande").nullable(),
   district: yup.string().max(50, "Nome de bairro muito grande").nullable(),
@@ -66,7 +66,7 @@ const schema = yup.object().shape({
   address_number: yup.string().max(10, "Numero muito grande").nullable(),
   address_complement: yup.string().max(150, "Complemento muito grande").nullable(),
   status: yup.string().default("agendado"),
-  id_band: yup.number().required("Informe a banda que vai tocar no compromisso"),
+  id_band: yup.number().required("Informe a banda que vai tocar no evento"),
   start_date: yup.date().required("Data inicial obrigatória").required("Data inicial obrigatória"),
   end_date: yup.date().required("Data final obrigatória").required("Data final obrigatória"),
   id_label: yup.number().required("Label é obrigatório"),
@@ -206,7 +206,7 @@ export const AppointmentForm = ({
       <form onSubmit={handleSubmit(submitForm)}>
         <Stack spacing={3}>
           <Stack>
-            <Typography variant="subtitle1">Preencha com as informações do compromisso</Typography>
+            <Typography variant="subtitle1">Preencha com as informações do evento</Typography>
           </Stack>
           <Stack direction={mobile ? "column" : "row"} spacing={2}>
             <Controller

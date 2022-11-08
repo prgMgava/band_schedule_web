@@ -101,12 +101,12 @@ const AppointmentProvider = ({ children }: AppointmentProviderProps) => {
         setAppointments(old => [...old, response.data])
         return {
           success: true,
-          message: "Compromisso agendado com sucesso",
+          message: "Evento agendado com sucesso",
         }
       }
       return {
         success: false,
-        message: "Você não tem permissão de criar um compromisso",
+        message: "Você não tem permissão de criar um evento",
       }
     } catch (e) {
       return {
@@ -125,12 +125,12 @@ const AppointmentProvider = ({ children }: AppointmentProviderProps) => {
         setAppointments(old => old.filter(Appointment => Appointment.id !== id))
         return {
           success: true,
-          message: "Compromisso deletado com sucesso",
+          message: "Evento deletado com sucesso",
         }
       }
       return {
         success: false,
-        message: "Você não tem permissão de deletar um compromisso",
+        message: "Você não tem permissão de deletar um evento",
       }
     } catch (e) {
       return {
@@ -150,12 +150,12 @@ const AppointmentProvider = ({ children }: AppointmentProviderProps) => {
 
         return {
           success: true,
-          message: "Compromisso atualizado com sucesso",
+          message: "Evento atualizado com sucesso",
         }
       }
       return {
         success: false,
-        message: "Você não tem permissão de editar um compromisso",
+        message: "Você não tem permissão de editar um evento",
       }
     } catch (e) {
       return {
@@ -184,7 +184,7 @@ const AppointmentProvider = ({ children }: AppointmentProviderProps) => {
       }
       return {
         success: false,
-        message: "Você não tem permissão de editar um compromisso",
+        message: "Você não tem permissão de editar um evento",
       }
     } catch (e) {
       return {

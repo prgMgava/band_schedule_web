@@ -1,8 +1,10 @@
-import { Box, Button, Card, Dialog, Drawer, Modal, Stack } from "@mui/material"
+import { Close } from "@mui/icons-material"
+import { Box, Button, Card, Dialog, Divider, Drawer, IconButton, Modal, Stack } from "@mui/material"
 import React, { useState } from "react"
 import uuid from "react-uuid"
 import { useLabel } from "../../../../Provider/Label/Label"
 import { hexToRgb } from "../../../../Utils/colors"
+import { AppointmentForm } from "../Form/AppointmentForm"
 import { FilterByBand } from "./FilterByBand"
 const local = localStorage.getItem("@BandSchedule:labels") || "[]"
 const labels = JSON.parse(local) || []
@@ -15,14 +17,38 @@ export const Filter = ({ setCurrentPriority }: FilterProps) => {
   const firstTime = localStorage.getItem("@BandSchedule:first_time") || ""
   const [openModal, setOpenModal] = useState(!firstTime)
   const { labels: labelsProvider } = useLabel()
+  const [openDrawer, setOpenDrawer] = useState(false)
   const handleClose = () => {
     window.location.reload()
     setOpenModal(false)
     localStorage.setItem("@BandSchedule:first_time", "true")
   }
 
+  const data = {
+    appointmentData: {
+      endDate: new Date(),
+      startDate: new Date(),
+    },
+  }
+
+  const openAppointmentForm = () => {
+    return
+  }
+
+  const toggleDrawer = () => {
+    setOpenDrawer(old => !old)
+  }
+
   return (
     <>
+      <Drawer anchor={"left"} open={openDrawer} onClose={toggleDrawer} style={{ padding: "0 4px 0 4px" }}>
+        <IconButton onClick={toggleDrawer} size="medium" style={{ width: "25px", marginLeft: "8px" }}>
+          <Close alignmentBaseline="baseline"></Close>
+        </IconButton>
+        <Divider />
+        <AppointmentForm data={data} fromMenu={true} />
+        <Divider />
+      </Drawer>
       <Box
         style={{ borderBottom: "1px solid #000", marginBottom: "8px", background: "gray" }}
         display="flex"
@@ -33,7 +59,9 @@ export const Filter = ({ setCurrentPriority }: FilterProps) => {
         color="#fff"
       >
         <Box pb="6px">Todos artistas</Box>
-        <Box pb="6px">Novo Evento</Box>
+        <Button id="basic-button" aria-haspopup="true" color="inherit" onClick={() => setOpenDrawer(true)}>
+          Novo Evento
+        </Button>
         <Box pb="6px">Eventos</Box>
         <FilterByBand />
       </Box>
@@ -91,8 +119,7 @@ export const Filter = ({ setCurrentPriority }: FilterProps) => {
               <Box component={"span"} key={uuid()} onClick={() => window.location.reload()} borderRadius={1}>
                 <b>Seja bem vindo.</b>
                 <br />
-                <br /> Hum vi que é primeira vez que você esta acessando ou você acabou de logar nossa agenda por este
-                dispositivo.
+                <br /> É primeira vez que você esta acessando ou você acabou de logar nossa agenda por este dispositivo.
                 <br /> É só <b onClick={handleClose}>clicar</b> no botão abaixo que vamos buscar toas as informações
                 para você!
               </Box>

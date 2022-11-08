@@ -27,7 +27,7 @@ export const StatusHandler = ({ toggleDrawer }: StatusProps) => {
     <Grid padding={mobile ? "" : 8}>
       <Card style={{ maxWidth: 300, padding: 32, display: "flex", flexDirection: "column", gap: 16 }}>
         <Typography>
-          Esta ação vai atualizar todos os compromissos que ja foram realizados (em relação com a data atual) de
+          Esta ação vai atualizar todos os eventos que ja foram realizados (em relação com a data atual) de
           <b> Agendado</b> para <b>Concluído</b>
         </Typography>
         <Button variant="contained" style={{ margin: "0 auto" }} onClick={handlingStatus}>
