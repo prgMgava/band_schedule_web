@@ -1,4 +1,4 @@
-import React, { useContext, createContext, useState, ReactNode, useCallback } from "react"
+import React, { useContext, createContext, useState, ReactNode, useCallback, Dispatch } from "react"
 
 import { AxiosResponse } from "axios"
 import { api } from "../../Services/api"
@@ -8,7 +8,10 @@ import { addDays, subDays } from "date-fns"
 
 interface AppointmentContextProps {
   getAppointments: (date: Date) => Promise<IResponse>
+  getAppointmentsByBand: (date: Date, idBand: number) => Promise<IResponse>
   appointments: IAppointments[]
+  currentDate: Date
+  setCurrentDate: Dispatch<React.SetStateAction<Date>>
   createAppointment: (payload: IAppointments) => Promise<IResponse>
   updateAppointment: (payload: IAppointments, id: number) => Promise<IResponse>
   deleteAppointment: (id: number) => Promise<IResponse>
@@ -31,6 +34,7 @@ interface AppointmentProviderProps {
 const AppointmentProvider = ({ children }: AppointmentProviderProps) => {
   const { accessToken, adm } = useAuth()
   const [appointments, setAppointments] = useState<IAppointments[]>([])
+  const [currentDate, setCurrentDate] = useState(new Date())
 
   const getAppointments = useCallback(async (date: Date) => {
     try {
@@ -42,6 +46,34 @@ const AppointmentProvider = ({ children }: AppointmentProviderProps) => {
 
       const { data }: AxiosResponse<IAppointments[]> = await api.get(
         `/appointment?start_date=${startDate}&end_date=${endDate}`,
+        {
+          headers: { "x-access-token": accessToken },
+        }
+      )
+      setAppointments(data)
+
+      return {
+        success: true,
+        message: "OK",
+      }
+    } catch (e) {
+      return {
+        success: false,
+        message: e.response.data.error,
+      }
+    }
+  }, [])
+
+  const getAppointmentsByBand = useCallback(async (date: Date, idBand) => {
+    try {
+      const startDateAux = subDays(date, 40)
+      const endDateAux = addDays(date, 40)
+
+      const startDate = new Date(startDateAux).toISOString().substring(0, 10)
+      const endDate = new Date(endDateAux).toISOString().substring(0, 10)
+
+      const { data }: AxiosResponse<IAppointments[]> = await api.get(
+        `/appointment/band/${idBand}?start_date=${startDate}&end_date=${endDate}`,
         {
           headers: { "x-access-token": accessToken },
         }
@@ -170,6 +202,9 @@ const AppointmentProvider = ({ children }: AppointmentProviderProps) => {
         createAppointment,
         updateAppointment,
         updateAppointmentStatus,
+        currentDate,
+        setCurrentDate,
+        getAppointmentsByBand,
       }}
     >
       {children}

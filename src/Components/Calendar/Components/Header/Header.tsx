@@ -22,8 +22,8 @@ import { useAuth } from "../../../../Provider/Auth/Auth"
 import { LabelForm } from "../Form/LabelForm"
 import { Filter } from "../Filter/Filter"
 import { StatusHandler } from "../../StatusHandler"
-import logo from "../../../../assets/logo.png"
 import { useMobile } from "../../../../Provider/Theme/Mobile"
+import { useBand } from "../../../../Provider/Band/Band"
 interface HeaderProps {
   setCurrentPriority: React.Dispatch<React.SetStateAction<number>>
 }
@@ -35,6 +35,7 @@ export const Header = ({ setCurrentPriority }: HeaderProps) => {
   const allUsers = [...adminList, ...memberList]
   const { mobile } = useMobile()
   const open = Boolean(anchorEl)
+  const { currentBand } = useBand()
   const handleClick = event => {
     setAnchorEl(event.currentTarget)
   }
@@ -73,7 +74,7 @@ export const Header = ({ setCurrentPriority }: HeaderProps) => {
         {forms[currentForm]}
         <Divider />
       </Drawer>
-      <Box width={"100%"} height={"80px"} boxShadow={2} bgcolor={"#000"} mb={1}>
+      <Box width={"100%"} height={"80px"} boxShadow={2} bgcolor={"#000"}>
         <Stack direction={"row"} justifyContent={"space-between"}>
           <Box display={"flex"}>
             {!mobile ? (
@@ -86,19 +87,23 @@ export const Header = ({ setCurrentPriority }: HeaderProps) => {
                   bgcolor={"#FFF"}
                   alignItems="center"
                 >
-                  <img src={logo} alt="logo" style={{ paddingLeft: "24px", height: "90%" }} />
+                  <img
+                    src={require("../../../../assets/logo.png")}
+                    alt="logo"
+                    style={{ paddingLeft: "24px", height: "90%" }}
+                  />
                 </Box>
                 <Box color="white" alignSelf={"center"} ml={2} fontSize="32px">
-                  BAND NAME HERE
+                  {currentBand?.toUpperCase()}
                 </Box>
               </>
             ) : (
               <Box p="16px">
                 <Box height="30px" width={"50px"} justifySelf={"flex-start"} display="flex" alignItems="center">
-                  <img src={logo} alt="logo" style={{ height: "90%" }} />
+                  <img src={require("../../../../assets/logo.png")} alt="logo" style={{ height: "90%" }} />
                 </Box>
                 <Box color="white" fontSize="12px">
-                  BAND BANE HERE
+                  {currentBand?.toUpperCase()}
                 </Box>
               </Box>
             )}

@@ -3,6 +3,7 @@ import React, { useState } from "react"
 import uuid from "react-uuid"
 import { useLabel } from "../../../../Provider/Label/Label"
 import { hexToRgb } from "../../../../Utils/colors"
+import { FilterByBand } from "./FilterByBand"
 const local = localStorage.getItem("@BandSchedule:labels") || "[]"
 const labels = JSON.parse(local) || []
 
@@ -34,7 +35,7 @@ export const Filter = ({ setCurrentPriority }: FilterProps) => {
         <Box pb="6px">Todos artistas</Box>
         <Box pb="6px">Novo Evento</Box>
         <Box pb="6px">Eventos</Box>
-        <Box pb="6px">Artistas</Box>
+        <FilterByBand />
       </Box>
 
       <Box style={{ background: "transparent" }} display={"flex"} flexWrap={"wrap"} gap={2} padding="0 4px">

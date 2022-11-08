@@ -1,4 +1,4 @@
-import React, { useContext, createContext, useState, ReactNode, useCallback } from "react"
+import React, { useContext, createContext, useState, ReactNode, useCallback, Dispatch } from "react"
 
 import { AxiosResponse } from "axios"
 import { api } from "../../Services/api"
@@ -9,11 +9,12 @@ interface BandContextProps {
   myBands: IBand[]
   bands: IBand[]
   getBands: () => Promise<IResponse>
-
+  currentBand: string
   getMyBands: () => Promise<IResponse>
   createBand: ({ name, cellphone, email }: CreateBandProp) => Promise<IResponse>
   deleteBand: (id: number) => Promise<IResponse>
   updateBand: ({ name, cellphone, email, id }: CreateBandProp) => Promise<IResponse>
+  setCurrentBand: Dispatch<React.SetStateAction<string>>
 }
 const BandContext = createContext<BandContextProps>({} as BandContextProps)
 
@@ -44,6 +45,7 @@ const BandProvider = ({ children }: BandProviderProps) => {
   const { id, accessToken, adm, superAdmin } = useAuth()
   const [myBands, setMyBands] = useState<IBand[]>([])
   const [bands, setBands] = useState<IBand[]>([])
+  const [currentBand, setCurrentBand] = useState("")
 
   const getBands = useCallback(async () => {
     try {
@@ -167,7 +169,9 @@ const BandProvider = ({ children }: BandProviderProps) => {
     }
   }, [])
   return (
-    <BandContext.Provider value={{ getBands, bands, myBands, getMyBands, createBand, deleteBand, updateBand }}>
+    <BandContext.Provider
+      value={{ getBands, bands, myBands, getMyBands, createBand, deleteBand, updateBand, currentBand, setCurrentBand }}
+    >
       {children}
     </BandContext.Provider>
   )

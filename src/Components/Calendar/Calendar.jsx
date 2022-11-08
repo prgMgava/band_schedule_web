@@ -125,7 +125,7 @@ export const Demo = () => {
   const { id, accessToken, getAdmins, getMembers } = useAuth()
   const { getMyBands } = useBand()
   const { getLabels } = useLabel()
-  const { appointments, getAppointments, deleteAppointment } = useAppointment()
+  const { appointments, getAppointments, deleteAppointment, currentDate, setCurrentDate } = useAppointment()
   const [currentViewName, setCurrentViewName] = React.useState("Mensal")
   const [currentPriority, setCurrentPriority] = React.useState(0)
   const [openDialog, setOpenDialog] = useState(false)
@@ -138,7 +138,6 @@ export const Demo = () => {
     },
   ])
   const [closedModal, setClosedModal] = useState(false)
-  const [currentDate, setCurrentDate] = React.useState(new Date())
   const closeForm = e => {
     setClosedModal(e)
     return e
