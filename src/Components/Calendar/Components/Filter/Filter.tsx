@@ -93,7 +93,7 @@ export const Filter = ({ setCurrentPriority }: FilterProps) => {
           aria-labelledby="modal-modal-title"
           aria-describedby="modal-modal-description"
         >
-          <Events />
+          <Events setOpenDrawer={setOpenDrawer} handleCloseModal={handleCloseModal} />
         </Modal>
         <FilterByBand />
       </Box>

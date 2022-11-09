@@ -121,7 +121,7 @@ export const EventFilter = () => {
                   return (
                     <MenuItem value={label.id} key={uuid()}>
                       <ListItemIcon>
-                        <Circle sx={{ color: label?.color }} fontSize={"small"} />
+                        <Circle sx={{ color: label?.color }} fontSize={"small"} style={{ height: "10px" }} />
                       </ListItemIcon>
                       {label.title}
                     </MenuItem>
@@ -131,7 +131,7 @@ export const EventFilter = () => {
               })}
               <MenuItem value={0} key={uuid()}>
                 <ListItemIcon>
-                  <Circle sx={{ color: "white" }} />
+                  <Circle sx={{ color: "white" }} fontSize="small" style={{ height: "10px" }} />
                 </ListItemIcon>
                 todas
               </MenuItem>
