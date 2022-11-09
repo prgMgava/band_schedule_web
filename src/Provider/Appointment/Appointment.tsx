@@ -9,7 +9,7 @@ import { addDays, subDays } from "date-fns"
 
 interface AppointmentContextProps {
   getAppointments: (date: Date) => Promise<IResponse>
-  getAppointmentsByBand: (date: Date, idBand: number) => Promise<IResponse>
+  getAppointmentsByBand: (date: Date, idBand?: number) => Promise<IResponse>
   getMyAppointments: (date: Date, owner: number) => Promise<IResponse>
   appointments: IAppointments[]
   currentDate: Date
@@ -37,6 +37,7 @@ const AppointmentProvider = ({ children }: AppointmentProviderProps) => {
   const { accessToken, adm } = useAuth()
   const [appointments, setAppointments] = useState<IAppointments[]>([])
   const [currentDate, setCurrentDate] = useState(new Date())
+  const [currentBand, setCurrentBand] = useState<number>()
 
   const getAppointments = useCallback(async (date: Date) => {
     try {
@@ -96,10 +97,11 @@ const AppointmentProvider = ({ children }: AppointmentProviderProps) => {
     }
   }, [])
 
-  const getAppointmentsByBand = useCallback(async (date: Date, idBand) => {
+  const getAppointmentsByBand = useCallback(async (date: Date, idBand = currentBand) => {
     try {
       const startDateAux = subDays(date, 40)
       const endDateAux = addDays(date, 40)
+      setCurrentBand(idBand)
 
       const startDate = new Date(startDateAux).toISOString().substring(0, 10)
       const endDate = new Date(endDateAux).toISOString().substring(0, 10)

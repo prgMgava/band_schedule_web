@@ -29,7 +29,7 @@ interface HeaderProps {
 }
 
 export const Header = ({ setCurrentPriority }: HeaderProps) => {
-  const { signOut, adm, superAdmin } = useAuth()
+  const { signOut, adm, superAdmin, userData } = useAuth()
   const [anchorEl, setAnchorEl] = React.useState(null)
   const [currentForm, setCurrentForm] = useState("")
   const { mobile } = useMobile()
@@ -165,7 +165,7 @@ export const Header = ({ setCurrentPriority }: HeaderProps) => {
                       setOpenDrawer(true)
                     }}
                   >
-                    <Avatar /> Meu Perfil
+                    <Avatar /> {userData.username}
                   </MenuItem>
                   <Divider />
                   <Typography component="h6" fontSize={"10px"} pl={1}>
