@@ -5,6 +5,7 @@ import {
   Button,
   Divider,
   FormControl,
+  FormHelperText,
   Grid,
   InputAdornment,
   InputLabel,
@@ -25,11 +26,13 @@ import { toast } from "react-toastify"
 import { useMobile } from "../../../../Provider/Theme/Mobile"
 import { useBand } from "../../../../Provider/Band/Band"
 import uuid from "react-uuid"
+import { useAuth } from "../../../../Provider/Auth/Auth"
 
 const schema = yup.object().shape({
   name: yup.string().required("Nome da Banda é obrigatório").max(100, "Nome muito grande"),
   email: yup.string().max(150, "Email muito grande").nullable(),
   cellphone: yup.string().max(50, "Telefone muito grande").nullable(),
+  owner: yup.number(),
 })
 
 interface BandProps {
@@ -37,6 +40,8 @@ interface BandProps {
 }
 
 export const BandForm = ({ toggleDrawer }: BandProps) => {
+  const { superAdmin, adminList } = useAuth()
+
   const { mobile } = useMobile()
   const { createBand, myBands, updateBand } = useBand()
   const [maskedCellPhone, setMaskedCellPhone] = useState("")
@@ -54,9 +59,15 @@ export const BandForm = ({ toggleDrawer }: BandProps) => {
     control,
     setValue,
     formState: { errors },
+    unregister,
+    getValues,
   } = useForm<IBandFields>({ resolver: yupResolver(schema), mode: "all" })
 
   const submitForm: SubmitHandler<IBandFields> = async (data: IBandFields) => {
+    if (!getValues("owner") && superAdmin) {
+      toast.error("Selecione um admin responsável por essa banda")
+      return
+    }
     if (currentBand) {
       const response = await updateBand({ ...data, id: currentBand })
       toast[response.success ? "success" : "error"](response.message)
@@ -72,7 +83,11 @@ export const BandForm = ({ toggleDrawer }: BandProps) => {
     }
   }
 
-  React.useEffect(() => setValue("cellphone", maskedCellPhone), [maskedCellPhone])
+  React.useEffect(() => {
+    if (!superAdmin) {
+      unregister("owner")
+    }
+  }, [])
 
   React.useEffect(() => {
     if (currentBand) {
@@ -166,6 +181,37 @@ export const BandForm = ({ toggleDrawer }: BandProps) => {
               )}
             />
           </Stack>
+          {superAdmin && (
+            <Controller
+              name="owner"
+              control={control}
+              render={({ field }) => (
+                <Box width={"100%"}>
+                  <FormControl fullWidth={true}>
+                    <InputLabel id="demo-simple-select-helper-label">Administrador *</InputLabel>
+                    <Select
+                      labelId="demo-simple-select-label"
+                      id="demo-simple-select"
+                      label="Administrador *"
+                      fullWidth={true}
+                      {...field}
+                    >
+                      {adminList.map(item => {
+                        if (!item.is_deleted) {
+                          return (
+                            <MenuItem value={item.id} key={uuid()}>
+                              {item.username}
+                            </MenuItem>
+                          )
+                        }
+                        return <></>
+                      })}
+                    </Select>
+                  </FormControl>
+                </Box>
+              )}
+            />
+          )}
         </Stack>
 
         <Stack spacing={"10px"} mt={3}>

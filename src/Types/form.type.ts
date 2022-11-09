@@ -19,6 +19,7 @@ export interface IBandFields {
   name: string
   cellphone: string
   email: string
+  owner: number
 }
 
 export interface IAdminFields {

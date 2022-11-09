@@ -11,7 +11,7 @@ interface BandContextProps {
   getBands: () => Promise<IResponse>
   currentBand: string
   getMyBands: () => Promise<IResponse>
-  createBand: ({ name, cellphone, email }: CreateBandProp) => Promise<IResponse>
+  createBand: ({ name, cellphone, email, owner }: CreateBandProp) => Promise<IResponse>
   deleteBand: (id: number) => Promise<IResponse>
   updateBand: ({ name, cellphone, email, id }: CreateBandProp) => Promise<IResponse>
   setCurrentBand: Dispatch<React.SetStateAction<string>>
@@ -31,6 +31,7 @@ interface CreateBandProp {
   email: string
   cellphone: string
   id?: number
+  owner?: number
 }
 
 interface BandProviderProps {
@@ -82,12 +83,12 @@ const BandProvider = ({ children }: BandProviderProps) => {
     }
   }, [])
 
-  const createBand = useCallback(async ({ name, cellphone, email }: CreateBandProp) => {
+  const createBand = useCallback(async ({ name, cellphone, email, owner }: CreateBandProp) => {
     try {
       if (adm) {
         const response: AxiosResponse = await api.post(
           "/band",
-          { name, cellphone, email },
+          { name, cellphone, email, owner },
           {
             headers: { "x-access-token": accessToken },
           }
