@@ -63,7 +63,7 @@ export const Filter = ({ setCurrentPriority }: FilterProps) => {
       <Box
         style={{ borderBottom: "1px solid #000", marginBottom: "8px", background: "gray" }}
         display="flex"
-        gap={2}
+        gap={1}
         justifyContent={"center"}
         alignItems="center"
         pt={"8px"}
@@ -98,7 +98,7 @@ export const Filter = ({ setCurrentPriority }: FilterProps) => {
         <FilterByBand />
       </Box>
 
-      <Box style={{ background: "transparent" }} display={"flex"} flexWrap={"wrap"} gap={2} padding="0 4px">
+      <Box style={{ background: "transparent" }} display={"flex"} flexWrap={"wrap"} gap={1} padding="0 4px">
         <Box
           onClick={() => filterByLabel(0)}
           display={"flex"}
@@ -107,7 +107,7 @@ export const Filter = ({ setCurrentPriority }: FilterProps) => {
         >
           <Box
             key={uuid()}
-            style={{ background: "white", padding: "2px 4px", height: "15px", cursor: "pointer", width: "15px" }}
+            style={{ background: "white", padding: "2px 4px", height: "10px", cursor: "pointer", width: "10px" }}
             boxShadow={1}
             border={"1px #000 solid"}
             display="inline-block"
@@ -115,7 +115,9 @@ export const Filter = ({ setCurrentPriority }: FilterProps) => {
           <span
             style={{
               lineHeight: "22px",
-              lineBreak: "anywhere",
+              whiteSpace: "nowrap",
+              textOverflow: "ellipsis",
+              overflow: "hidden",
               fontSize: "12px",
               borderBottom: currentLabel == 0 ? "3px solid #000" : "3px solid transparent",
             }}
@@ -129,7 +131,7 @@ export const Filter = ({ setCurrentPriority }: FilterProps) => {
               <Box
                 onClick={() => filterByLabel(label?.id)}
                 display={"flex"}
-                gap="5px"
+                gap="2px"
                 key={uuid()}
                 style={{ height: "min-content", width: "130px", cursor: "pointer" }}
               >
@@ -137,9 +139,9 @@ export const Filter = ({ setCurrentPriority }: FilterProps) => {
                   style={{
                     background: label.color,
                     padding: "2px 4px",
-                    height: "15px",
+                    height: "10px",
 
-                    width: "15px",
+                    width: "10px",
                   }}
                   boxShadow={1}
                   color={hexToRgb(label.color) > 120 ? "#000000" : "#ffffff"}
@@ -149,10 +151,13 @@ export const Filter = ({ setCurrentPriority }: FilterProps) => {
                 <span
                   style={{
                     lineHeight: "22px",
-                    lineBreak: "anywhere",
+                    whiteSpace: "nowrap",
+                    textOverflow: "ellipsis",
+                    overflow: "hidden",
                     fontSize: "12px",
                     borderBottom: currentLabel == label.id ? "3px solid #000" : "3px solid transparent",
                   }}
+                  title={label.title}
                 >
                   {label.title?.toUpperCase()}
                 </span>
