@@ -72,7 +72,7 @@ const schema = yup.object().shape({
   end_date: yup.date().required("Data final obrigatória").required("Data final obrigatória"),
   id_label: yup.number().required("Label é obrigatório"),
   company_name: yup.string().max(200, "Nome de empresa muito grande").nullable(),
-  company_contractor: yup.string().max(200, "Nome de contratante muito grande").nullable(),
+  contractor: yup.string().max(200, "Nome de contratante muito grande").nullable(),
   company_cellphone: yup.string().max(200, "Telefone muito grande").nullable(),
   company_contact: yup.string().max(200, "Contato muito grande").nullable(),
   company_email: yup.string().max(200, "email muito grande").nullable(),
@@ -108,6 +108,8 @@ export const AppointmentForm = ({
   const [currenLabel, setCurrentLabel] = useState(data.appointmentData?.id_label)
   const [currentStatus, setCurrentStatus] = useState(data.appointmentData?.status)
   const [currentEditingData, setCurrentEditingData] = useState(data.appointmentData)
+  const [currentEvent, setCurrentEvent] = useState(data.appointmentData?.event)
+  const [currentMoney, setCurrentMoney] = useState(data.appointmentData?.money)
 
   const isEditing = !!title
 
@@ -186,6 +188,7 @@ export const AppointmentForm = ({
     setMaskedCellPhone(data.appointmentData?.cellphone)
     setCurrentState(data.appointmentData?.state)
     setCurrentBand(data.appointmentData?.id_band)
+    setCurrentEvent(data.appointmentData?.event)
 
     getValues()
   }, [])
@@ -401,7 +404,7 @@ export const AppointmentForm = ({
                 name="event"
                 control={control}
                 render={({ field }) => (
-                  <RadioGroup {...field} row>
+                  <RadioGroup {...field} row defaultValue={currentEvent}>
                     <FormControlLabel value="Corporativo" control={<Radio />} label="Corporativo" />
                     <FormControlLabel value="Show" control={<Radio />} label="Show" />
                     <FormControlLabel value="Participação" control={<Radio />} label="Participação" />
@@ -418,7 +421,7 @@ export const AppointmentForm = ({
                 name="money"
                 control={control}
                 render={({ field }) => (
-                  <RadioGroup {...field} row>
+                  <RadioGroup {...field} row defaultValue={currentMoney}>
                     <FormControlLabel value="Bilheteria" control={<Radio />} label="Bilheteria" />
                     <FormControlLabel value="Cachê" control={<Radio />} label="Cachê" />
                   </RadioGroup>
@@ -602,15 +605,14 @@ export const AppointmentForm = ({
           </Stack>
           <Stack direction={mobile ? "column" : "row"} spacing={2}>
             <Controller
-              name="company_contractor"
+              name="contractor"
               control={control}
-              render={({ field: { onChange, ...rest } }) => (
+              render={({ field }) => (
                 <TextField
-                  {...rest}
+                  {...field}
                   label="Contratante"
-                  error={!!errors.company_contractor}
-                  helperText={errors.company_contractor && errors.company_contractor.message}
-                  onChange={e => maskCellNumber(e.currentTarget.value)}
+                  error={!!errors.contractor}
+                  helperText={errors.contractor && errors.contractor.message}
                   fullWidth={true}
                   InputProps={{
                     startAdornment: (
@@ -628,13 +630,12 @@ export const AppointmentForm = ({
             <Controller
               name="company_contact"
               control={control}
-              render={({ field: { onChange, ...rest } }) => (
+              render={({ field }) => (
                 <TextField
-                  {...rest}
+                  {...field}
                   label="Contato"
                   error={!!errors.company_contact}
                   helperText={errors.company_contact && errors.company_contact.message}
-                  onChange={e => maskCellNumber(e.currentTarget.value)}
                   fullWidth={true}
                   InputProps={{
                     startAdornment: (
@@ -718,18 +719,13 @@ export const AppointmentForm = ({
             <Controller
               name="expanse"
               control={control}
-              render={({ field: { onChange, ...rest } }) => (
+              render={({ field }) => (
                 <TextField
-                  {...rest}
+                  {...field}
                   label="Despesas"
                   error={!!errors.expanse}
                   helperText={errors.expanse && errors.expanse.message}
-                  onChange={e => maskCellNumber(e.currentTarget.value)}
                   fullWidth={true}
-                  multiline
-                  inputProps={{
-                    maxLength: 15,
-                  }}
                 ></TextField>
               )}
             />

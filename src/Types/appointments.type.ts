@@ -26,7 +26,7 @@ export interface IAppointments {
     owner: number
   }
   company_name: string
-  company_contractor: string
+  contractor: string
   company_cellphone: string
   company_contact: string
   company_email: string
