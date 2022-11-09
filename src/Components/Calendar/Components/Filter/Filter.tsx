@@ -5,6 +5,7 @@ import uuid from "react-uuid"
 import { useAppointment } from "../../../../Provider/Appointment/Appointment"
 import { useBand } from "../../../../Provider/Band/Band"
 import { useLabel } from "../../../../Provider/Label/Label"
+import { useMobile } from "../../../../Provider/Theme/Mobile"
 import { hexToRgb } from "../../../../Utils/colors"
 import { Events } from "../Events/Events"
 import { AppointmentForm } from "../Form/AppointmentForm"
@@ -22,6 +23,7 @@ export const Filter = ({ setCurrentPriority }: FilterProps) => {
   const { getAppointments, currentDate } = useAppointment()
   const { setCurrentBand } = useBand()
   const [isOpen, setIsOpen] = useState(false)
+  const { mobile } = useMobile()
   const handleClose = () => {
     window.location.reload()
     setOpenModal(false)
@@ -66,6 +68,7 @@ export const Filter = ({ setCurrentPriority }: FilterProps) => {
         alignItems="center"
         pt={"8px"}
         color="#fff"
+        flexDirection={mobile ? "column" : "row"}
       >
         <Button
           id="basic-button"
