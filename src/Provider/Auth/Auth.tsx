@@ -70,13 +70,14 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     const adm = localStorage.getItem("@BandSchedule:adm") || ""
     const superAdmin = localStorage.getItem("@BandSchedule:super_admin") || ""
     const bandVisibility = localStorage.getItem("@BandSchedule:band_visibility") || ""
+    const bandAux = bandVisibility ? bandVisibility : "null"
     if (accessToken && id) {
       return {
         accessToken,
         id: JSON.parse(id),
         adm: adm === "true",
         superAdmin: superAdmin === "true",
-        bandVisibility: JSON.parse(bandVisibility),
+        bandVisibility: JSON.parse(bandAux),
       }
     }
     return {} as AuthState
