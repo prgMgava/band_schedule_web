@@ -122,7 +122,7 @@ const PrioritySelectorItem = ({ color, text: resourceTitle }) => {
 
 export const Demo = () => {
   const [labels, setLabels] = useState(JSON.parse(localStorage.getItem("@BandSchedule:labels")) || [])
-  const { id, accessToken, getAdmins, getMembers, superAdmin, bandVisibility, adm } = useAuth()
+  const { id, accessToken, getAdmins, getMembers, superAdmin, bandVisibility, adm, getUser } = useAuth()
   const { getMyBands } = useBand()
   const { getLabels } = useLabel()
   const { appointments, getAppointments, deleteAppointment, currentDate, setCurrentDate, getMyAppointments } =
@@ -238,6 +238,7 @@ export const Demo = () => {
     getLabels()
     getMembers()
     getAdmins()
+    getUser()
   }, [])
 
   useEffect(() => {

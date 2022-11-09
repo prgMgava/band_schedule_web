@@ -1,3 +1,4 @@
+/* eslint-disable no-debugger */
 import React, { useContext, createContext, useState, ReactNode, useCallback, Dispatch } from "react"
 
 import { AxiosResponse } from "axios"
@@ -126,6 +127,7 @@ const AppointmentProvider = ({ children }: AppointmentProviderProps) => {
   const createAppointment = useCallback(async (payload: IAppointments) => {
     try {
       if (adm) {
+        debugger
         const response: AxiosResponse = await api.post("/appointment", payload, {
           headers: { "x-access-token": accessToken },
         })

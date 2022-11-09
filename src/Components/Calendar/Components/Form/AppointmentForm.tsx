@@ -54,6 +54,7 @@ import { useBand } from "../../../../Provider/Band/Band"
 import { useAppointment } from "../../../../Provider/Appointment/Appointment"
 import { useLabel } from "../../../../Provider/Label/Label"
 import { IAppointments } from "../../../../Types/appointments.type"
+import { useAuth } from "../../../../Provider/Auth/Auth"
 
 const schema = yup.object().shape({
   title: yup.string().required("Nome do evento é obrigatório").max(5000, "Nome muito grande"),
@@ -98,6 +99,7 @@ export const AppointmentForm = ({
   const { mobile } = useMobile()
   const { myBands } = useBand()
   const { labels } = useLabel()
+  const { userData } = useAuth()
   const [maskedCellPhone, setMaskedCellPhone] = useState("")
   const { startDate, endDate, title, id } = data.appointmentData
   const { createAppointment, updateAppointment } = useAppointment()
@@ -163,6 +165,7 @@ export const AppointmentForm = ({
       }
       return
     }
+    data.creator = userData.username
     const response = await createAppointment(data)
     toast[response.success ? "success" : "error"](response.message)
     if (response.success) {

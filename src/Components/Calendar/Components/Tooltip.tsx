@@ -108,11 +108,11 @@ export const Tooltip = ({ appointmentData, formatDate, appointmentResources }: T
         </Grid>
       </Grid>
 
-      {appointmentData.emphasis && (
+      {appointmentData.creator && (
         <>
           <Grid container alignItems="center" key={`${resource.fieldName}_${resource.id}`} mb={2} ml={2.5}>
             <div>
-              <Grid>{appointmentData.emphasis}</Grid>
+              <Grid fontSize={10}>Criado por: {appointmentData.creator}</Grid>
             </div>
           </Grid>
         </>
