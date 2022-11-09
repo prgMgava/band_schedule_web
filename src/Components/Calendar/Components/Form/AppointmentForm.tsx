@@ -158,6 +158,12 @@ export const AppointmentForm = ({
   } = useForm<IAppointments>({ resolver: yupResolver(schema), mode: "onSubmit" })
 
   const submitForm: SubmitHandler<IAppointments> = async data => {
+    // Validar datas
+    const { start_date, end_date } = data
+    if (end_date < start_date) {
+      toast.error("Data final é menor que data atual")
+      return
+    }
     if (isEditing) {
       const response = await updateAppointment(data, id)
       toast[response.success ? "success" : "error"](response.message)
