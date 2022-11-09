@@ -34,4 +34,5 @@ export interface IAppointments {
   observations: string
   event: string
   money: string
+  expanse: string
 }

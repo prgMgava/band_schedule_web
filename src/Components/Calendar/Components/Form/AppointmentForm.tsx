@@ -56,7 +56,7 @@ import { useLabel } from "../../../../Provider/Label/Label"
 import { IAppointments } from "../../../../Types/appointments.type"
 
 const schema = yup.object().shape({
-  title: yup.string().required("Nome do evento é obrigatório").max(100, "Nome muito grande"),
+  title: yup.string().required("Nome do evento é obrigatório").max(5000, "Nome muito grande"),
   cellphone: yup.string().max(50, "Telefone muito grande").nullable(),
   street: yup.string().max(50, "Nome de rua muito grande").nullable(),
   district: yup.string().max(50, "Nome de bairro muito grande").nullable(),
@@ -64,21 +64,22 @@ const schema = yup.object().shape({
   city: yup.string().max(50, "Nome de cidade muito grande").nullable(),
   place: yup.string().max(50, "Nome muito grande").nullable(),
   address_number: yup.string().max(10, "Numero muito grande").nullable(),
-  address_complement: yup.string().max(150, "Complemento muito grande").nullable(),
+  address_complement: yup.string().max(200, "Complemento muito grande").nullable(),
   status: yup.string().default("agendado"),
   id_band: yup.number().required("Informe a banda que vai tocar no evento"),
   start_date: yup.date().required("Data inicial obrigatória").required("Data inicial obrigatória"),
   end_date: yup.date().required("Data final obrigatória").required("Data final obrigatória"),
   id_label: yup.number().required("Label é obrigatório"),
-  company_name: yup.string().max(150, "Nome de empresa muito grande").nullable(),
-  company_contractor: yup.string().max(150, "Nome de contratante muito grande").nullable(),
-  company_cellphone: yup.string().max(150, "Telefone muito grande").nullable(),
-  company_contact: yup.string().max(150, "Contato muito grande").nullable(),
-  company_email: yup.string().max(150, "email muito grande").nullable(),
-  emphasis: yup.string().max(500, "Descrição destaque muito grande").nullable(),
+  company_name: yup.string().max(200, "Nome de empresa muito grande").nullable(),
+  company_contractor: yup.string().max(200, "Nome de contratante muito grande").nullable(),
+  company_cellphone: yup.string().max(200, "Telefone muito grande").nullable(),
+  company_contact: yup.string().max(200, "Contato muito grande").nullable(),
+  company_email: yup.string().max(200, "email muito grande").nullable(),
+  emphasis: yup.string().max(5000, "Descrição destaque muito grande").nullable(),
   observations: yup.string().max(5000, "Descrição destaque muito grande").nullable(),
-  event: yup.string().max(5000, "Descrição destaque muito grande").nullable(),
+  event: yup.string().max(20, "Descrição destaque muito grande").nullable(),
   money: yup.string().nullable(),
+  expanse: yup.string().nullable().max(5000, "Informação muito grande"),
 })
 
 interface AppointmentFormProps {
@@ -215,10 +216,11 @@ export const AppointmentForm = ({
               render={({ field }) => (
                 <TextField
                   {...field}
-                  label="Título *"
+                  label="Destaque *"
                   error={!!errors.title}
                   helperText={errors.title && errors.title.message}
                   name="title"
+                  multiline
                   fullWidth={true}
                   InputProps={{
                     startAdornment: (
@@ -685,6 +687,43 @@ export const AppointmentForm = ({
                       </InputAdornment>
                     ),
                   }}
+                  inputProps={{
+                    maxLength: 15,
+                  }}
+                ></TextField>
+              )}
+            />
+          </Stack>
+          <Divider variant="inset" />
+
+          <Stack direction={mobile ? "column" : "row"} spacing={2}>
+            <Controller
+              name="observations"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  label="Observações"
+                  error={!!errors.observations}
+                  helperText={errors.observations && errors.observations.message}
+                  name="observations"
+                  fullWidth={true}
+                  multiline
+                ></TextField>
+              )}
+            />
+            <Controller
+              name="expanse"
+              control={control}
+              render={({ field: { onChange, ...rest } }) => (
+                <TextField
+                  {...rest}
+                  label="Despesas"
+                  error={!!errors.expanse}
+                  helperText={errors.expanse && errors.expanse.message}
+                  onChange={e => maskCellNumber(e.currentTarget.value)}
+                  fullWidth={true}
+                  multiline
                   inputProps={{
                     maxLength: 15,
                   }}
