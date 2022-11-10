@@ -79,6 +79,23 @@ export const EventFilter = ({ setCurrentFilter }: EventFilterProps) => {
 
   useEffect(() => {
     setValue("period", "1")
+    const currentDate = new Date()
+
+    const owner = adm ? parseInt(id) : bandVisibility
+
+    const dataInicial = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1)
+    const dataFinal = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0)
+
+    const dataInicialFormatada = dataInicial.toISOString().substring(0, 10)
+    const dataFinalFormatada = dataFinal.toISOString().substring(0, 10)
+    const payload: any = {
+      artista: "",
+      categoria: "",
+      data_inicial: dataInicialFormatada,
+      data_final: dataFinalFormatada,
+      estado: "",
+    }
+    getMyAppointmentsAdvanced(payload, owner || 0)
   }, [])
 
   return (
