@@ -29,16 +29,17 @@ export const EventTable = () => {
     },
   }))
 
-  function createData(name: string, calories: number, fat: number, carbs: number, protein: number) {
-    return { name, calories, fat, carbs, protein }
+  function createData(date: string, createAt: string, address: string, title: string, label: string, band: string) {
+    return { date, createAt, band, address, title, label }
   }
 
   const rows = [
-    createData("Frozen yoghurt", 159, 6.0, 24, 4.0),
-    createData("Ice cream sandwich", 237, 9.0, 37, 4.3),
-    createData("Eclair", 262, 16.0, 24, 6.0),
-    createData("Cupcake", 305, 3.7, 67, 4.3),
-    createData("Gingerbread", 356, 16.0, 49, 3.9),
+    createData("01/11/2002 17:57", "01/11/2002 17:57", "Vitoria/ES", "Meu vento legal", "OUTROS", "banda dejavu"),
+    createData("01/11/2002 17:57", "01/11/2002 17:57", "Vitoria/ES", "Meu vento legal", "OUTROS", "banda dejavu"),
+    createData("01/11/2002 17:57", "01/11/2002 17:57", "Vitoria/ES", "Meu vento legal", "OUTROS", "banda dejavu"),
+    createData("01/11/2002 17:57", "01/11/2002 17:57", "Vitoria/ES", "Meu vento legal", "OUTROS", "banda dejavu"),
+    createData("01/11/2002 17:57", "01/11/2002 17:57", "Vitoria/ES", "Meu vento legal", "OUTROS", "banda dejavu"),
+    createData("01/11/2002 17:57", "01/11/2002 17:57", "Vitoria/ES", "Meu vento legal", "OUTROS", "banda dejavu"),
   ]
 
   return (
@@ -46,23 +47,23 @@ export const EventTable = () => {
       <Table sx={{ minWidth: 700 }} aria-label="customized table">
         <TableHead>
           <TableRow>
-            <StyledTableCell>Dessert (100g serving)</StyledTableCell>
-            <StyledTableCell align="right">Calories</StyledTableCell>
-            <StyledTableCell align="right">Fat&nbsp;(g)</StyledTableCell>
-            <StyledTableCell align="right">Carbs&nbsp;(g)</StyledTableCell>
-            <StyledTableCell align="right">Protein&nbsp;(g)</StyledTableCell>
+            <StyledTableCell>Data</StyledTableCell>
+            <StyledTableCell>Criado em</StyledTableCell>
+            <StyledTableCell>Artista</StyledTableCell>
+            <StyledTableCell>Cidade/Estado</StyledTableCell>
+            <StyledTableCell>Destaque</StyledTableCell>
+            <StyledTableCell>Categoria</StyledTableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {rows.map(row => (
-            <StyledTableRow key={row.name}>
-              <StyledTableCell component="th" scope="row">
-                {row.name}
-              </StyledTableCell>
-              <StyledTableCell align="right">{row.calories}</StyledTableCell>
-              <StyledTableCell align="right">{row.fat}</StyledTableCell>
-              <StyledTableCell align="right">{row.carbs}</StyledTableCell>
-              <StyledTableCell align="right">{row.protein}</StyledTableCell>
+            <StyledTableRow key={row.date} sx={{ ":hover": { backdropFilter: "contrast(0.5)" } }}>
+              <StyledTableCell>{row.date}</StyledTableCell>
+              <StyledTableCell>{row.createAt}</StyledTableCell>
+              <StyledTableCell>{row.band}</StyledTableCell>
+              <StyledTableCell>{row.address}</StyledTableCell>
+              <StyledTableCell>{row.title}</StyledTableCell>
+              <StyledTableCell>{row.label}</StyledTableCell>
             </StyledTableRow>
           ))}
         </TableBody>
