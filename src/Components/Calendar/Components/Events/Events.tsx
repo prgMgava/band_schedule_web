@@ -11,6 +11,7 @@ interface EventsProp {
 }
 
 export const Events = ({ setOpenDrawer, handleCloseModal }: EventsProp) => {
+  const [currentFilter, setCurrentFilter] = useState<Array<string>>([])
   const data = {
     appointmentData: {
       endDate: new Date(),
@@ -20,10 +21,13 @@ export const Events = ({ setOpenDrawer, handleCloseModal }: EventsProp) => {
 
   return (
     <Card style={{ padding: "16px", margin: "64px 16px", position: "relative" }}>
-      <CardHeader title="Shrimp and Chorizo Paella" subheader="September 14, 2016">
+      <CardHeader
+        title="Meus eventos"
+        subheader={`Filtrado por: ${currentFilter.length ? currentFilter.join(", ") : ""}`}
+      >
         Filtros
       </CardHeader>
-      <EventFilter />
+      <EventFilter setCurrentFilter={setCurrentFilter} />
       <Divider variant="middle" style={{ margin: "10px 0" }} />
       <EventTable />
       <Box

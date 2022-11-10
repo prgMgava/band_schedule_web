@@ -1,7 +1,7 @@
 import { Circle, Search } from "@mui/icons-material"
 import { Button, FormControl, InputLabel, ListItemIcon, MenuItem, Select } from "@mui/material"
 import { Box, Stack } from "@mui/system"
-import React, { useEffect, useState } from "react"
+import React, { Dispatch, useEffect, useState } from "react"
 import { SubmitHandler, useForm } from "react-hook-form"
 import uuid from "react-uuid"
 import { useBand } from "../../../../Provider/Band/Band"
@@ -10,7 +10,11 @@ import { useMobile } from "../../../../Provider/Theme/Mobile"
 import { monthList } from "../../Utils/months"
 import { statesList } from "../../Utils/states"
 
-export const EventFilter = () => {
+interface EventFilterProps {
+  setCurrentFilter: Dispatch<React.SetStateAction<Array<string>>>
+}
+
+export const EventFilter = ({ setCurrentFilter }: EventFilterProps) => {
   const { mobile } = useMobile()
   const { labels } = useLabel()
   const { myBands } = useBand()
@@ -29,12 +33,22 @@ export const EventFilter = () => {
   const range = (start, stop, step) => Array.from({ length: (stop - start) / step + 1 }, (_, i) => start + i * step)
 
   const submitForm: SubmitHandler<any> = async data => {
-    const obj = {}
+    setCurrentFilter([])
+    const obj: any = {}
     Object.keys(data).map(key => {
       if (parseInt(data[key]) > 0) {
         obj[key] = data[key]
       }
     })
+    data.estado != "0" && (obj.estado = data.estado)
+    if (obj.period == "1") {
+      delete obj.ano
+    } else {
+      delete obj.mes
+    }
+    delete obj.period
+
+    Object.keys(obj).map(key => setCurrentFilter(old => [...old, key]))
   }
 
   useEffect(() => {
@@ -66,13 +80,13 @@ export const EventFilter = () => {
             </Select>
           </FormControl>
           {periodWatch == "1" ? (
-            <FormControl error={!!errors.month} sx={{ minWidth: 120 }} fullWidth={true}>
+            <FormControl sx={{ minWidth: 120 }} fullWidth={true}>
               <InputLabel id="demo-simple-select-helper-label">Mês</InputLabel>
               <Select
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
                 label="Mês"
-                {...register("month")}
+                {...register("mes")}
                 size={"small"}
                 defaultValue={currentMonth}
               >
@@ -85,13 +99,13 @@ export const EventFilter = () => {
             </FormControl>
           ) : (
             <Box>
-              <FormControl error={!!errors.year} sx={{ minWidth: 120 }}>
+              <FormControl sx={{ minWidth: 120 }}>
                 <InputLabel id="demo-simple-select-helper-label">Ano</InputLabel>
                 <Select
                   labelId="demo-simple-select-label"
                   id="demo-simple-select"
                   label="Ano"
-                  {...register("year")}
+                  {...register("ano")}
                   defaultValue={currentYear}
                   size={"small"}
                 >
@@ -106,7 +120,7 @@ export const EventFilter = () => {
           )}
         </Stack>
         <Stack direction={"row"} gap={2} width="100%">
-          <FormControl error={!!errors.label} fullWidth={true}>
+          <FormControl fullWidth={true}>
             <InputLabel id="demo-simple-select-helper-label">Categoria</InputLabel>
             <Select
               labelId="demo-simple-select-label"
@@ -114,7 +128,7 @@ export const EventFilter = () => {
               label="Categoria"
               size={"small"}
               defaultValue={0}
-              {...register("label")}
+              {...register("categoria")}
             >
               {labels.map(label => {
                 if (!label.is_deleted) {
@@ -139,7 +153,7 @@ export const EventFilter = () => {
           </FormControl>
         </Stack>
         <Stack direction={"row"} gap={2} width="100%">
-          <FormControl error={!!errors.band} sx={{ minWidth: 120 }} fullWidth={true}>
+          <FormControl sx={{ minWidth: 120 }} fullWidth={true}>
             <InputLabel id="demo-simple-select-helper-label">Artista</InputLabel>
             <Select
               labelId="demo-simple-select-label"
@@ -147,7 +161,7 @@ export const EventFilter = () => {
               label="Artista"
               size={"small"}
               defaultValue={0}
-              {...register("band")}
+              {...register("artista")}
             >
               {myBands.map(band => {
                 if (!band.is_deleted) {
@@ -172,7 +186,7 @@ export const EventFilter = () => {
               id="demo-simple-select"
               label="Estado"
               defaultValue={0}
-              {...register("state")}
+              {...register("estado")}
               size={"small"}
             >
               {statesList.map((item, index) => (

@@ -234,6 +234,7 @@ export const AppointmentForm = ({
                   name="title"
                   multiline
                   fullWidth={true}
+                  size="small"
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
@@ -250,6 +251,7 @@ export const AppointmentForm = ({
               render={({ field: { onChange, ...rest } }) => (
                 <TextField
                   {...rest}
+                  size="small"
                   label="Telefone"
                   error={!!errors.cellphone}
                   helperText={errors.cellphone && errors.cellphone.message}
@@ -278,6 +280,7 @@ export const AppointmentForm = ({
                 <TextField
                   {...field}
                   label="Rua"
+                  size="small"
                   error={!!errors.street}
                   helperText={errors.street && errors.street.message}
                   fullWidth={true}
@@ -297,6 +300,7 @@ export const AppointmentForm = ({
               render={({ field }) => (
                 <TextField
                   {...field}
+                  size="small"
                   label="Bairro"
                   error={!!errors.district}
                   helperText={errors.district && errors.district.message}
@@ -321,6 +325,7 @@ export const AppointmentForm = ({
                   <FormControl error={!!errors.state} fullWidth={true}>
                     <InputLabel id="demo-simple-select-helper-label">Estado</InputLabel>
                     <Select
+                      size="small"
                       sx={{ minWidth: 240 }}
                       labelId="demo-simple-select-label"
                       id="demo-simple-select"
@@ -345,6 +350,7 @@ export const AppointmentForm = ({
               render={({ field }) => (
                 <TextField
                   {...field}
+                  size="small"
                   label="Cidade"
                   error={!!errors.city}
                   helperText={errors.city && errors.city.message}
@@ -368,6 +374,7 @@ export const AppointmentForm = ({
                 <TextField
                   {...field}
                   label="Número"
+                  size="small"
                   error={!!errors.address_number}
                   helperText={errors.address_number && errors.address_number.message}
                   fullWidth={true}
@@ -388,6 +395,7 @@ export const AppointmentForm = ({
                 <TextField
                   fullWidth={true}
                   {...field}
+                  size="small"
                   label="Complemento"
                   error={!!errors.address_complement}
                   helperText={errors.address_complement && errors.address_complement.message}
@@ -495,6 +503,7 @@ export const AppointmentForm = ({
                   <FormControl fullWidth={true}>
                     <InputLabel id="demo-simple-select-helper-label">Status</InputLabel>
                     <Select
+                      size="small"
                       sx={{ minWidth: 270 }}
                       labelId="demo-simple-select-label"
                       id="demo-simple-select"
@@ -520,6 +529,7 @@ export const AppointmentForm = ({
                   <FormControl error={!!errors.id_band} fullWidth={true}>
                     <InputLabel id="demo-simple-select-helper-label">Banda *</InputLabel>
                     <Select
+                      size="small"
                       sx={{ minWidth: 270 }}
                       labelId="demo-simple-select-error-label"
                       id="demo-simple-select-error"
@@ -553,6 +563,7 @@ export const AppointmentForm = ({
                   <FormControl error={!!errors.id_label} fullWidth={true}>
                     <InputLabel id="demo-simple-select-helper-label">Categoria *</InputLabel>
                     <Select
+                      size="small"
                       sx={{ minWidth: 270 }}
                       labelId="demo-simple-select-error-label"
                       id="demo-simple-select-error"
@@ -594,6 +605,7 @@ export const AppointmentForm = ({
                 <TextField
                   {...field}
                   label="Empresa"
+                  size="small"
                   error={!!errors.company_name}
                   helperText={errors.company_name && errors.company_name.message}
                   name="company_name"
@@ -617,6 +629,7 @@ export const AppointmentForm = ({
                 <TextField
                   {...field}
                   label="Contratante"
+                  size="small"
                   error={!!errors.contractor}
                   helperText={errors.contractor && errors.contractor.message}
                   fullWidth={true}
@@ -640,6 +653,7 @@ export const AppointmentForm = ({
                 <TextField
                   {...field}
                   label="Contato"
+                  size="small"
                   error={!!errors.company_contact}
                   helperText={errors.company_contact && errors.company_contact.message}
                   fullWidth={true}
@@ -665,6 +679,7 @@ export const AppointmentForm = ({
                 <TextField
                   {...field}
                   label="Email"
+                  size="small"
                   error={!!errors.company_email}
                   helperText={errors.company_email && errors.company_email.message}
                   name="company_email"
@@ -686,6 +701,7 @@ export const AppointmentForm = ({
                 <TextField
                   {...rest}
                   label="Telefone"
+                  size="small"
                   error={!!errors.company_cellphone}
                   helperText={errors.company_cellphone && errors.company_cellphone.message}
                   onChange={e => maskCellNumber(e.currentTarget.value)}
@@ -714,6 +730,7 @@ export const AppointmentForm = ({
                 <TextField
                   {...field}
                   label="Observações"
+                  size="small"
                   error={!!errors.observations}
                   helperText={errors.observations && errors.observations.message}
                   name="observations"
@@ -728,6 +745,7 @@ export const AppointmentForm = ({
               render={({ field }) => (
                 <TextField
                   {...field}
+                  size="small"
                   label="Despesas"
                   error={!!errors.expanse}
                   helperText={errors.expanse && errors.expanse.message}
