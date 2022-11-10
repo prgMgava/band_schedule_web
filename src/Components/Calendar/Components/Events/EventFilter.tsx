@@ -3,7 +3,10 @@ import { Button, FormControl, InputLabel, ListItemIcon, MenuItem, Select } from 
 import { Box, Stack } from "@mui/system"
 import React, { Dispatch, useEffect, useState } from "react"
 import { SubmitHandler, useForm } from "react-hook-form"
+import { toast } from "react-toastify"
 import uuid from "react-uuid"
+import { useAppointment } from "../../../../Provider/Appointment/Appointment"
+import { useAuth } from "../../../../Provider/Auth/Auth"
 import { useBand } from "../../../../Provider/Band/Band"
 import { useLabel } from "../../../../Provider/Label/Label"
 import { useMobile } from "../../../../Provider/Theme/Mobile"
@@ -18,6 +21,8 @@ export const EventFilter = ({ setCurrentFilter }: EventFilterProps) => {
   const { mobile } = useMobile()
   const { labels } = useLabel()
   const { myBands } = useBand()
+  const { getMyAppointmentsAdvanced } = useAppointment()
+  const { id, bandVisibility, adm } = useAuth()
   const [currentMonth, setCurrentMonth] = useState(new Date().getMonth() + 1)
   const [currentYear, setCurrentYear] = useState(new Date().getFullYear())
 
@@ -49,6 +54,27 @@ export const EventFilter = ({ setCurrentFilter }: EventFilterProps) => {
     delete obj.period
 
     Object.keys(obj).map(key => setCurrentFilter(old => [...old, key]))
+
+    const owner = adm ? parseInt(id) : bandVisibility
+
+    const currentDate = new Date()
+    const isMonth = data.period == "1"
+
+    const dataInicial = new Date(isMonth ? currentDate.getFullYear() : data.ano, isMonth ? data.mes - 1 : 0, 1)
+    const dataFinal = new Date(isMonth ? currentDate.getFullYear() : data.ano, isMonth ? data.mes : 12, 0)
+
+    const dataInicialFormatada = dataInicial.toISOString().substring(0, 10)
+    const dataFinalFormatada = dataFinal.toISOString().substring(0, 10)
+
+    const payload: any = {
+      artista: obj.artista || "",
+      categoria: obj.categoria || "",
+      data_inicial: dataInicialFormatada,
+      data_final: dataFinalFormatada,
+      estado: obj.estado || "",
+    }
+    const response = await getMyAppointmentsAdvanced(payload, owner || 0)
+    toast[response.success ? "success" : "error"](response.message)
   }
 
   useEffect(() => {

@@ -7,6 +7,13 @@ import { IResponse, useAuth } from "../Auth/Auth"
 import { IAppointments } from "../../Types/appointments.type"
 import { addDays, subDays } from "date-fns"
 
+export interface IParams {
+  data_inicial: Date
+  data_final: Date
+  categoria?: number
+  artista?: number
+  estado?: string
+}
 interface AppointmentContextProps {
   getAppointments: (date: Date) => Promise<IResponse>
   getAppointmentsByBand: (date: Date, idBand?: number) => Promise<IResponse>
@@ -18,6 +25,7 @@ interface AppointmentContextProps {
   updateAppointment: (payload: IAppointments, id: number) => Promise<IResponse>
   deleteAppointment: (id: number) => Promise<IResponse>
   updateAppointmentStatus: () => Promise<IResponse>
+  getMyAppointmentsAdvanced: (payload: IParams, owner: number) => Promise<IResponse>
 }
 const AppointmentContext = createContext<AppointmentContextProps>({} as AppointmentContextProps)
 
@@ -88,6 +96,28 @@ const AppointmentProvider = ({ children }: AppointmentProviderProps) => {
       return {
         success: true,
         message: "OK",
+      }
+    } catch (e) {
+      return {
+        success: false,
+        message: e.response.data.error,
+      }
+    }
+  }, [])
+
+  const getMyAppointmentsAdvanced = useCallback(async (payload, owner) => {
+    try {
+      const query = `data_inicial=${payload.data_inicial}&data_final=${payload.data_final}&categoria=${payload.categoria}&estado=${payload.estado}&artista=${payload.artista}`
+
+      const { data }: AxiosResponse<IAppointments[]> = await api.get(`/appointment/${owner}/advanced?${query}`, {
+        headers: { "x-access-token": accessToken },
+      })
+
+      setAppointments(data)
+
+      return {
+        success: true,
+        message: "Lista de compromissos buscadas com sucesso",
       }
     } catch (e) {
       return {
@@ -240,6 +270,7 @@ const AppointmentProvider = ({ children }: AppointmentProviderProps) => {
         setCurrentDate,
         getAppointmentsByBand,
         getMyAppointments,
+        getMyAppointmentsAdvanced,
       }}
     >
       {children}
