@@ -2,8 +2,7 @@ import React, { useState } from "react"
 import { Box, Card, CardHeader, Divider, Drawer, IconButton } from "@mui/material"
 import { EventTable } from "./EventTable"
 import { EventFilter } from "./EventFilter"
-import { Add, Close } from "@mui/icons-material"
-import { AppointmentForm } from "../Form/AppointmentForm"
+import { Add } from "@mui/icons-material"
 
 interface EventsProp {
   setOpenDrawer: (boolean) => void

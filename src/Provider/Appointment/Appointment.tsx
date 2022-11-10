@@ -19,6 +19,7 @@ interface AppointmentContextProps {
   getAppointmentsByBand: (date: Date, idBand?: number) => Promise<IResponse>
   getMyAppointments: (date: Date, owner: number) => Promise<IResponse>
   appointments: IAppointments[]
+  appointmentsFiltered: IAppointments[]
   currentDate: Date
   setCurrentDate: Dispatch<React.SetStateAction<Date>>
   createAppointment: (payload: IAppointments) => Promise<IResponse>
@@ -44,6 +45,8 @@ interface AppointmentProviderProps {
 const AppointmentProvider = ({ children }: AppointmentProviderProps) => {
   const { accessToken, adm } = useAuth()
   const [appointments, setAppointments] = useState<IAppointments[]>([])
+  const [appointmentsFiltered, setAppointmentsFiltered] = useState<IAppointments[]>([])
+
   const [currentDate, setCurrentDate] = useState(new Date())
   const [currentBand, setCurrentBand] = useState<number>()
 
@@ -113,7 +116,7 @@ const AppointmentProvider = ({ children }: AppointmentProviderProps) => {
         headers: { "x-access-token": accessToken },
       })
 
-      setAppointments(data)
+      setAppointmentsFiltered(data)
 
       return {
         success: true,
@@ -271,6 +274,7 @@ const AppointmentProvider = ({ children }: AppointmentProviderProps) => {
         getAppointmentsByBand,
         getMyAppointments,
         getMyAppointmentsAdvanced,
+        appointmentsFiltered,
       }}
     >
       {children}
