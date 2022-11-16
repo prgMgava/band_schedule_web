@@ -1,10 +1,10 @@
+/* eslint-disable no-debugger */
 import React, { useContext, createContext, useState, ReactNode, useCallback, Dispatch } from "react"
 import jwt_decode from "jwt-decode"
 
 import { AxiosResponse } from "axios"
 import { api } from "../../Services/api"
 import { IUser } from "../../Types/user.type"
-import { useBand } from "../Band/Band"
 const AuthContext = createContext<AuthContextData>({} as AuthContextData)
 
 const useAuth = () => {
@@ -70,7 +70,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     const adm = localStorage.getItem("@BandSchedule:adm") || ""
     const superAdmin = localStorage.getItem("@BandSchedule:super_admin") || ""
     const bandVisibility = localStorage.getItem("@BandSchedule:band_visibility") || ""
-    const bandAux = bandVisibility ? bandVisibility : "null"
+    const bandAux = bandVisibility && bandVisibility != "undefined" ? bandVisibility : "null"
     if (accessToken && id) {
       return {
         accessToken,

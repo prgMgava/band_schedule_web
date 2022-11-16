@@ -709,7 +709,7 @@ export const AppointmentForm = ({
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
-                        <Person2Outlined />
+                        <PhoneOutlined />
                       </InputAdornment>
                     ),
                   }}

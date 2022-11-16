@@ -34,6 +34,7 @@ import { useAppointment } from "../../Provider/Appointment/Appointment"
 import { toast } from "react-toastify"
 import { useLabel } from "../../Provider/Label/Label"
 import { api } from "../../Services/api"
+import classNames from "clsx"
 
 const PREFIX = "Demo"
 export const classes = {
@@ -318,6 +319,57 @@ export const Demo = () => {
     return appointmentsEdited
   }
 
+  const StyledAppointmentsAppointmentContent = styled(Appointments.AppointmentContent)(({ theme: { palette } }) => ({
+    [`& .${classes.text}`]: {
+      overflow: "hidden",
+      textOverflow: "ellipsis",
+      whiteSpace: "nowrap",
+    },
+    [`& .${classes.content}`]: {
+      opacity: 0.7,
+    },
+    [`& .${classes.container}`]: {
+      width: "100%",
+      lineHeight: 1.2,
+      height: "100%",
+    },
+  }))
+
+  const AppointmentContent = ({ data, ...restProps }) => {
+    return (
+      <StyledAppointmentsAppointmentContent {...restProps} data={data}>
+        <div className={classes.container}>
+          <div className={classes.text}>{data.title}</div>
+          <div className={classNames(classes.text, classes.content)}>
+            {new Date(data.start_date).toLocaleTimeString().substring(0, 5)} -{" "}
+            {new Date(data.end_date).toLocaleTimeString().substring(0, 5)}
+          </div>
+          <div className={classNames(classes.text, classes.content)}>{data.observations}</div>
+        </div>
+      </StyledAppointmentsAppointmentContent>
+    )
+  }
+
+  const StyledAppointmentsAppointment = styled(Appointments.Appointment)(() => ({
+    [`&.${classes.appointment}`]: {
+      borderRadius: 0,
+      borderBottom: 0,
+    },
+  }))
+
+  const Appointment = ({ data, ...restProps }) => (
+    <StyledAppointmentsAppointment
+      {...restProps}
+      className={classNames({
+        [classes.highPriorityAppointment]: data.priority === 1,
+        [classes.mediumPriorityAppointment]: data.priority === 2,
+        [classes.lowPriorityAppointment]: data.priority === 3,
+        [classes.appointment]: true,
+      })}
+      data={data}
+    />
+  )
+
   return (
     <>
       <Stack justifyContent={"space-around"} direction="column" alignContent={"space-around"}>
@@ -332,11 +384,11 @@ export const Demo = () => {
             />
 
             <DayView intervalCount={2} name="Dia" />
-            <WeekView name="Semanal" />
+            <WeekView name="Semanal" startDayHour={6} />
 
             <MonthView name="Mensal" />
 
-            <Appointments />
+            <Appointments appointmentContentComponent={AppointmentContent} appointmentComponent={Appointment} />
             <Resources data={resources} />
 
             <Toolbar />
