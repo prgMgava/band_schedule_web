@@ -5,6 +5,6 @@ export interface IBand {
   cellphone: string
   createdAt?: string
   updatedAt?: string
-  owner?: 2
+  owner: 2
   is_deleted: boolean
 }

@@ -538,7 +538,7 @@ export const AppointmentForm = ({
                       {...field}
                     >
                       {myBands.map(band => {
-                        if (!band.is_deleted) {
+                        if (!band.is_deleted || isEditing) {
                           return (
                             <MenuItem value={band.id} key={uuid()}>
                               {band.name}
@@ -572,7 +572,7 @@ export const AppointmentForm = ({
                       {...field}
                     >
                       {labels.map(label => {
-                        if (!label.is_deleted) {
+                        if (!label.is_deleted || isEditing) {
                           return (
                             <MenuItem value={label.id} key={uuid()}>
                               <ListItemIcon>

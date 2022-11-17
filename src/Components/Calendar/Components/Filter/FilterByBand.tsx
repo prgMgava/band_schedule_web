@@ -43,11 +43,15 @@ export const FilterByBand = () => {
           "aria-labelledby": "basic-button",
         }}
       >
-        {myBands.map(band => (
-          <MenuItem onClick={() => handleClose(band)} key={uuid()}>
-            {band.name}
-          </MenuItem>
-        ))}
+        {myBands.map(band => {
+          return (
+            !band.is_deleted && (
+              <MenuItem onClick={() => handleClose(band)} key={uuid()}>
+                {band.name}
+              </MenuItem>
+            )
+          )
+        })}
       </Menu>
     </>
   )

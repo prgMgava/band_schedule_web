@@ -58,7 +58,7 @@ export const Header = ({ setCurrentPriority }: HeaderProps) => {
   const forms = {
     appointment: <AppointmentForm data={data} fromMenu={true} />,
     band: <BandForm toggleDrawer={toggleDrawer}></BandForm>,
-    admin: <AdminForm toggleDrawer={toggleDrawer} isUpdating />,
+    admin: <AdminForm toggleDrawer={toggleDrawer} isUpdating={!superAdmin} />,
     superAdmin: <SuperAdmin toggleDrawer={toggleDrawer} />,
     label: <LabelForm toggleDrawer={toggleDrawer} />,
     status: <StatusHandler toggleDrawer={toggleDrawer} />,
