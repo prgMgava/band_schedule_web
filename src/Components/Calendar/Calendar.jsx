@@ -336,15 +336,23 @@ export const Demo = () => {
   }))
 
   const AppointmentContent = ({ data, ...restProps }) => {
+    const dateInit = `${new Date(data.start_date).toLocaleTimeString().substring(0, 5)} - `
+    const dateEnd = `${new Date(data.end_date).toLocaleTimeString().substring(0, 5)}`
     return (
-      <StyledAppointmentsAppointmentContent {...restProps} data={data}>
+      <StyledAppointmentsAppointmentContent
+        {...restProps}
+        data={data}
+        title={`${data.title}\n${dateInit}${dateEnd}\n${data.observations || ""}\n${
+          labels.find(label => label.id == data.id_label)?.title
+        } `}
+      >
         <div className={classes.container}>
           <div className={classes.text}>{data.title}</div>
           <div className={classNames(classes.text, classes.content)}>
-            {new Date(data.start_date).toLocaleTimeString().substring(0, 5)} -{" "}
-            {new Date(data.end_date).toLocaleTimeString().substring(0, 5)}
+            {dateInit}
+            {dateEnd}
           </div>
-          <div className={classNames(classes.text, classes.content)}>{data.observations}</div>
+          <div className={classNames(classes.text, classes.content)}>{data.observations || ""}</div>
         </div>
       </StyledAppointmentsAppointmentContent>
     )

@@ -42,7 +42,7 @@ interface AuthContextData {
   id: string
   accessToken: string
   signIn: (credentials: SignInCredentials) => Promise<IResponse>
-  signUp: (credentials: SignUpCredentials) => Promise<IResponse>
+  signUp: (credentials: SignUpCredentials, band_visibility: number) => Promise<IResponse>
   createAdm: (credentials: SignUpCredentials) => Promise<IResponse>
   signOut: () => void
   getUser: () => void
@@ -133,30 +133,36 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
       .catch(err => console.log(err))
   }
 
-  const signUp = useCallback(async ({ username, password, cellphone, email }: SignUpCredentials) => {
-    try {
-      await api.post("/user/member", { username, password, cellphone, email })
-      return {
-        success: true,
-        message: "Usuário criado com sucesso",
+  const signUp = useCallback(
+    async ({ username, password, cellphone, email }: SignUpCredentials, band_visibility: number) => {
+      try {
+        const member = await api.post("/user/member", { username, password, cellphone, email, band_visibility })
+        setMemberList(old => [...old, member.data])
+        return {
+          success: true,
+          message: "Usuário criado com sucesso",
+        }
+      } catch (e) {
+        return {
+          success: false,
+          message: e.response.data.error,
+        }
       }
-    } catch (e) {
-      return {
-        success: false,
-        message: e.response.data.error,
-      }
-    }
-  }, [])
+    },
+    []
+  )
 
   const createAdm = useCallback(async ({ username, password, cellphone, email }: SignUpCredentials) => {
     try {
       if (data.superAdmin) {
-        await api.post(
+        const newUser = await api.post(
           "/user/adm",
           { username, password, cellphone, email },
           { headers: { "x-access-token": data.accessToken } }
         )
+        setAdminList(old => [...old, newUser.data])
       }
+
       return {
         success: true,
         message: "Admin criado com sucesso",

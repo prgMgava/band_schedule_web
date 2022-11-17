@@ -34,7 +34,7 @@ export const AdminForm = ({ toggleDrawer = () => null, isSignup = false, isUpdat
   const { signUp, createAdm, adminList, memberList, updateUser, id: userId } = useAuth()
   const [maskedCellPhone, setMaskedCellPhone] = useState("")
   const [id, setId] = useState(0)
-  const { superAdmin } = useAuth()
+  const { superAdmin, id: bandVisibility } = useAuth()
 
   const maskCellNumber = (value: string) => {
     value = value.replace(/\D/g, "")
@@ -52,7 +52,8 @@ export const AdminForm = ({ toggleDrawer = () => null, isSignup = false, isUpdat
 
   const submitForm: SubmitHandler<IAdminFields> = async (data: IAdminFields) => {
     if (isSignup) {
-      const response = await signUp(data)
+      console.log(bandVisibility)
+      const response = await signUp(data, parseInt(bandVisibility) || 0)
       toast[response.success ? "success" : "error"](response.message)
       if (response.success) {
         navigate("/")
