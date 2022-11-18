@@ -94,7 +94,12 @@ export const Tooltip = ({ appointmentData, formatDate, appointmentResources }: T
 
   return (
     <StyledTooltipContent className={classes.content} color={resource?.color}>
-      <Grid container alignItems="flex-start" className={classes.titleContainer}>
+      <Grid
+        container
+        alignItems="flex-start"
+        className={classes.titleContainer}
+        maxWidth={mobile ? "250px" : "inherit"}
+      >
         <Grid item xs={2} className={classNames(classes.textCenter)}>
           <Lens className={classNames(classes.lens, classes.colorfulContent)} />
         </Grid>
@@ -135,7 +140,7 @@ export const Tooltip = ({ appointmentData, formatDate, appointmentResources }: T
         <Grid item xs={10}>
           <div className={classes.text}>
             {`${formatDate(appointmentData.start_date, { hour: "numeric", minute: "numeric" })}
-				- ${formatDate(appointmentData.end_date, { hour: "numeric", minute: "numeric" })}`}
+				`}
           </div>
         </Grid>
       </Grid>

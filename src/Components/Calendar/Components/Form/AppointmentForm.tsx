@@ -69,7 +69,7 @@ const schema = yup.object().shape({
   status: yup.string().default("agendado"),
   id_band: yup.number().required("Informe a banda que vai tocar no evento"),
   start_date: yup.date().required("Data inicial obrigatória").required("Data inicial obrigatória"),
-  end_date: yup.date().required("Data final obrigatória").required("Data final obrigatória"),
+  end_date: yup.date(),
   id_label: yup.number().required("Label é obrigatório"),
   company_name: yup.string().max(200, "Nome de empresa muito grande").nullable(),
   contractor: yup.string().max(200, "Nome de contratante muito grande").nullable(),
@@ -470,7 +470,7 @@ export const AppointmentForm = ({
                 </Box>
               </fieldset>
             </FormControl>
-            <FormControl fullWidth={true}>
+            <FormControl fullWidth={true} style={{ visibility: "hidden" }}>
               <fieldset
                 style={{
                   border: `${errors.end_date ? "1px #E34367 solid" : "1px #C0C0C0 solid"}`,
