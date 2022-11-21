@@ -1,4 +1,3 @@
-/* eslint-disable no-debugger */
 import React, { useContext, createContext, useState, ReactNode, useCallback, Dispatch } from "react"
 
 import { AxiosResponse } from "axios"

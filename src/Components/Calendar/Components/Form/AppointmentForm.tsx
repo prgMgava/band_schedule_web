@@ -1,6 +1,3 @@
-/* eslint-disable no-debugger */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import * as React from "react"
 
 import {
@@ -143,6 +140,7 @@ export const AppointmentForm = ({
   const [reqEndDate, setreqEndDate] = useState(endDateFormatted)
 
   const maskCellNumber = (value: any, from: "userPhone" | "companyPhone") => {
+    if (!value) return
     value = value.replace(/\D/g, "")
     value = value.replace(/(\d{2})(\d)/, "($1) $2")
     value = value.replace(/(\d{4,5})(\d)/, "$1-$2")
@@ -167,7 +165,6 @@ export const AppointmentForm = ({
       toast.error("Data final é menor que data atual")
       return
     }
-    debugger
     data.cellphone = removeMaskNumber(data.cellphone)
     data.company_cellphone = removeMaskNumber(data.company_cellphone)
     if (isEditing) {

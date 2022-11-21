@@ -1,4 +1,3 @@
-/* eslint-disable no-debugger */
 import * as React from "react"
 
 import {
@@ -6,7 +5,6 @@ import {
   Button,
   Divider,
   FormControl,
-  FormHelperText,
   Grid,
   InputAdornment,
   InputLabel,
@@ -49,6 +47,7 @@ export const BandForm = ({ toggleDrawer }: BandProps) => {
   const [maskedCellPhone, setMaskedCellPhone] = useState("")
   const [currentBand, setCurrentBand] = useState(0)
   const maskCellNumber = (value: string) => {
+    if (!value) return
     value = value.replace(/\D/g, "")
     value = value.replace(/(\d{2})(\d)/, "($1) $2")
     value = value.replace(/(\d{4,5})(\d)/, "$1-$2")

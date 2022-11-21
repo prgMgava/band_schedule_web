@@ -37,6 +37,7 @@ export const AdminForm = ({ toggleDrawer = () => null, isSignup = false, isUpdat
   const { superAdmin, id: bandVisibility } = useAuth()
 
   const maskCellNumber = (value: string) => {
+    if (!value) return
     value = value.replace(/\D/g, "")
     value = value.replace(/(\d{2})(\d)/, "($1) $2")
     value = value.replace(/(\d{4,5})(\d)/, "$1-$2")

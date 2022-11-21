@@ -65,7 +65,6 @@ export const LabelForm = ({ toggleDrawer }: LabelProps) => {
       if (response.success) {
         toggleDrawer()
       }
-      window.location.reload()
     }
   }
 
