@@ -81,7 +81,7 @@ export const AdminForm = ({ toggleDrawer = () => null, isSignup = false, isUpdat
       if (updatedUser) {
         setValue("username", updatedUser.username)
         setValue("cellphone", updatedUser.cellphone)
-        setMaskedCellPhone(updatedUser.cellphone)
+        maskCellNumber(updatedUser.cellphone)
         setValue("email", updatedUser.email)
         setId(updatedUser.id)
       }

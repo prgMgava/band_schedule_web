@@ -1,3 +1,4 @@
+/* eslint-disable no-debugger */
 import * as React from "react"
 
 import {
@@ -27,6 +28,7 @@ import { useMobile } from "../../../../Provider/Theme/Mobile"
 import { useBand } from "../../../../Provider/Band/Band"
 import uuid from "react-uuid"
 import { useAuth } from "../../../../Provider/Auth/Auth"
+import { removeMaskNumber } from "../../../../Utils/masks"
 
 const schema = yup.object().shape({
   name: yup.string().required("Nome da Banda é obrigatório").max(100, "Nome muito grande"),
@@ -68,6 +70,8 @@ export const BandForm = ({ toggleDrawer }: BandProps) => {
       toast.error("Selecione um admin responsável por essa banda")
       return
     }
+
+    data.cellphone = removeMaskNumber(data.cellphone)
     if (currentBand) {
       const response = await updateBand({ ...data, id: currentBand })
       toast[response.success ? "success" : "error"](response.message)
@@ -95,11 +99,13 @@ export const BandForm = ({ toggleDrawer }: BandProps) => {
       if (band) {
         setValue("name", band.name)
         setValue("cellphone", band.cellphone)
-        setMaskedCellPhone(band.cellphone)
+        maskCellNumber(band.cellphone)
         setValue("email", band.email)
       }
     }
   }, [currentBand])
+
+  React.useEffect(() => setValue("cellphone", maskedCellPhone), [maskedCellPhone])
 
   return (
     <Grid padding={mobile ? 2 : 8}>
