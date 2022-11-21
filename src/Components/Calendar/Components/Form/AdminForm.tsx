@@ -53,7 +53,6 @@ export const AdminForm = ({ toggleDrawer = () => null, isSignup = false, isUpdat
 
   const submitForm: SubmitHandler<IAdminFields> = async (data: IAdminFields) => {
     if (isSignup) {
-      console.log(bandVisibility)
       const response = await signUp(data, parseInt(bandVisibility) || 0)
       toast[response.success ? "success" : "error"](response.message)
       if (response.success) {

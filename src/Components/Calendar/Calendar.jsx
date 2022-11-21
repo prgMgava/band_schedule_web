@@ -408,7 +408,7 @@ export const Demo = () => {
             <AppointmentTooltip contentComponent={TooltipContent} showOpenButton showCloseButton showDeleteButton />
 
             <AppointmentForm
-              messages={{ afterLabel: "meu deus", commitCommand: "Salvar" }}
+              messages={{ commitCommand: "Salvar" }}
               basicLayoutComponent={CustomFormAppointment}
               visible={closedModal}
               onVisibilityChange={closeForm}

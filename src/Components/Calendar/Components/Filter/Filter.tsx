@@ -164,7 +164,7 @@ export const Filter = ({ setCurrentPriority }: FilterProps) => {
               </Box>
             )
           }
-          return <></>
+          return <div key={uuid()}></div>
         })}
         <Dialog onClose={handleClose} open={openModal}>
           <Card style={{ padding: "8px", display: "flex", flexDirection: "column" }}>

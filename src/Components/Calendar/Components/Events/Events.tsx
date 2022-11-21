@@ -11,12 +11,6 @@ interface EventsProp {
 
 export const Events = ({ setOpenDrawer, handleCloseModal }: EventsProp) => {
   const [currentFilter, setCurrentFilter] = useState<Array<string>>([])
-  const data = {
-    appointmentData: {
-      endDate: new Date(),
-      startDate: new Date(),
-    },
-  }
 
   return (
     <Card style={{ padding: "16px", margin: "64px 16px", position: "relative" }}>

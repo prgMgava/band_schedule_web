@@ -65,7 +65,7 @@ export const Header = ({ setCurrentPriority }: HeaderProps) => {
     musician: <AdminForm toggleDrawer={toggleDrawer} isSignup />,
   }
   return (
-    <>
+    <div>
       <Drawer anchor={"left"} open={openDrawer} onClose={toggleDrawer} style={{ padding: "0 4px 0 4px" }}>
         <IconButton onClick={toggleDrawer} size="medium" style={{ width: "25px", marginLeft: "8px" }}>
           <Close alignmentBaseline="baseline"></Close>
@@ -244,6 +244,6 @@ export const Header = ({ setCurrentPriority }: HeaderProps) => {
         </Stack>
       </Box>
       <Filter setCurrentPriority={setCurrentPriority} />
-    </>
+    </div>
   )
 }
