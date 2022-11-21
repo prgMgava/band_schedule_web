@@ -55,6 +55,7 @@ import { useAppointment } from "../../../../Provider/Appointment/Appointment"
 import { useLabel } from "../../../../Provider/Label/Label"
 import { IAppointments } from "../../../../Types/appointments.type"
 import { useAuth } from "../../../../Provider/Auth/Auth"
+import { removeMaskNumber } from "../../../../Utils/masks"
 
 const schema = yup.object().shape({
   title: yup.string().required("Nome do evento é obrigatório").max(5000, "Nome muito grande"),
@@ -69,7 +70,7 @@ const schema = yup.object().shape({
   status: yup.string().default("agendado"),
   id_band: yup.number().required("Informe a banda que vai tocar no evento"),
   start_date: yup.date().required("Data inicial obrigatória").required("Data inicial obrigatória"),
-  end_date: yup.date().required("Data final obrigatória").required("Data final obrigatória"),
+  end_date: yup.date(),
   id_label: yup.number().required("Label é obrigatório"),
   company_name: yup.string().max(200, "Nome de empresa muito grande").nullable(),
   contractor: yup.string().max(200, "Nome de contratante muito grande").nullable(),
@@ -101,6 +102,8 @@ export const AppointmentForm = ({
   const { labels } = useLabel()
   const { userData } = useAuth()
   const [maskedCellPhone, setMaskedCellPhone] = useState("")
+  const [maskedCompanyCellPhone, setMaskedCompanyCellPhone] = useState("")
+
   const { startDate, endDate, title, id } = data.appointmentData
   const { createAppointment, updateAppointment } = useAppointment()
   const [currentState, setCurrentState] = useState(data.appointmentData?.state)
@@ -128,7 +131,6 @@ export const AppointmentForm = ({
       : new Date(startDate).toLocaleTimeString().substring(0, 5)
   //TODO: add one hour when create an appointment
   const hasHourEnd = endHourPlusOne
-  console.log(hasHourEnd)
 
   const startDateFormatted =
     startDate && hasHour ? `${new Date(startDate).toISOString().substring(0, 11)}${hasHour}` : ""
@@ -140,11 +142,12 @@ export const AppointmentForm = ({
   const [reqStartDate, setreqStartDate] = useState(startDateFormatted)
   const [reqEndDate, setreqEndDate] = useState(endDateFormatted)
 
-  const maskCellNumber = value => {
+  const maskCellNumber = (value: any, from: "userPhone" | "companyPhone") => {
     value = value.replace(/\D/g, "")
     value = value.replace(/(\d{2})(\d)/, "($1) $2")
     value = value.replace(/(\d{4,5})(\d)/, "$1-$2")
-    setMaskedCellPhone(value)
+    from == "userPhone" && setMaskedCellPhone(value)
+    from == "companyPhone" && setMaskedCompanyCellPhone(value)
   }
 
   const {
@@ -164,6 +167,9 @@ export const AppointmentForm = ({
       toast.error("Data final é menor que data atual")
       return
     }
+    debugger
+    data.cellphone = removeMaskNumber(data.cellphone)
+    data.company_cellphone = removeMaskNumber(data.company_cellphone)
     if (isEditing) {
       const response = await updateAppointment(data, id)
       toast[response.success ? "success" : "error"](response.message)
@@ -183,6 +189,7 @@ export const AppointmentForm = ({
   }
 
   React.useEffect(() => setValue("cellphone", maskedCellPhone), [maskedCellPhone])
+  React.useEffect(() => setValue("company_cellphone", maskedCompanyCellPhone), [maskedCompanyCellPhone])
 
   useEffect(() => {
     if (isEditing && !!currentEditingData) {
@@ -191,7 +198,9 @@ export const AppointmentForm = ({
         setValue(item as keyof IAppointments, data.appointmentData[item])
       })
     }
-    setMaskedCellPhone(data.appointmentData?.cellphone)
+    maskCellNumber(data.appointmentData?.cellphone, "userPhone")
+    maskCellNumber(data.appointmentData?.company_cellphone, "companyPhone")
+
     setCurrentState(data.appointmentData?.state)
     setCurrentBand(data.appointmentData?.id_band)
     setCurrentEvent(data.appointmentData?.event)
@@ -255,7 +264,7 @@ export const AppointmentForm = ({
                   label="Telefone"
                   error={!!errors.cellphone}
                   helperText={errors.cellphone && errors.cellphone.message}
-                  onChange={e => maskCellNumber(e.currentTarget.value)}
+                  onChange={e => maskCellNumber(e.currentTarget.value, "userPhone")}
                   value={maskedCellPhone}
                   fullWidth={true}
                   InputProps={{
@@ -470,7 +479,7 @@ export const AppointmentForm = ({
                 </Box>
               </fieldset>
             </FormControl>
-            <FormControl fullWidth={true}>
+            <FormControl fullWidth={true} style={{ visibility: "hidden" }}>
               <fieldset
                 style={{
                   border: `${errors.end_date ? "1px #E34367 solid" : "1px #C0C0C0 solid"}`,
@@ -704,7 +713,8 @@ export const AppointmentForm = ({
                   size="small"
                   error={!!errors.company_cellphone}
                   helperText={errors.company_cellphone && errors.company_cellphone.message}
-                  onChange={e => maskCellNumber(e.currentTarget.value)}
+                  onChange={e => maskCellNumber(e.currentTarget.value, "companyPhone")}
+                  value={maskedCompanyCellPhone}
                   fullWidth={true}
                   InputProps={{
                     startAdornment: (
