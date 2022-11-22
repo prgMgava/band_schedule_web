@@ -342,9 +342,9 @@ export const Demo = () => {
       <StyledAppointmentsAppointmentContent
         {...restProps}
         data={data}
-        title={`${data.title}\n${dateInit}${dateEnd}\n${data.observations || ""}\n${
-          labels.find(label => label.id == data.id_label)?.title
-        } `}
+        title={`${data.title}\n${dateInit}\n${data.observations || ""}\n${labels
+          .find(label => label.id == data.id_label)
+          ?.title?.toUpperCase()} `}
       >
         <div className={classes.container}>
           <div className={classes.text}>{data.title}</div>
