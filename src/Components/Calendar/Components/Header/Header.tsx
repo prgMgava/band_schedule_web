@@ -205,7 +205,7 @@ export const Header = ({ setCurrentPriority }: HeaderProps) => {
                     <ListItemIcon>
                       <PersonAddAlt fontSize="small" />
                     </ListItemIcon>
-                    {superAdmin ? "Adicionar administrador" : "Adicionar músico"}
+                    {superAdmin ? "Adicionar usuário" : "Adicionar músico"}
                   </MenuItem>
                   <MenuItem
                     onClick={() => {

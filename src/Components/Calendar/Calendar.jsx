@@ -392,7 +392,7 @@ export const Demo = () => {
             />
 
             <DayView intervalCount={2} name="Dia" />
-            <WeekView name="Semanal" startDayHour={6} />
+            <WeekView name="Semanal" />
 
             <MonthView name="Mensal" />
 

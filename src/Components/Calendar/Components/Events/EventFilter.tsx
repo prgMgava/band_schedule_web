@@ -106,6 +106,8 @@ export const EventFilter = ({ setCurrentFilter }: EventFilterProps) => {
         direction={mobile ? "column" : "row"}
         component="form"
         onSubmit={handleSubmit(submitForm)}
+        overflow="auto"
+        p="8px 0"
       >
         <Stack direction={"row"} gap={2} width="100%">
           <FormControl error={!!errors.period} sx={{ minWidth: 120 }} fullWidth={true}>

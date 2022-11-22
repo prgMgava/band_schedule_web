@@ -68,7 +68,7 @@ export const Filter = ({ setCurrentPriority }: FilterProps) => {
         alignItems="center"
         pt={"8px"}
         color="#fff"
-        flexDirection={mobile ? "column" : "row"}
+        flexDirection={"row"}
       >
         <Button
           id="basic-button"
@@ -78,13 +78,20 @@ export const Filter = ({ setCurrentPriority }: FilterProps) => {
             getAppointments(currentDate)
             setCurrentBand("")
           }}
+          style={{ fontSize: mobile ? "8px" : "12px" }}
         >
           Todos os artistas
         </Button>
-        <Button id="basic-button" aria-haspopup="true" color="inherit" onClick={() => setOpenDrawer(true)}>
+        <Button
+          id="basic-button"
+          aria-haspopup="true"
+          color="inherit"
+          onClick={() => setOpenDrawer(true)}
+          style={{ fontSize: mobile ? "8px" : "12px" }}
+        >
           Novo Evento
         </Button>
-        <Button onClick={handleOpen} color="inherit">
+        <Button onClick={handleOpen} color="inherit" style={{ fontSize: mobile ? "8px" : "12px" }}>
           Eventos
         </Button>
         <Modal
@@ -92,18 +99,28 @@ export const Filter = ({ setCurrentPriority }: FilterProps) => {
           onClose={handleCloseModal}
           aria-labelledby="modal-modal-title"
           aria-describedby="modal-modal-description"
+          style={{ overflow: "auto" }}
         >
           <Events setOpenDrawer={setOpenDrawer} handleCloseModal={handleCloseModal} />
         </Modal>
         <FilterByBand />
       </Box>
 
-      <Box style={{ background: "transparent" }} display={"flex"} flexWrap={"wrap"} gap={1} padding="0 4px">
+      {/* Label Filters */}
+
+      <Box
+        style={{ background: "transparent" }}
+        display={"flex"}
+        flexWrap={mobile ? "nowrap" : "wrap"}
+        gap={1}
+        padding="0 4px"
+        overflow={"auto"}
+      >
         <Box
           onClick={() => filterByLabel(0)}
           display={"flex"}
           gap="5px"
-          style={{ height: "min-content", width: "130px", cursor: "pointer" }}
+          style={{ height: "min-content", width: "110px", cursor: "pointer" }}
         >
           <Box
             key={uuid()}
@@ -118,7 +135,7 @@ export const Filter = ({ setCurrentPriority }: FilterProps) => {
               whiteSpace: "nowrap",
               textOverflow: "ellipsis",
               overflow: "hidden",
-              fontSize: "12px",
+              fontSize: "10px",
               borderBottom: currentLabel == 0 ? "3px solid #000" : "3px solid transparent",
             }}
           >
@@ -133,14 +150,13 @@ export const Filter = ({ setCurrentPriority }: FilterProps) => {
                 display={"flex"}
                 gap="2px"
                 key={uuid()}
-                style={{ height: "min-content", width: "130px", cursor: "pointer" }}
+                style={{ height: "min-content", width: "110px", cursor: "pointer" }}
               >
                 <Box
                   style={{
                     background: label.color,
                     padding: "2px 4px",
                     height: "10px",
-
                     width: "10px",
                   }}
                   boxShadow={1}
@@ -154,7 +170,7 @@ export const Filter = ({ setCurrentPriority }: FilterProps) => {
                     whiteSpace: "nowrap",
                     textOverflow: "ellipsis",
                     overflow: "hidden",
-                    fontSize: "12px",
+                    fontSize: "10px",
                     borderBottom: currentLabel == label.id ? "3px solid #000" : "3px solid transparent",
                   }}
                   title={label.title}
