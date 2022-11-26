@@ -117,17 +117,18 @@ export const AppointmentForm = ({
     return date.setHours(date.getHours() + 1)
   }
 
-  const endHourPlusOne =
-    new Date(endDate).toLocaleTimeString().substring(0, 5) === "00:00"
-      ? new Date(!isEditing ? addHour(new Date()) : 0).toLocaleTimeString().substring(0, 5)
-      : new Date(!isEditing ? addHour(new Date(startDate)) : endDate).toLocaleTimeString().substring(0, 5)
+  const endHourPlusOne = (dateEnd, dateStart, delta) => {
+    return new Date(dateEnd).toLocaleTimeString().substring(0, 5) === "00:00"
+      ? new Date(!delta ? addHour(new Date()) : 0).toLocaleTimeString().substring(0, 5)
+      : new Date(!delta ? addHour(new Date(dateStart)) : dateEnd).toLocaleTimeString().substring(0, 5)
+  }
 
   const hasHour =
     new Date(startDate).toLocaleTimeString().substring(0, 5) === "00:00"
       ? new Date().toLocaleTimeString().substring(0, 5)
       : new Date(startDate).toLocaleTimeString().substring(0, 5)
   //TODO: add one hour when create an appointment
-  const hasHourEnd = endHourPlusOne
+  const hasHourEnd = endHourPlusOne(endDate, startDate, isEditing)
 
   const startDateFormatted =
     startDate && hasHour ? `${new Date(startDate).toISOString().substring(0, 11)}${hasHour}` : ""
@@ -162,8 +163,12 @@ export const AppointmentForm = ({
     // Validar datas
     const { start_date, end_date } = data
     if (end_date < start_date) {
-      toast.error("Data final é menor que data atual")
-      return
+      const newEndDate = `${new Date(start_date).toISOString().substring(0, 11)}${endHourPlusOne(
+        end_date,
+        start_date,
+        isEditing
+      )}`
+      data.end_date = newEndDate
     }
     data.cellphone = removeMaskNumber(data.cellphone)
     data.company_cellphone = removeMaskNumber(data.company_cellphone)
