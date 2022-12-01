@@ -166,7 +166,8 @@ export const AppointmentForm = ({
         start_date,
         isEditing
       )}`
-      data.end_date = newEndDate
+      const dataEnd = new Date(newEndDate)
+      data.end_date = dataEnd as unknown as string
     }
     data.cellphone = removeMaskNumber(data.cellphone)
     data.company_cellphone = removeMaskNumber(data.company_cellphone)
