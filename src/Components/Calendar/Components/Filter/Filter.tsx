@@ -1,5 +1,5 @@
 import { Close } from "@mui/icons-material"
-import { Box, Button, Card, Dialog, Divider, Drawer, IconButton, Modal, Stack, Typography } from "@mui/material"
+import { Box, Button, Card, Dialog, Divider, Drawer, IconButton, Modal, Stack } from "@mui/material"
 import React, { useState } from "react"
 import uuid from "react-uuid"
 import { useAppointment } from "../../../../Provider/Appointment/Appointment"
@@ -22,7 +22,6 @@ export const Filter = ({ setCurrentPriority }: FilterProps) => {
   const [openDrawer, setOpenDrawer] = useState(false)
   const { getAppointments, currentDate } = useAppointment()
   const { setCurrentBand } = useBand()
-  const [isOpen, setIsOpen] = useState(false)
   const { mobile } = useMobile()
   const handleClose = () => {
     window.location.reload()
@@ -30,7 +29,7 @@ export const Filter = ({ setCurrentPriority }: FilterProps) => {
     localStorage.setItem("@BandSchedule:first_time", "true")
   }
 
-  const [open, setOpen] = React.useState(isOpen)
+  const [open, setOpen] = React.useState(false)
   const handleOpen = () => setOpen(true)
   const handleCloseModal = () => setOpen(false)
 
@@ -75,8 +74,8 @@ export const Filter = ({ setCurrentPriority }: FilterProps) => {
           aria-haspopup="true"
           color="inherit"
           onClick={() => {
-            getAppointments(currentDate)
             setCurrentBand("")
+            getAppointments(currentDate)
           }}
           style={{ fontSize: mobile ? "8px" : "12px" }}
         >

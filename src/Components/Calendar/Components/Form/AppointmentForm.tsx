@@ -35,7 +35,6 @@ import {
   TextSnippetOutlined,
   Close,
   Circle,
-  BusinessCenterOutlined,
   Person2Outlined,
   BusinessOutlined,
   EmailOutlined,
@@ -105,11 +104,11 @@ export const AppointmentForm = ({
   const { createAppointment, updateAppointment } = useAppointment()
   const [currentState, setCurrentState] = useState(data.appointmentData?.state)
   const [currenBand, setCurrentBand] = useState(data.appointmentData?.id_band)
-  const [currenLabel, setCurrentLabel] = useState(data.appointmentData?.id_label)
-  const [currentStatus, setCurrentStatus] = useState(data.appointmentData?.status)
+  const currenLabel = data.appointmentData?.id_label
+  const currentStatus = data.appointmentData?.status
   const [currentEditingData, setCurrentEditingData] = useState(data.appointmentData)
   const [currentEvent, setCurrentEvent] = useState(data.appointmentData?.event)
-  const [currentMoney, setCurrentMoney] = useState(data.appointmentData?.money)
+  const currentMoney = data.appointmentData?.money
 
   const isEditing = !!title
 
@@ -137,8 +136,8 @@ export const AppointmentForm = ({
       ? `${new Date(!isEditing ? startDate : endDate).toISOString().substring(0, 11)}${hasHourEnd}`
       : ""
 
-  const [reqStartDate, setreqStartDate] = useState(startDateFormatted)
-  const [reqEndDate, setreqEndDate] = useState(endDateFormatted)
+  const reqStartDate = startDateFormatted
+  const reqEndDate = endDateFormatted
 
   const maskCellNumber = (value: any, from: "userPhone" | "companyPhone") => {
     if (!value) return
@@ -152,7 +151,6 @@ export const AppointmentForm = ({
   const {
     register,
     handleSubmit,
-    reset,
     control,
     setValue,
     getValues,

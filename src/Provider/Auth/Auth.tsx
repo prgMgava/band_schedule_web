@@ -16,7 +16,7 @@ const useAuth = () => {
 
 interface AuthState {
   accessToken: string
-  id: string
+  id: number
   adm: boolean
   superAdmin: boolean
   bandVisibility: number
@@ -38,7 +38,7 @@ export interface IResponse {
 }
 
 interface AuthContextData {
-  id: string
+  id: number
   accessToken: string
   signIn: (credentials: SignInCredentials) => Promise<IResponse>
   signUp: (credentials: SignUpCredentials, band_visibility: number) => Promise<IResponse>

@@ -8,7 +8,6 @@ import {
   PhoneOutlined,
   EventOutlined,
   Lens,
-  AppsOutage,
 } from "@mui/icons-material"
 
 import Grid from "@mui/material/Grid"
@@ -20,7 +19,6 @@ import { IResource } from "../../../Types/calendar.type"
 import { classes } from "../../Calendar/Calendar"
 import { useMobile } from "../../../Provider/Theme/Mobile"
 import { useBand } from "../../../Provider/Band/Band"
-import { Divider } from "@mui/material"
 
 const StyledTooltipContent = styled("div")(({ theme: { spacing, typography, palette }, color }) => ({
   [`&.${classes.content}`]: {

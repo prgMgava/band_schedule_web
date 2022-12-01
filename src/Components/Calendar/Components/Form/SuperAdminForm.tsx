@@ -222,7 +222,7 @@ export const SuperAdminForm = ({ toggleDrawer }: SuperAdminProps) => {
           aria-labelledby="alert-dialog-title"
           aria-describedby="alert-dialog-description"
         >
-          <DialogTitle id="alert-dialog-title">Esta ação não podera ser desfeita</DialogTitle>
+          <DialogTitle id="alert-dialog-title">Esta ação não poderá ser desfeita</DialogTitle>
           <DialogContent>
             <DialogContentText id="alert-dialog-description">
               Você tem certeza que deseja excluir o(s) seguinte(s) dados:

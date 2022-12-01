@@ -45,7 +45,6 @@ export const LabelForm = ({ toggleDrawer }: LabelProps) => {
 
   const {
     handleSubmit,
-    reset,
     control,
     setValue,
     formState: { errors },

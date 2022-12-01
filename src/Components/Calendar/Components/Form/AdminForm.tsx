@@ -20,12 +20,11 @@ import { IAdminFields } from "../../../../Types/form.type"
 import { yupResolver } from "@hookform/resolvers/yup"
 import * as yup from "yup"
 import { TextField } from "@mui/material"
-import { NewspaperOutlined, PhoneOutlined, EmailOutlined, LockOpenOutlined, CheckBox } from "@mui/icons-material"
+import { NewspaperOutlined, PhoneOutlined, EmailOutlined, LockOpenOutlined } from "@mui/icons-material"
 import { Stack } from "@mui/system"
 import { useState } from "react"
 import { toast } from "react-toastify"
 import { useMobile } from "../../../../Provider/Theme/Mobile"
-import { useNavigate } from "react-router-dom"
 import { useAuth } from "../../../../Provider/Auth/Auth"
 import { useBand } from "../../../../Provider/Band/Band"
 import uuid from "react-uuid"
@@ -52,7 +51,6 @@ interface AdminFormProps {
 
 export const AdminForm = ({ toggleDrawer = () => null, isSignup = false, isUpdating = false }: AdminFormProps) => {
   const { mobile } = useMobile()
-  const navigate = useNavigate()
   const { signUp, createAdm, adminList, memberList, updateUser, id: userId } = useAuth()
   const [maskedCellPhone, setMaskedCellPhone] = useState("")
   const [id, setId] = useState(0)
@@ -81,7 +79,7 @@ export const AdminForm = ({ toggleDrawer = () => null, isSignup = false, isUpdat
   const submitForm: SubmitHandler<IAdminFields> = async (data: IAdminFields) => {
     if (isSignup || isMusician) {
       // eslint-disable-next-line prefer-const
-      let bandOwner = parseInt(bandVisibility)
+      let bandOwner = bandVisibility
       if (isMusician) {
         bandOwner = myBands.find(band => band.id == data.id_band)?.owner || 0
       }
@@ -106,7 +104,7 @@ export const AdminForm = ({ toggleDrawer = () => null, isSignup = false, isUpdat
 
   React.useEffect(() => {
     if (isUpdating) {
-      const updatedUser = [...memberList, ...adminList].find(item => item.id == parseInt(userId))
+      const updatedUser = [...memberList, ...adminList].find(item => item.id == userId)
       if (updatedUser) {
         setValue("username", updatedUser.username)
         setValue("cellphone", updatedUser.cellphone)

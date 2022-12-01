@@ -56,7 +56,6 @@ export const BandForm = ({ toggleDrawer }: BandProps) => {
 
   const {
     handleSubmit,
-    reset,
     control,
     setValue,
     formState: { errors },

@@ -1,32 +1,6 @@
-.App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-link {
-  color: #61dafb;
-}
-
 body {
   background-color: "#BBBBBB";
 }
-/* .OverlayContainer-container {
-  top: 0 !important;
-}
-
-.Container-container {
-  position: inherit !important;
-} */
 
 .HorizontalAppointment-content,
 .VerticalAppointment-content {
@@ -42,10 +16,6 @@ body {
   .MainLayout-relativeContainer
   .MuiTableCell-root.MuiTableCell-body.MuiTableCell-sizeMedium.Cell-cell {
   height: 150px;
-}
-
-.MainLayout-container.css-99cbwm .Appointment-clickableAppointment {
-  max-height: 50px;
 }
 
 @media only screen and (min-width: 768px) {
