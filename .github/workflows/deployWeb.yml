@@ -16,5 +16,4 @@ jobs:
           username: ${{ secrets.USERNAME_BAND_SCHEDULE }}
           port: ${{ secrets.PORT_BAND_SCHEDULE }}
           key: ${{ secrets.PRIVATE_KEY_BAND_SCHEDULE }}
-          password: ${{ secrets.PASSWORD_BAND_SCHEDULE}}
           script: ls
