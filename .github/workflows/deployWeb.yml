@@ -2,8 +2,7 @@ name: Web Deploy CI
 
 on:
   push:
-    branchs:
-      - main
+    branches: [main]
 
 jobs:
   build:
@@ -14,7 +13,7 @@ steps:
     uses: appleboy/ssh-action@master
     with:
       host: ${{ secrets.HOST_BAND_SCHEDULE }}
-      USERNAME: ${{ secrets.USERNAME_BAND_SCHEDULE }}
-      PORT: ${{ secrets.PORT_BAND_SCHEDULE }}
-      KEY: ${{ secrets.PRIVATE_KEY_BAND_SCHEDULE }}
+      username: ${{ secrets.USERNAME_BAND_SCHEDULE }}
+      port: ${{ secrets.PORT_BAND_SCHEDULE }}
+      key: ${{ secrets.PRIVATE_KEY_BAND_SCHEDULE }}
       script: ls
