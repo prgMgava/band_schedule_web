@@ -256,14 +256,13 @@ export const Demo = () => {
       <StyledAppointmentsAppointmentContent
         {...restProps}
         data={data}
-        title={`${data.title}\n${dateInit}\n${data.observations || ""}\n${labels
+        title={`${data.title}\n${data.observations || ""}\n${labels
           .find(label => label.id == data.id_label)
           ?.title?.toUpperCase()} `}
       >
         <div className={classes.container}>
           <div className={classes.text}>{data.title}</div>
           <div className={classNames(classes.text, classes.content)}>
-            test deploy automatizado
             {data.observations && ` - ${data.observations || ""}`}
           </div>
           {/* <div className={classNames(classes.text, classes.content)}>{data.observations || ""}</div> */}
