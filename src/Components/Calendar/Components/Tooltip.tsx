@@ -104,9 +104,6 @@ export const Tooltip = ({ appointmentData, formatDate, appointmentResources }: T
         <Grid item xs={10}>
           <div>
             <div className={classNames(classes.title, classes.dateAndTitle)}>{appointmentData.title}</div>
-            <div className={classNames(classes.text, classes.dateAndTitle)}>
-              {formatDate(appointmentData.start_date, { day: "numeric", weekday: "long" })}
-            </div>
           </div>
         </Grid>
       </Grid>
