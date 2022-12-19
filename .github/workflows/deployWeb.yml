@@ -1,21 +1,20 @@
 name: Web Deploy CI
 
-on: 
+on:
   push:
     branchs:
-     - main
-     
+      - main
+
 jobs:
   build:
     runs-on: ubuntu-18.04
-    
+
 steps:
-- name: Deploy using ssh
-  uses: appleboy/ssh-action@master
-      with:
-        host: ${{ secrets.HOST_BAND_SCHEDULE }}
-        USERNAME: ${{ secrets.USERNAME_BAND_SCHEDULE }}
-        PORT: ${{ secrets.PORT_BAND_SCHEDULE }}
-        KEY: ${{ secrets.PRIVATE_KEY_BAND_SCHEDULE }}
-        script: ls
-  
+  - name: Deploy using ssh
+    uses: appleboy/ssh-action@master
+    with:
+      host: ${{ secrets.HOST_BAND_SCHEDULE }}
+      USERNAME: ${{ secrets.USERNAME_BAND_SCHEDULE }}
+      PORT: ${{ secrets.PORT_BAND_SCHEDULE }}
+      KEY: ${{ secrets.PRIVATE_KEY_BAND_SCHEDULE }}
+      script: ls
