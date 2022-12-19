@@ -14,6 +14,6 @@ jobs:
         with:
           host: ${{ secrets.HOST_BAND_SCHEDULE }}
           username: ${{ secrets.USERNAME_BAND_SCHEDULE }}
-          port: ${{ secrets.PORT_BAND_SCHEDULE }}
+          port: 22
           key: ${{ secrets.PRIVATE_KEY_BAND_SCHEDULE }}
           script: ls
