@@ -45,7 +45,6 @@ export const LabelForm = ({ toggleDrawer }: LabelProps) => {
 
   const {
     handleSubmit,
-    reset,
     control,
     setValue,
     formState: { errors },
@@ -65,7 +64,6 @@ export const LabelForm = ({ toggleDrawer }: LabelProps) => {
       if (response.success) {
         toggleDrawer()
       }
-      window.location.reload()
     }
   }
 

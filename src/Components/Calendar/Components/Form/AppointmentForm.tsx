@@ -1,6 +1,3 @@
-/* eslint-disable no-debugger */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import * as React from "react"
 
 import {
@@ -38,7 +35,6 @@ import {
   TextSnippetOutlined,
   Close,
   Circle,
-  BusinessCenterOutlined,
   Person2Outlined,
   BusinessOutlined,
   EmailOutlined,
@@ -55,6 +51,7 @@ import { useAppointment } from "../../../../Provider/Appointment/Appointment"
 import { useLabel } from "../../../../Provider/Label/Label"
 import { IAppointments } from "../../../../Types/appointments.type"
 import { useAuth } from "../../../../Provider/Auth/Auth"
+import { removeMaskNumber } from "../../../../Utils/masks"
 
 const schema = yup.object().shape({
   title: yup.string().required("Nome do evento é obrigatório").max(5000, "Nome muito grande"),
@@ -69,7 +66,7 @@ const schema = yup.object().shape({
   status: yup.string().default("agendado"),
   id_band: yup.number().required("Informe a banda que vai tocar no evento"),
   start_date: yup.date().required("Data inicial obrigatória").required("Data inicial obrigatória"),
-  end_date: yup.date().required("Data final obrigatória").required("Data final obrigatória"),
+  end_date: yup.date(),
   id_label: yup.number().required("Label é obrigatório"),
   company_name: yup.string().max(200, "Nome de empresa muito grande").nullable(),
   contractor: yup.string().max(200, "Nome de contratante muito grande").nullable(),
@@ -101,15 +98,17 @@ export const AppointmentForm = ({
   const { labels } = useLabel()
   const { userData } = useAuth()
   const [maskedCellPhone, setMaskedCellPhone] = useState("")
+  const [maskedCompanyCellPhone, setMaskedCompanyCellPhone] = useState("")
+
   const { startDate, endDate, title, id } = data.appointmentData
   const { createAppointment, updateAppointment } = useAppointment()
   const [currentState, setCurrentState] = useState(data.appointmentData?.state)
   const [currenBand, setCurrentBand] = useState(data.appointmentData?.id_band)
-  const [currenLabel, setCurrentLabel] = useState(data.appointmentData?.id_label)
-  const [currentStatus, setCurrentStatus] = useState(data.appointmentData?.status)
+  const currenLabel = data.appointmentData?.id_label
+  const currentStatus = data.appointmentData?.status
   const [currentEditingData, setCurrentEditingData] = useState(data.appointmentData)
   const [currentEvent, setCurrentEvent] = useState(data.appointmentData?.event)
-  const [currentMoney, setCurrentMoney] = useState(data.appointmentData?.money)
+  const currentMoney = data.appointmentData?.money
 
   const isEditing = !!title
 
@@ -117,18 +116,18 @@ export const AppointmentForm = ({
     return date.setHours(date.getHours() + 1)
   }
 
-  const endHourPlusOne =
-    new Date(endDate).toLocaleTimeString().substring(0, 5) === "00:00"
-      ? new Date(!isEditing ? addHour(new Date()) : 0).toLocaleTimeString().substring(0, 5)
-      : new Date(!isEditing ? addHour(new Date(startDate)) : endDate).toLocaleTimeString().substring(0, 5)
+  const endHourPlusOne = (dateEnd, dateStart, delta) => {
+    return new Date(dateEnd).toLocaleTimeString().substring(0, 5) === "00:00"
+      ? new Date(!delta ? addHour(new Date()) : 0).toLocaleTimeString().substring(0, 5)
+      : new Date(!delta ? addHour(new Date(dateStart)) : dateEnd).toLocaleTimeString().substring(0, 5)
+  }
 
   const hasHour =
     new Date(startDate).toLocaleTimeString().substring(0, 5) === "00:00"
       ? new Date().toLocaleTimeString().substring(0, 5)
       : new Date(startDate).toLocaleTimeString().substring(0, 5)
   //TODO: add one hour when create an appointment
-  const hasHourEnd = endHourPlusOne
-  console.log(hasHourEnd)
+  const hasHourEnd = endHourPlusOne(endDate, startDate, isEditing)
 
   const startDateFormatted =
     startDate && hasHour ? `${new Date(startDate).toISOString().substring(0, 11)}${hasHour}` : ""
@@ -137,20 +136,21 @@ export const AppointmentForm = ({
       ? `${new Date(!isEditing ? startDate : endDate).toISOString().substring(0, 11)}${hasHourEnd}`
       : ""
 
-  const [reqStartDate, setreqStartDate] = useState(startDateFormatted)
-  const [reqEndDate, setreqEndDate] = useState(endDateFormatted)
+  const reqStartDate = startDateFormatted
+  const reqEndDate = endDateFormatted
 
-  const maskCellNumber = value => {
+  const maskCellNumber = (value: any, from: "userPhone" | "companyPhone") => {
+    if (!value) return
     value = value.replace(/\D/g, "")
     value = value.replace(/(\d{2})(\d)/, "($1) $2")
     value = value.replace(/(\d{4,5})(\d)/, "$1-$2")
-    setMaskedCellPhone(value)
+    from == "userPhone" && setMaskedCellPhone(value)
+    from == "companyPhone" && setMaskedCompanyCellPhone(value)
   }
 
   const {
     register,
     handleSubmit,
-    reset,
     control,
     setValue,
     getValues,
@@ -161,9 +161,16 @@ export const AppointmentForm = ({
     // Validar datas
     const { start_date, end_date } = data
     if (end_date < start_date) {
-      toast.error("Data final é menor que data atual")
-      return
+      const newEndDate = `${new Date(start_date).toISOString().substring(0, 11)}${endHourPlusOne(
+        end_date,
+        start_date,
+        isEditing
+      )}`
+      const dataEnd = new Date(newEndDate)
+      data.end_date = dataEnd as unknown as string
     }
+    data.cellphone = removeMaskNumber(data.cellphone)
+    data.company_cellphone = removeMaskNumber(data.company_cellphone)
     if (isEditing) {
       const response = await updateAppointment(data, id)
       toast[response.success ? "success" : "error"](response.message)
@@ -183,6 +190,7 @@ export const AppointmentForm = ({
   }
 
   React.useEffect(() => setValue("cellphone", maskedCellPhone), [maskedCellPhone])
+  React.useEffect(() => setValue("company_cellphone", maskedCompanyCellPhone), [maskedCompanyCellPhone])
 
   useEffect(() => {
     if (isEditing && !!currentEditingData) {
@@ -191,7 +199,9 @@ export const AppointmentForm = ({
         setValue(item as keyof IAppointments, data.appointmentData[item])
       })
     }
-    setMaskedCellPhone(data.appointmentData?.cellphone)
+    maskCellNumber(data.appointmentData?.cellphone, "userPhone")
+    maskCellNumber(data.appointmentData?.company_cellphone, "companyPhone")
+
     setCurrentState(data.appointmentData?.state)
     setCurrentBand(data.appointmentData?.id_band)
     setCurrentEvent(data.appointmentData?.event)
@@ -255,7 +265,7 @@ export const AppointmentForm = ({
                   label="Telefone"
                   error={!!errors.cellphone}
                   helperText={errors.cellphone && errors.cellphone.message}
-                  onChange={e => maskCellNumber(e.currentTarget.value)}
+                  onChange={e => maskCellNumber(e.currentTarget.value, "userPhone")}
                   value={maskedCellPhone}
                   fullWidth={true}
                   InputProps={{
@@ -470,7 +480,7 @@ export const AppointmentForm = ({
                 </Box>
               </fieldset>
             </FormControl>
-            <FormControl fullWidth={true}>
+            <FormControl fullWidth={true} style={{ visibility: "hidden" }}>
               <fieldset
                 style={{
                   border: `${errors.end_date ? "1px #E34367 solid" : "1px #C0C0C0 solid"}`,
@@ -538,7 +548,7 @@ export const AppointmentForm = ({
                       {...field}
                     >
                       {myBands.map(band => {
-                        if (!band.is_deleted) {
+                        if (!band.is_deleted || isEditing) {
                           return (
                             <MenuItem value={band.id} key={uuid()}>
                               {band.name}
@@ -572,7 +582,7 @@ export const AppointmentForm = ({
                       {...field}
                     >
                       {labels.map(label => {
-                        if (!label.is_deleted) {
+                        if (!label.is_deleted || isEditing) {
                           return (
                             <MenuItem value={label.id} key={uuid()}>
                               <ListItemIcon>
@@ -704,12 +714,13 @@ export const AppointmentForm = ({
                   size="small"
                   error={!!errors.company_cellphone}
                   helperText={errors.company_cellphone && errors.company_cellphone.message}
-                  onChange={e => maskCellNumber(e.currentTarget.value)}
+                  onChange={e => maskCellNumber(e.currentTarget.value, "companyPhone")}
+                  value={maskedCompanyCellPhone}
                   fullWidth={true}
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
-                        <Person2Outlined />
+                        <PhoneOutlined />
                       </InputAdornment>
                     ),
                   }}

@@ -58,14 +58,14 @@ export const Header = ({ setCurrentPriority }: HeaderProps) => {
   const forms = {
     appointment: <AppointmentForm data={data} fromMenu={true} />,
     band: <BandForm toggleDrawer={toggleDrawer}></BandForm>,
-    admin: <AdminForm toggleDrawer={toggleDrawer} isUpdating />,
+    admin: <AdminForm toggleDrawer={toggleDrawer} isUpdating={!superAdmin} />,
     superAdmin: <SuperAdmin toggleDrawer={toggleDrawer} />,
     label: <LabelForm toggleDrawer={toggleDrawer} />,
     status: <StatusHandler toggleDrawer={toggleDrawer} />,
     musician: <AdminForm toggleDrawer={toggleDrawer} isSignup />,
   }
   return (
-    <>
+    <div>
       <Drawer anchor={"left"} open={openDrawer} onClose={toggleDrawer} style={{ padding: "0 4px 0 4px" }}>
         <IconButton onClick={toggleDrawer} size="medium" style={{ width: "25px", marginLeft: "8px" }}>
           <Close alignmentBaseline="baseline"></Close>
@@ -88,9 +88,12 @@ export const Header = ({ setCurrentPriority }: HeaderProps) => {
                   alignItems="center"
                 >
                   <img
-                    src={require("../../../../assets/logo.png")}
+                    src={require("../../../../assets/low-logo.webp")}
+                    data-src={require("../../../../assets/logo.webp")}
                     alt="logo"
-                    style={{ paddingLeft: "24px", height: "90%" }}
+                    style={{ paddingLeft: "24px", height: "90%", width: "75%" }}
+                    className="lazyload item-image img-absolute blur-up"
+                    data-sizes="auto"
                   />
                 </Box>
                 <Box color="white" alignSelf={"center"} ml={2} fontSize="32px">
@@ -100,7 +103,13 @@ export const Header = ({ setCurrentPriority }: HeaderProps) => {
             ) : (
               <Box p="16px">
                 <Box height="30px" width={"50px"} justifySelf={"flex-start"} display="flex" alignItems="center">
-                  <img src={require("../../../../assets/logo.png")} alt="logo" style={{ height: "90%" }} />
+                  <img
+                    className="lazyload item-image img-absolute blur-up"
+                    src={require("../../../../assets/low-logo.webp")}
+                    data-src={require("../../../../assets/logo.webp")}
+                    alt="logo"
+                    style={{ height: "90%" }}
+                  />
                 </Box>
                 <Box color="white" fontSize="12px">
                   {currentBand?.toUpperCase()}
@@ -205,7 +214,7 @@ export const Header = ({ setCurrentPriority }: HeaderProps) => {
                     <ListItemIcon>
                       <PersonAddAlt fontSize="small" />
                     </ListItemIcon>
-                    {superAdmin ? "Adicionar administrador" : "Adicionar músico"}
+                    {superAdmin ? "Adicionar usuário" : "Adicionar músico"}
                   </MenuItem>
                   <MenuItem
                     onClick={() => {
@@ -244,6 +253,6 @@ export const Header = ({ setCurrentPriority }: HeaderProps) => {
         </Stack>
       </Box>
       <Filter setCurrentPriority={setCurrentPriority} />
-    </>
+    </div>
   )
 }

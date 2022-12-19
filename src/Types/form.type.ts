@@ -27,6 +27,8 @@ export interface IAdminFields {
   cellphone: string
   email: string
   password: string
+  id_band?: number
+  is_musician?: boolean
 }
 
 export interface ILoginFields {

@@ -1,4 +1,4 @@
-import { Card, Stack, Link, Box } from "@mui/material"
+import { Card, Stack, Box } from "@mui/material"
 import React, { useEffect } from "react"
 
 import { Button, Grid, InputAdornment } from "@mui/material"
@@ -44,7 +44,13 @@ export const Login = () => {
     <Stack justifyContent={"center"} height={"100vh"} alignItems="center" bgcolor={"#DDDDDD"}>
       <Card style={{ maxWidth: "500px" }}>
         <Box height="80px" justifySelf={"flex-start"} textAlign="center" mt={2}>
-          <img src={require("../assets/logo.png")} alt="logo" style={{ height: "90%" }} />
+          <img
+            className="lazyload"
+            src={require("../assets/low-logo.webp")}
+            data-src={require("../assets/logo.webp")}
+            alt="logo"
+            style={{ height: "90%" }}
+          />
         </Box>
         <Grid padding={"16px 64px 64px 64px"}>
           <form onSubmit={handleSubmit(submitForm)} autoComplete="off">

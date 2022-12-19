@@ -1,7 +1,7 @@
 import { Circle, Search } from "@mui/icons-material"
 import { Button, FormControl, InputLabel, ListItemIcon, MenuItem, Select } from "@mui/material"
 import { Box, Stack } from "@mui/system"
-import React, { Dispatch, useEffect, useState } from "react"
+import React, { Dispatch, useEffect } from "react"
 import { SubmitHandler, useForm } from "react-hook-form"
 import { toast } from "react-toastify"
 import uuid from "react-uuid"
@@ -23,8 +23,8 @@ export const EventFilter = ({ setCurrentFilter }: EventFilterProps) => {
   const { myBands } = useBand()
   const { getMyAppointmentsAdvanced } = useAppointment()
   const { id, bandVisibility, adm } = useAuth()
-  const [currentMonth, setCurrentMonth] = useState(new Date().getMonth() + 1)
-  const [currentYear, setCurrentYear] = useState(new Date().getFullYear())
+  const currentMonth = new Date().getMonth() + 1
+  const currentYear = new Date().getFullYear()
 
   const {
     register,
@@ -55,7 +55,7 @@ export const EventFilter = ({ setCurrentFilter }: EventFilterProps) => {
 
     Object.keys(obj).map(key => setCurrentFilter(old => [...old, key]))
 
-    const owner = adm ? parseInt(id) : bandVisibility
+    const owner = adm ? id : bandVisibility
 
     const currentDate = new Date()
     const isMonth = data.period == "1"
@@ -81,7 +81,7 @@ export const EventFilter = ({ setCurrentFilter }: EventFilterProps) => {
     setValue("period", "1")
     const currentDate = new Date()
 
-    const owner = adm ? parseInt(id) : bandVisibility
+    const owner = adm ? id : bandVisibility
 
     const dataInicial = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1)
     const dataFinal = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0)
@@ -106,6 +106,8 @@ export const EventFilter = ({ setCurrentFilter }: EventFilterProps) => {
         direction={mobile ? "column" : "row"}
         component="form"
         onSubmit={handleSubmit(submitForm)}
+        overflow="auto"
+        p="8px 0"
       >
         <Stack direction={"row"} gap={2} width="100%">
           <FormControl error={!!errors.period} sx={{ minWidth: 120 }} fullWidth={true}>
@@ -232,7 +234,7 @@ export const EventFilter = ({ setCurrentFilter }: EventFilterProps) => {
               {...register("estado")}
               size={"small"}
             >
-              {statesList.map((item, index) => (
+              {statesList.map(item => (
                 <MenuItem value={item.nome} key={uuid()}>
                   {item.nome}
                 </MenuItem>

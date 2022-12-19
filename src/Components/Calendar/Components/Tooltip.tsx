@@ -8,7 +8,6 @@ import {
   PhoneOutlined,
   EventOutlined,
   Lens,
-  AppsOutage,
 } from "@mui/icons-material"
 
 import Grid from "@mui/material/Grid"
@@ -20,7 +19,6 @@ import { IResource } from "../../../Types/calendar.type"
 import { classes } from "../../Calendar/Calendar"
 import { useMobile } from "../../../Provider/Theme/Mobile"
 import { useBand } from "../../../Provider/Band/Band"
-import { Divider } from "@mui/material"
 
 const StyledTooltipContent = styled("div")(({ theme: { spacing, typography, palette }, color }) => ({
   [`&.${classes.content}`]: {
@@ -94,7 +92,12 @@ export const Tooltip = ({ appointmentData, formatDate, appointmentResources }: T
 
   return (
     <StyledTooltipContent className={classes.content} color={resource?.color}>
-      <Grid container alignItems="flex-start" className={classes.titleContainer}>
+      <Grid
+        container
+        alignItems="flex-start"
+        className={classes.titleContainer}
+        maxWidth={mobile ? "250px" : "inherit"}
+      >
         <Grid item xs={2} className={classNames(classes.textCenter)}>
           <Lens className={classNames(classes.lens, classes.colorfulContent)} />
         </Grid>
@@ -110,9 +113,20 @@ export const Tooltip = ({ appointmentData, formatDate, appointmentResources }: T
 
       {appointmentData.creator && (
         <>
-          <Grid container alignItems="center" key={`${resource.fieldName}_${resource.id}`} mb={2} ml={2.5}>
+          <Grid container alignItems="center" key={`${resource.fieldName}_${resource.id}`} ml={2.5}>
             <div>
               <Grid fontSize={10}>Criado por: {appointmentData.creator}</Grid>
+            </div>
+          </Grid>
+        </>
+      )}
+      {appointmentData.observations && (
+        <>
+          <Grid container alignItems="center" key={`${resource.fieldName}_${resource.id}`} mb={2} ml={2.5}>
+            <div>
+              <Grid fontSize={12}>
+                Obs.:&nbsp;<b>{appointmentData.observations}</b>
+              </Grid>
             </div>
           </Grid>
         </>
@@ -124,7 +138,7 @@ export const Tooltip = ({ appointmentData, formatDate, appointmentResources }: T
         <Grid item xs={10}>
           <div className={classes.text}>
             {`${formatDate(appointmentData.start_date, { hour: "numeric", minute: "numeric" })}
-				- ${formatDate(appointmentData.end_date, { hour: "numeric", minute: "numeric" })}`}
+				`}
           </div>
         </Grid>
       </Grid>

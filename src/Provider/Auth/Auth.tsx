@@ -4,7 +4,6 @@ import jwt_decode from "jwt-decode"
 import { AxiosResponse } from "axios"
 import { api } from "../../Services/api"
 import { IUser } from "../../Types/user.type"
-import { useBand } from "../Band/Band"
 const AuthContext = createContext<AuthContextData>({} as AuthContextData)
 
 const useAuth = () => {
@@ -17,7 +16,7 @@ const useAuth = () => {
 
 interface AuthState {
   accessToken: string
-  id: string
+  id: number
   adm: boolean
   superAdmin: boolean
   bandVisibility: number
@@ -39,10 +38,10 @@ export interface IResponse {
 }
 
 interface AuthContextData {
-  id: string
+  id: number
   accessToken: string
   signIn: (credentials: SignInCredentials) => Promise<IResponse>
-  signUp: (credentials: SignUpCredentials) => Promise<IResponse>
+  signUp: (credentials: SignUpCredentials, band_visibility: number) => Promise<IResponse>
   createAdm: (credentials: SignUpCredentials) => Promise<IResponse>
   signOut: () => void
   getUser: () => void
@@ -70,7 +69,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     const adm = localStorage.getItem("@BandSchedule:adm") || ""
     const superAdmin = localStorage.getItem("@BandSchedule:super_admin") || ""
     const bandVisibility = localStorage.getItem("@BandSchedule:band_visibility") || ""
-    const bandAux = bandVisibility ? bandVisibility : "null"
+    const bandAux = bandVisibility && bandVisibility != "undefined" ? bandVisibility : "null"
     if (accessToken && id) {
       return {
         accessToken,
@@ -133,30 +132,36 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
       .catch(err => console.log(err))
   }
 
-  const signUp = useCallback(async ({ username, password, cellphone, email }: SignUpCredentials) => {
-    try {
-      await api.post("/user/member", { username, password, cellphone, email })
-      return {
-        success: true,
-        message: "Usuário criado com sucesso",
+  const signUp = useCallback(
+    async ({ username, password, cellphone, email }: SignUpCredentials, band_visibility: number) => {
+      try {
+        const member = await api.post("/user/member", { username, password, cellphone, email, band_visibility })
+        setMemberList(old => [...old, member.data])
+        return {
+          success: true,
+          message: "Usuário criado com sucesso",
+        }
+      } catch (e) {
+        return {
+          success: false,
+          message: e.response.data.error,
+        }
       }
-    } catch (e) {
-      return {
-        success: false,
-        message: e.response.data.error,
-      }
-    }
-  }, [])
+    },
+    []
+  )
 
   const createAdm = useCallback(async ({ username, password, cellphone, email }: SignUpCredentials) => {
     try {
       if (data.superAdmin) {
-        await api.post(
+        const newUser = await api.post(
           "/user/adm",
           { username, password, cellphone, email },
           { headers: { "x-access-token": data.accessToken } }
         )
+        setAdminList(old => [...old, newUser.data])
       }
+
       return {
         success: true,
         message: "Admin criado com sucesso",

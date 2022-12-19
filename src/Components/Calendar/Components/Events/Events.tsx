@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { Box, Card, CardHeader, Divider, Drawer, IconButton } from "@mui/material"
+import { Box, Card, CardHeader, Divider, IconButton } from "@mui/material"
 import { EventTable } from "./EventTable"
 import { EventFilter } from "./EventFilter"
 import { Add } from "@mui/icons-material"
@@ -10,13 +10,7 @@ interface EventsProp {
 }
 
 export const Events = ({ setOpenDrawer, handleCloseModal }: EventsProp) => {
-  const [currentFilter, setCurrentFilter] = useState<Array<string>>([])
-  const data = {
-    appointmentData: {
-      endDate: new Date(),
-      startDate: new Date(),
-    },
-  }
+  const [currentFilter, setCurrentFilter] = useState<Array<string>>(["mês"])
 
   return (
     <Card style={{ padding: "16px", margin: "64px 16px", position: "relative" }}>
