@@ -16,7 +16,6 @@ interface IDataTable {
   date: React.ReactNode
   createAt: React.ReactNode
   band: string
-  address: string
   title: string
   idLabel: number
   observations: string
@@ -70,7 +69,6 @@ export const EventTable = () => {
         </>
       ),
       band: appointment.band?.name || "--",
-      address: appointment.city || appointment.state ? `${appointment.city || ""} / ${appointment.state || ""}` : "--",
       title: appointment.title || "--",
       idLabel: appointment.id_label,
       observations: appointment.observations || "--",
@@ -86,7 +84,6 @@ export const EventTable = () => {
               <StyledTableCell style={{ textAlign: "center" }}>Data</StyledTableCell>
               <StyledTableCell style={{ textAlign: "center" }}>Criado em</StyledTableCell>
               <StyledTableCell>Artista</StyledTableCell>
-              <StyledTableCell>Cidade/Estado</StyledTableCell>
               <StyledTableCell>Observação</StyledTableCell>
               <StyledTableCell>Destaque</StyledTableCell>
               <StyledTableCell style={{ textAlign: "center" }}>Categoria</StyledTableCell>
@@ -98,7 +95,6 @@ export const EventTable = () => {
                 <StyledTableCell style={{ textAlign: "center" }}>{row.date}</StyledTableCell>
                 <StyledTableCell style={{ textAlign: "center" }}>{row.createAt}</StyledTableCell>
                 <StyledTableCell>{row.band}</StyledTableCell>
-                <StyledTableCell>{row.address}</StyledTableCell>
                 <StyledTableCell>{row.observations}</StyledTableCell>
                 <StyledTableCell>{row.title}</StyledTableCell>
                 <StyledTableCell
