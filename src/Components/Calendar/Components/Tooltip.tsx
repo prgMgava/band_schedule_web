@@ -83,12 +83,8 @@ interface TooltipProps {
 
 export const Tooltip = ({ appointmentData, formatDate, appointmentResources }: TooltipProps) => {
   const { mobile } = useMobile()
-  const { bands, getBands } = useBand()
+  const { bands } = useBand()
   const resource = appointmentResources[0]
-
-  React.useEffect(() => {
-    getBands()
-  })
 
   return (
     <StyledTooltipContent className={classes.content} color={resource?.color}>

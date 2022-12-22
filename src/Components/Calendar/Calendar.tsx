@@ -69,7 +69,7 @@ const StyledToolbarFlexibleSpace = styled(Toolbar.FlexibleSpace)(() => ({
 export const Demo = () => {
   const [labels, setLabels] = useState<ILabel[]>(JSON.parse(localStorage.getItem("@BandSchedule:labels")) || [])
   const { id, accessToken, getAdmins, getMembers, superAdmin, bandVisibility, adm, getUser } = useAuth()
-  const { getMyBands, currentBand, myBands } = useBand()
+  const { getMyBands, currentBand, myBands, getBands } = useBand()
   const { getLabels } = useLabel()
   const {
     appointments,
@@ -163,6 +163,7 @@ export const Demo = () => {
     getMembers()
     getAdmins()
     getUser()
+    getBands()
   }, [])
 
   useEffect(() => {
