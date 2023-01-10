@@ -18,10 +18,26 @@ body {
   height: 150px;
 }
 
+.MuiToolbar-root.MuiToolbar-gutters.MuiToolbar-regular
+  button.MuiButtonBase-root.MuiIconButton-root.MuiIconButton-sizeLarge.OpenButton-iconButton
+  svg.MuiSvgIcon-root.MuiSvgIcon-fontSizeMedium {
+  display: none;
+}
+
+.css-vnscjq-MuiButtonBase-root-MuiButton-root.OpenButton-textButton {
+  display: inline-block !important;
+}
+
 @media only screen and (min-width: 768px) {
   .MuiPopover-root.MuiModal-root .Layout-popover {
     top: 7% !important;
     left: 22% !important;
+  }
+
+  .MuiToolbar-root.MuiToolbar-gutters.MuiToolbar-regular
+    button.MuiButtonBase-root.MuiIconButton-root.MuiIconButton-sizeLarge.OpenButton-iconButton
+    svg.MuiSvgIcon-root.MuiSvgIcon-fontSizeMedium {
+    display: block;
   }
 }
 
