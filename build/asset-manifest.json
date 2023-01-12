@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/static/css/main.9a368863.css",
+    "main.css": "/static/css/main.8522b7d4.css",
     "main.js": "/static/js/main.9e80fa51.js",
     "static/media/logo.webp": "/static/media/logo.87cbfd956b0b262cfed4.webp",
     "static/media/low-logo.webp": "/static/media/low-logo.2e977fa077deedb43246.webp",
     "index.html": "/index.html",
-    "main.9a368863.css.map": "/static/css/main.9a368863.css.map",
+    "main.8522b7d4.css.map": "/static/css/main.8522b7d4.css.map",
     "main.9e80fa51.js.map": "/static/js/main.9e80fa51.js.map"
   },
   "entrypoints": [
-    "static/css/main.9a368863.css",
+    "static/css/main.8522b7d4.css",
     "static/js/main.9e80fa51.js"
   ]
 }

@@ -24,7 +24,7 @@ body {
   display: none;
 }
 
-.css-vnscjq-MuiButtonBase-root-MuiButton-root.OpenButton-textButton {
+.Root-root .OpenButton-textButton {
   display: inline-block !important;
 }
 
