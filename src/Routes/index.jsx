@@ -11,7 +11,7 @@ export const Routes = () => {
     <Switch>
       <Route path="/agenda" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
-      <Route path="/calendar" element={accessToken ? <Demo /> : <Navigate to={"/"}></Navigate>} />
+      <Route path="/calendar" element={accessToken ? <Demo /> : <Navigate to={"/agenda"}></Navigate>} />
     </Switch>
   )
 }
