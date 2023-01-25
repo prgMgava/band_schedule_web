@@ -10,6 +10,7 @@ export const Routes = () => {
   const { accessToken } = useAuth()
   return (
     <Switch>
+      <Route path="/" element={<Navigate to={"/tanamedida"} />} />
       <Route path="/agenda" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
       <Route path="/calendar" element={accessToken ? <Demo /> : <Navigate to={"/agenda"}></Navigate>} />
