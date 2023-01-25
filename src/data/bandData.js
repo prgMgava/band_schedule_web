@@ -14,6 +14,7 @@ export const bandData = [
   {
     name: "Na Medida",
     contact: "(61) 99533-1001",
+    whatsapp: "5561995331001",
     logo: LogoBandNaMedida,
     id: "namedida",
     presKitLink: "https://drive.google.com/drive/folders/1gAvjNdFOgMULmHhlyjHVdPYZIgnFabPQ?usp=sharing",

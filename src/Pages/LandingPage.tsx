@@ -6,6 +6,7 @@ import "react-carousel-animated/dist/style.css"
 
 import { MidiaContainer } from "../Components/LandingPage/MidiaContainer"
 import { bandData } from "../data/bandData"
+import { FaWhatsapp } from "react-icons/fa"
 export const LandingPage = () => {
   const viewPortHeight = window.innerHeight
   const Video = require("../assets/videos/naMedidaVideo.mp4")
@@ -56,8 +57,16 @@ export const LandingPage = () => {
                   <div className="carousel-content">
                     <div className="content-description">{band.description}</div>
                     <div className="information-tell">
-                      Contato para shows: <br />
-                      {band.contact}
+                      <span>Contato para shows:</span> <br />
+                      <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                        <a target="blank" href={`https://wa.me/${band.whatsapp}`} style={{ color: "#fff" }}>
+                          {band.contact}
+                        </a>
+                        <a aria-label="Chat on WhatsApp" href={`https://wa.me/${band.whatsapp}`} target="blank">
+                          {" "}
+                          <FaWhatsapp color="#25D366" size={"2rem"} />
+                        </a>
+                      </div>
                     </div>
                     <div className="media-container">
                       <MidiaContainer midiaData={band.midias} />

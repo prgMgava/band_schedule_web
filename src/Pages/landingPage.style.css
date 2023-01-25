@@ -6,6 +6,10 @@
 }
 
 a {
+  text-decoration: none;
+}
+
+.custom-a {
   color: #d64045;
   text-decoration: none;
 }
@@ -180,7 +184,7 @@ button {
   left: 0px;
 }
 
-.carousel__container--item {
+/* .carousel__container--item {
   cursor: grab;
 }
 
@@ -188,7 +192,7 @@ button {
   cursor: grabbing;
   cursor: -moz-grabbing;
   cursor: -webkit-grabbing;
-}
+} */
 
 /* MEDIAS QUERY */
 

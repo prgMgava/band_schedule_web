@@ -1,6 +1,7 @@
 export interface BandData {
   name: string
   contact: string
+  whatsapp: string
   logo: JSX.Element
   id: string
   presKitLink: string

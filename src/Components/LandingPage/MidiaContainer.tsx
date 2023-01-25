@@ -9,7 +9,7 @@ export const MidiaContainer = ({ midiaData }: MidiaContainerProps) => {
   return (
     <>
       {midiaData.map(midia => (
-        <a href={midia.link} key={midia.name + uuid()} target="blank">
+        <a href={midia.link} key={midia.name + uuid()} target="blank" className={"custom-a"}>
           {midia.icon}
         </a>
       ))}
