@@ -1,0 +1,292 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Quicksand", sans-serif;
+}
+
+a {
+  color: #d64045;
+  text-decoration: none;
+}
+.parallax-content {
+  background-color: #d64045;
+}
+
+.parallax-video {
+  position: absolute;
+}
+
+.brand-container {
+}
+
+.section1 {
+  display: flex;
+  flex-direction: column;
+}
+
+.main-container {
+  background: radial-gradient(circle at center, #000 20%, transparent 22%),
+    transparent;
+  background-size: 8px 8px;
+}
+
+.parallax-video video {
+  position: fixed;
+  min-height: 100%;
+  min-width: 100%;
+  top: 0;
+  z-index: -999;
+  filter: brightness(25%);
+}
+
+.brand-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.brand-container h1 {
+  color: #ff0000;
+  font-family: "Megrim";
+  font-size: 50px;
+  text-shadow: white 1px 2px 1px;
+  font-weight: bold;
+  text-align: center;
+  padding: 24px 0;
+  width: 70%;
+}
+
+.brand-bar-a {
+  width: 70%;
+  height: 8px;
+  background-color: rgba(255, 0, 0, 0.651);
+}
+.brand-bar-b {
+  width: 70%;
+  height: 16px;
+  background-color: rgba(255, 0, 0, 0.651);
+}
+
+.logo-bus {
+  width: 200px;
+}
+
+.logo-band {
+  margin: 0 auto 12px;
+  width: 130px;
+}
+
+.flex {
+  display: flex;
+  flex-wrap: nowrap;
+  flex-direction: column;
+}
+
+.carousel-image {
+  display: none;
+}
+
+.carousel-information {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  padding: 0 32px;
+}
+
+.corousel-container {
+  display: flex;
+  flex-direction: column;
+  background-repeat: no-repeat;
+  background-image: url("./assets/images/grupo-namedida.webp");
+
+  background-position-y: bottom;
+  background-position-x: 50%;
+
+  color: white;
+  width: 100%;
+  height: 100%;
+  background-size: contain;
+}
+
+.carousel-content {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.content-description {
+  font-size: 12px;
+}
+
+.information-tell {
+  font-weight: bolder;
+  margin-top: 16px;
+}
+
+.media-container {
+  margin-top: 16px;
+  display: flex;
+  justify-content: space-around;
+  padding: 12px;
+  max-width: 375px;
+}
+
+.media-container a {
+  font-size: 32px;
+  display: flex;
+}
+
+.media-icon:hover {
+  animation: shake 0.82s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+button {
+  margin-top: 32px;
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  padding: 13px 20px 13px;
+  outline: 0;
+  color: #d64045;
+  border: 1px solid #d64045;
+  cursor: pointer;
+  position: relative;
+  background-color: rgba(0, 0, 0, 0);
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+.button-52:after {
+  content: "";
+  background-color: white;
+  width: 100%;
+  z-index: -1;
+  position: absolute;
+  height: 100%;
+  top: 7px;
+  left: 7px;
+  transition: 0.2s;
+}
+
+.button-52:hover:after {
+  top: 0px;
+  left: 0px;
+}
+
+.carousel__container--item {
+  cursor: grab;
+}
+
+.carousel__container--item:active {
+  cursor: grabbing;
+  cursor: -moz-grabbing;
+  cursor: -webkit-grabbing;
+}
+
+/* MEDIAS QUERY */
+
+@media screen and (max-width: 425px) {
+}
+@media screen and (min-width: 768px) {
+  button {
+    padding: 13px 50px 13px;
+  }
+  .logo-bus {
+    width: 300px;
+  }
+}
+
+@media screen and (min-width: 500px) {
+  .corousel-container {
+    background-size: 80%;
+  }
+
+  .media-container {
+    gap: 8px;
+  }
+}
+
+@media screen and (min-width: 940px) {
+  .corousel-container {
+    background-size: 50%;
+  }
+
+  .media-container {
+    gap: 8px;
+  }
+}
+
+@media screen and (min-width: 1024px) {
+  .corousel-container {
+    background-position-x: 50%;
+    background-size: 40%;
+  }
+}
+
+/* End mobile */
+
+@media screen and (min-width: 1440px) {
+  .corousel-container {
+    background-size: 700px;
+    background-position-x: 0;
+  }
+
+  .carousel-image {
+    width: 1600px;
+    display: block;
+  }
+
+  .flex {
+    flex-direction: row;
+    height: 100%;
+    align-items: center;
+  }
+
+  .content-description {
+    font-size: initial;
+  }
+
+  .carousel-content {
+    position: relative;
+  }
+}
+
+@media screen and (min-width: 1754px) {
+}
+
+@media screen and (min-width: 2000px) {
+  .corousel-container {
+    background-size: contain;
+  }
+}
+
+@keyframes shake {
+  10%,
+  90% {
+    transform: translate3d(-1px, 0, 0);
+  }
+
+  20%,
+  80% {
+    transform: translate3d(2px, 0, 0);
+  }
+
+  30%,
+  50%,
+  70% {
+    transform: translate3d(-4px, 0, 0);
+  }
+
+  40%,
+  60% {
+    transform: translate3d(4px, 0, 0);
+  }
+}
