@@ -19,7 +19,7 @@ const schema = yup.object().shape({
   password: yup.string().max(20, "Senha Muito grande").required("Senha obrigatória"),
 })
 
-export const Login = () => {
+const Login = () => {
   const { mobile } = useMobile()
   const { signIn, accessToken } = useAuth()
   const navigate = useNavigate()
@@ -133,3 +133,5 @@ export const Login = () => {
     </Stack>
   )
 }
+
+export default Login
