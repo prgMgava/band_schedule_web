@@ -7,7 +7,7 @@ import "react-carousel-animated/dist/style.css"
 import { MidiaContainer } from "../Components/LandingPage/MidiaContainer"
 import { bandData } from "../data/bandData"
 import { FaWhatsapp } from "react-icons/fa"
-export const LandingPage = () => {
+const LandingPage = () => {
   const viewPortHeight = window.innerHeight
   const Video = require("../assets/videos/naMedidaVideo.mp4")
   const Logo = require("../assets/images/logo.webp")
@@ -84,3 +84,5 @@ export const LandingPage = () => {
     </div>
   )
 }
+
+export default LandingPage

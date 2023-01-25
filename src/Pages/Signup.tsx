@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom"
 import { AdminForm } from "../Components/Calendar/Components/Form/AdminForm"
 import { useAuth } from "../Provider/Auth/Auth"
 
-export const Signup = () => {
+const Signup = () => {
   const { accessToken } = useAuth()
   const navigate = useNavigate()
   useEffect(() => {
@@ -20,3 +20,5 @@ export const Signup = () => {
     </Stack>
   )
 }
+
+export default Signup
