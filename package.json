@@ -41,7 +41,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "rm -rf ./build && react-scripts build",
-    "build:prod": "git add . && git commit -m {\"new build\"}' && git push",
+    "build:prod": "rm -rf ./build && react-scripts build && git add . && git commit -m \"new build\" && git push",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

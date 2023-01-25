@@ -10,6 +10,9 @@ import { FaWhatsapp } from "react-icons/fa"
 const LandingPage = () => {
   const viewPortHeight = window.innerHeight
   const Video = require("../assets/videos/naMedidaVideo.mp4")
+  const VideoIOS = require("../assets/videos/naMedidaVideo.m4v")
+  const VideoMOB = require("../assets/videos/naMedidaVideo.webm")
+
   const Logo = require("../assets/images/logo.webp")
 
   return (
@@ -20,7 +23,9 @@ const LandingPage = () => {
         </div>
         <div className="parallax-video">
           <video autoPlay loop muted>
+            <source src={VideoMOB} type="video/webm" />
             <source src={Video} type="video/mp4" />
+            <source src={VideoIOS} type="video/x-m4v" />
             Your browser does not support the video tag.
           </video>
           <div className="filter-video"></div>
