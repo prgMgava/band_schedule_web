@@ -26,8 +26,7 @@ a {
 }
 
 .main-container {
-  background: radial-gradient(circle at center, #000 20%, transparent 22%),
-    transparent;
+  background: radial-gradient(circle at center, #000 20%, transparent 22%), transparent;
   background-size: 8px 8px;
 }
 
@@ -100,7 +99,7 @@ a {
   display: flex;
   flex-direction: column;
   background-repeat: no-repeat;
-  background-image: url("./assets/images/grupo-namedida.webp");
+  background-image: url("../assets/images/grupo-namedida.webp");
 
   background-position-y: bottom;
   background-position-x: 50%;

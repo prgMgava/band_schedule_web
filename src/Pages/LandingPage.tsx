@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 import React from "react"
-import "./landingPage.style..css"
+import "./landingPage.style.css"
 import ReactCarousel, { AFTER, CENTER, BEFORE } from "react-carousel-animated"
 import "react-carousel-animated/dist/style.css"
 
@@ -8,8 +8,8 @@ import { MidiaContainer } from "../Components/LandingPage/MidiaContainer"
 import { bandData } from "../data/bandData"
 export const LandingPage = () => {
   const viewPortHeight = window.innerHeight
-  const Video = require("./assets/videos/naMedidaVideo.mp4")
-  const Logo = require("./assets/images/logo.webp")
+  const Video = require("../assets/videos/naMedidaVideo.mp4")
+  const Logo = require("../assets/images/logo.webp")
 
   return (
     <div className="main-container">

@@ -1,3 +1,4 @@
+import React from "react"
 import {
   FaFacebookSquare,
   FaInstagramSquare,
@@ -5,9 +6,9 @@ import {
   FaTiktok,
   FaTwitterSquare,
   FaYoutubeSquare,
-} from "react-icons/fa";
+} from "react-icons/fa"
 
-import LogoBandNaMedida from "../assets/images/naMedidaLogo.webp";
+import LogoBandNaMedida from "../assets/images/naMedidaLogo.webp"
 
 export const bandData = [
   {
@@ -15,8 +16,7 @@ export const bandData = [
     contact: "(61) 99533-1001",
     logo: LogoBandNaMedida,
     id: "namedida",
-    presKitLink:
-      "https://drive.google.com/drive/folders/1gAvjNdFOgMULmHhlyjHVdPYZIgnFabPQ?usp=sharing",
+    presKitLink: "https://drive.google.com/drive/folders/1gAvjNdFOgMULmHhlyjHVdPYZIgnFabPQ?usp=sharing",
     description:
       "Poder tocar corações e trazer bastante alegria para quem consome nosso som! essa é nossa maior alegria se for assim Tá Na Medida!",
     midias: [
@@ -32,7 +32,7 @@ export const bandData = [
       },
       {
         name: "instagram",
-        link: "#",
+        link: "https://www.instagram.com/tanamedida/",
         icon: <FaInstagramSquare className="media-icon" />,
       },
       {
@@ -40,16 +40,16 @@ export const bandData = [
         link: "#",
         icon: <FaSpotify className="media-icon" />,
       },
-      {
-        name: "tiktok",
-        link: "#",
-        icon: <FaTiktok className="media-icon" />,
-      },
-      {
-        name: "twitter",
-        link: "#",
-        icon: <FaTwitterSquare className="media-icon" />,
-      },
+      // {
+      //   name: "tiktok",
+      //   link: "#",
+      //   icon: <FaTiktok className="media-icon" />,
+      // },
+      // {
+      //   name: "twitter",
+      //   link: "#",
+      //   icon: <FaTwitterSquare className="media-icon" />,
+      // },
     ],
   },
-];
+]

@@ -4,6 +4,7 @@ import React from "react"
 import { useAuth } from "../Provider/Auth/Auth"
 import { Login } from "../Pages/Login"
 import { Signup } from "../Pages/Signup"
+import { LandingPage } from "../Pages/LandingPage"
 
 export const Routes = () => {
   const { accessToken } = useAuth()
@@ -12,6 +13,7 @@ export const Routes = () => {
       <Route path="/agenda" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
       <Route path="/calendar" element={accessToken ? <Demo /> : <Navigate to={"/agenda"}></Navigate>} />
+      <Route path="/tanamedida" element={<LandingPage />} />
     </Switch>
   )
 }

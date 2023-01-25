@@ -6,9 +6,11 @@ import "./App.css"
 import Routes from "./Routes"
 export const App = () => {
   return (
-    <Stack bg="#0D1F35">
-      <Routes />
-      <ToastContainer />
-    </Stack>
+    <>
+      <Stack bg="#0D1F35">
+        <Routes />
+        <ToastContainer />
+      </Stack>
+    </>
   )
 }
