@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-import React from "react"
+import React, { useEffect, useRef } from "react"
 import "./landingPage.style.css"
 import ReactCarousel, { AFTER, CENTER, BEFORE } from "react-carousel-animated"
 import "react-carousel-animated/dist/style.css"
@@ -13,7 +13,15 @@ const LandingPage = () => {
   const VideoIOS = require("../assets/videos/naMedidaVideo.m4v")
   const VideoMOB = require("../assets/videos/naMedidaVideo.webm")
 
-  const Logo = require("../assets/images/logo.webp")
+  const Logo = require("../assets/images/logo.png")
+
+  const videoRef = useRef(null)
+
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.play()
+    }
+  }, [videoRef.current])
 
   return (
     <div className="main-container">
@@ -21,8 +29,8 @@ const LandingPage = () => {
         <div className="brand-container" style={{ height: `${viewPortHeight}px` }}>
           <img src={Logo} alt="Logo, onibus vermelho" className="logo-bus"></img>
         </div>
-        <div className="parallax-video">
-          <video autoPlay loop muted>
+        <div className="parallax-video" style={{ backgroundColor: "balck" }}>
+          <video loop muted ref={videoRef}>
             <source src={VideoMOB} type="video/webm" />
             <source src={Video} type="video/mp4" />
             <source src={VideoIOS} type="video/x-m4v" />

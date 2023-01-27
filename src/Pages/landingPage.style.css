@@ -100,7 +100,7 @@ a {
   display: flex;
   flex-direction: column;
   background-repeat: no-repeat;
-  background-image: url("../assets/images/grupo-namedida.webp");
+  background-image: url("../assets/images/grupo-namedida.png");
 
   background-position-y: bottom;
   background-position-x: 50%;

@@ -8,7 +8,7 @@ import {
   FaYoutubeSquare,
 } from "react-icons/fa"
 
-import LogoBandNaMedida from "../assets/images/naMedidaLogo.webp"
+import LogoBandNaMedida from "../assets/images/naMedidaLogo.png"
 
 export const bandData = [
   {

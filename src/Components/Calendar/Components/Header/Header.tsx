@@ -89,7 +89,7 @@ export const Header = ({ setCurrentPriority }: HeaderProps) => {
                 >
                   <img
                     src={require("../../../../assets/low-logo.webp")}
-                    data-src={require("../../../../assets/logo.webp")}
+                    data-src={require("../../../../assets/images/logo.png")}
                     alt="logo"
                     style={{ paddingLeft: "24px", height: "90%", width: "75%" }}
                     className="lazyload item-image img-absolute blur-up"
@@ -106,7 +106,7 @@ export const Header = ({ setCurrentPriority }: HeaderProps) => {
                   <img
                     className="lazyload item-image img-absolute blur-up"
                     src={require("../../../../assets/low-logo.webp")}
-                    data-src={require("../../../../assets/logo.webp")}
+                    data-src={require("../../../../assets/images/logo.png")}
                     alt="logo"
                     style={{ height: "90%" }}
                   />

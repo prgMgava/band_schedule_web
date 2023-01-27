@@ -47,7 +47,7 @@ const Login = () => {
           <img
             className="lazyload"
             src={require("../assets/low-logo.webp")}
-            data-src={require("../assets/logo.webp")}
+            data-src={require("../assets/images/logo.png")}
             alt="logo"
             style={{ height: "90%" }}
           />
