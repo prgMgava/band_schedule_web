@@ -85,7 +85,7 @@ const LandingPage = () => {
                       <MidiaContainer midiaData={band.midias} />
                     </div>
                     <a href={band.presKitLink} target="blank">
-                      <button className="button-52">BAIXAR PRESS KIT</button>
+                      <button className="button-52">BAIXAR PRESS KIT TESTE</button>
                     </a>
                   </div>
                 </div>
