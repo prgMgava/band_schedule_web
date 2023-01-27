@@ -21,6 +21,10 @@ a {
   position: absolute;
 }
 
+video[poster] {
+  object-fit: cover;
+}
+
 .section1 {
   display: flex;
   flex-direction: column;
@@ -181,6 +185,10 @@ button {
   left: 0px;
 }
 
+video[poster] {
+  object-position: -203px 0;
+}
+
 /* .carousel__container--item {
   cursor: grab;
 }
@@ -193,7 +201,14 @@ button {
 
 /* MEDIAS QUERY */
 
-@media screen and (max-width: 425px) {
+@media screen and (min-width: 500px) {
+  .corousel-container {
+    background-size: 80%;
+  }
+
+  .media-container {
+    gap: 8px;
+  }
 }
 @media screen and (min-width: 768px) {
   button {
@@ -202,15 +217,8 @@ button {
   .logo-bus {
     width: 400px;
   }
-}
-
-@media screen and (min-width: 500px) {
-  .corousel-container {
-    background-size: 80%;
-  }
-
-  .media-container {
-    gap: 8px;
+  video[poster] {
+    object-position: initial;
   }
 }
 

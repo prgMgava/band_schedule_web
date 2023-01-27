@@ -12,6 +12,7 @@ const LandingPage = () => {
   const Video = require("../assets/videos/naMedidaVideo.mp4")
   const VideoIOS = require("../assets/videos/naMedidaVideo.m4v")
   const VideoMOB = require("../assets/videos/naMedidaVideo.webm")
+  const PosterVideo = require("../assets/videos/naMedidaVideo.gif")
 
   const Logo = require("../assets/images/logo.png")
 
@@ -26,14 +27,11 @@ const LandingPage = () => {
   return (
     <div className="main-container">
       <section className="section1">
-        <div className="brand-container" style={{ height: `${viewPortHeight}px` }}>
+        <div className="brand-container" style={{ height: `${viewPortHeight - 30}px` }}>
           <img src={Logo} alt="Logo, onibus vermelho" className="logo-bus"></img>
         </div>
         <div className="parallax-video" style={{ backgroundColor: "balck" }}>
-          <video loop muted ref={videoRef}>
-            <source src={VideoMOB} type="video/webm" />
-            <source src={Video} type="video/mp4" />
-            <source src={VideoIOS} type="video/x-m4v" />
+          <video loop muted ref={videoRef} poster={PosterVideo}>
             Your browser does not support the video tag.
           </video>
           <div className="filter-video"></div>
@@ -85,7 +83,7 @@ const LandingPage = () => {
                       <MidiaContainer midiaData={band.midias} />
                     </div>
                     <a href={band.presKitLink} target="blank">
-                      <button className="button-52">BAIXAR PRESS KIT TESTE</button>
+                      <button className="button-52">BAIXAR PRESS KIT</button>
                     </a>
                   </div>
                 </div>
