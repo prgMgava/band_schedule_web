@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/static/css/main.b6ea72bb.css",
-    "main.js": "/static/js/main.5ea50d3e.js",
+    "main.js": "/static/js/main.b99cb2ec.js",
     "static/js/883.ad470526.chunk.js": "/static/js/883.ad470526.chunk.js",
     "static/js/47.9185e32c.chunk.js": "/static/js/47.9185e32c.chunk.js",
     "static/css/201.77d8c34b.chunk.css": "/static/css/201.77d8c34b.chunk.css",
@@ -17,7 +17,7 @@
     "static/media/low-logo.webp": "/static/media/low-logo.2e977fa077deedb43246.webp",
     "index.html": "/index.html",
     "main.b6ea72bb.css.map": "/static/css/main.b6ea72bb.css.map",
-    "main.5ea50d3e.js.map": "/static/js/main.5ea50d3e.js.map",
+    "main.b99cb2ec.js.map": "/static/js/main.b99cb2ec.js.map",
     "883.ad470526.chunk.js.map": "/static/js/883.ad470526.chunk.js.map",
     "47.9185e32c.chunk.js.map": "/static/js/47.9185e32c.chunk.js.map",
     "201.77d8c34b.chunk.css.map": "/static/css/201.77d8c34b.chunk.css.map",
@@ -26,6 +26,6 @@
   },
   "entrypoints": [
     "static/css/main.b6ea72bb.css",
-    "static/js/main.5ea50d3e.js"
+    "static/js/main.b99cb2ec.js"
   ]
 }
