@@ -90,7 +90,7 @@ const LandingPage = () => {
           ))}
         </ReactCarousel>
       </div>
-      <Finances handleCloseModal={() => { }} setOpenDrawer={() => { }} />
+      <Finances handleCloseModal={() => { return 123 }} setOpenDrawer={() => { return 123 }} />
     </div>
   )
 }

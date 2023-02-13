@@ -1,8 +1,9 @@
 
 import { Box, Card, CardHeader, Divider, IconButton, CardContent } from "@mui/material"
 import { Add } from "@mui/icons-material"
+import { HeaderFinances } from "./HeaderFinances"
 interface FinancesProp {
-  setOpenDrawer: (boolean) => void
+  setOpenDrawer: (boolean: boolean) => void
   handleCloseModal: () => void
 }
 export const Finances = ({ setOpenDrawer, handleCloseModal }: FinancesProp) => {
@@ -27,8 +28,8 @@ export const Finances = ({ setOpenDrawer, handleCloseModal }: FinancesProp) => {
           <Add /> <small style={{ fontSize: "10px" }}>Registrar entrada/saída</small>
         </IconButton>
       </Box>
-      <CardContent>
-        <div>header</div>
+      <CardContent style={{}}>
+        <HeaderFinances />
         <div>chart</div>
 
         <div>tabel</div>
