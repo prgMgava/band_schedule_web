@@ -7,11 +7,9 @@ import "react-carousel-animated/dist/style.css"
 import { MidiaContainer } from "../Components/LandingPage/MidiaContainer"
 import { bandData } from "../data/bandData"
 import { FaWhatsapp } from "react-icons/fa"
+import { Finances } from "../Components/Calendar/Components/Finances/Finances"
 const LandingPage = () => {
   const viewPortHeight = window.innerHeight
-  const Video = require("../assets/videos/naMedidaVideo.mp4")
-  const VideoIOS = require("../assets/videos/naMedidaVideo.m4v")
-  const VideoMOB = require("../assets/videos/naMedidaVideo.webm")
   const PosterVideo = require("../assets/videos/naMedidaVideo.gif")
 
   const Logo = require("../assets/images/logo.png")
@@ -92,6 +90,7 @@ const LandingPage = () => {
           ))}
         </ReactCarousel>
       </div>
+      <Finances handleCloseModal={() => { }} setOpenDrawer={() => { }} />
     </div>
   )
 }
