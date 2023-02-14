@@ -112,7 +112,7 @@ video[poster] {
   color: white;
   width: 100%;
   height: 100%;
-  background-size: 300px;
+  background-size: 256px;
 }
 
 .carousel-content {
@@ -203,7 +203,7 @@ video[poster] {
 
 @media screen and (min-width: 500px) {
   .corousel-container {
-    background-size: 80%;
+    background-size: 55%;
   }
 
   .media-container {
