@@ -1,10 +1,11 @@
 import { Box, Card, CardContent, Typography, Chip } from "@mui/material"
 import { useMobile } from "../../../../Provider/Theme/Mobile"
+import React from 'react'
 
 export const HeaderFinances = () => {
     const { mobile } = useMobile()
     return (
-        <Card style={{ padding: "16px", margin: "0px auto", position: "relative", maxWidth: "800px" }}>
+        <Card style={{ padding: "16px", margin: "0px auto", position: "relative" }}>
 
             <CardContent style={{ display: "flex", flexDirection: mobile ? 'column' : "row", textAlign: !mobile ? 'center' : 'left', paddingBottom: "16px" }}>
                 <Box style={{ borderRight: !mobile && "solid 2px #e1e1e1", borderBottom: mobile && "solid 2px #e1e1e1", marginBottom: mobile && "8px", flexBasis: "20%" }}>

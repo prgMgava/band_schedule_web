@@ -1,20 +1,27 @@
 
-import { Box, Card, CardHeader, Divider, IconButton, CardContent } from "@mui/material"
-import { Add } from "@mui/icons-material"
+import { Box, Card, CardHeader, Divider, IconButton, CardContent, Button } from "@mui/material"
+import { Add, ArrowBack } from "@mui/icons-material"
 import { HeaderFinances } from "./HeaderFinances"
 import { TableFinances } from "./TableFinances"
 import { ChartFinances } from "./ChartFinances"
-import React from 'react'
+import React, { useState } from 'react'
+import { useNavigate } from "react-router-dom"
+import { FilterFinances } from "./FilterFinances"
+
 
 export const Finances = () => {
+  const navigate = useNavigate()
+  const [currentFilter, setCurrentFilter] = useState<Array<string>>(["mês"])
+
   return (
-    <Card style={{ padding: "16px", margin: "64px 16px", position: "relative" }}>
+    <div style={{ padding: "8px", margin: "8px", position: "relative" }}>
+      <Button startIcon={<ArrowBack />} onClick={() => navigate('/calendar')}> Voltar</Button>
       <CardHeader
         title="Minhas Finanças"
+        style={{ padding: "8px 0" }}
       >
-        Filtros
       </CardHeader>
-      <Divider variant="middle" style={{ margin: "10px 0" }} />
+      <FilterFinances setCurrentFilter={setCurrentFilter} />
       <Box
         position={"absolute"}
         top={0}
@@ -30,11 +37,11 @@ export const Finances = () => {
       </Box>
       <CardContent style={{}}>
         <HeaderFinances />
-        <ChartFinances />
+        {/* <ChartFinances /> */}
 
         <TableFinances />
 
       </CardContent>
-    </Card>
+    </div>
   )
 }
