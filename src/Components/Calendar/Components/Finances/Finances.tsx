@@ -4,11 +4,9 @@ import { Add } from "@mui/icons-material"
 import { HeaderFinances } from "./HeaderFinances"
 import { TableFinances } from "./TableFinances"
 import { ChartFinances } from "./ChartFinances"
-interface FinancesProp {
-  setOpenDrawer: (boolean: boolean) => void
-  handleCloseModal: () => void
-}
-export const Finances = ({ setOpenDrawer, handleCloseModal }: FinancesProp) => {
+import React from 'react'
+
+export const Finances = () => {
   return (
     <Card style={{ padding: "16px", margin: "64px 16px", position: "relative" }}>
       <CardHeader
@@ -22,8 +20,8 @@ export const Finances = ({ setOpenDrawer, handleCloseModal }: FinancesProp) => {
         top={0}
         right={10}
         onClick={() => {
-          handleCloseModal()
-          setOpenDrawer(true)
+          // handleCloseModal()
+          // setOpenDrawer(true)
         }}
       >
         <IconButton color="primary" component="label">

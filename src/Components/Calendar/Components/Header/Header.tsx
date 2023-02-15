@@ -1,4 +1,4 @@
-import { Close, ColorLens, EventAvailable, Logout, MusicNote, PersonAddAlt, SyncOutlined } from "@mui/icons-material"
+import { Close, ColorLens, EventAvailable, Logout, MusicNote, PersonAddAlt, SyncOutlined, AttachMoney } from "@mui/icons-material"
 import {
   Box,
   Menu,
@@ -25,7 +25,8 @@ import { StatusHandler } from "../../StatusHandler"
 import { useMobile } from "../../../../Provider/Theme/Mobile"
 import { useBand } from "../../../../Provider/Band/Band"
 interface HeaderProps {
-  setCurrentPriority: React.Dispatch<React.SetStateAction<number>>
+  setCurrentPriority?: React.Dispatch<React.SetStateAction<number>>
+  hiddenFilter: boolean
 }
 
 export const Header = ({ setCurrentPriority }: HeaderProps) => {
@@ -240,6 +241,15 @@ export const Header = ({ setCurrentPriority }: HeaderProps) => {
                     </ListItemIcon>
                     Atualizar eventos
                   </MenuItem>
+                  <MenuItem onClick={() => {
+                    setCurrentForm("finances")
+                    setOpenDrawer(true)
+                  }}>
+                    <ListItemIcon>
+                      <AttachMoney fontSize="small" />
+                    </ListItemIcon>
+                    Finanças
+                  </MenuItem>
                   <MenuItem onClick={() => signOut()}>
                     <ListItemIcon>
                       <Logout fontSize="small" />
@@ -252,7 +262,9 @@ export const Header = ({ setCurrentPriority }: HeaderProps) => {
           </Stack>
         </Stack>
       </Box>
-      <Filter setCurrentPriority={setCurrentPriority} />
+      {!!setCurrentPriority && (
+        <Filter setCurrentPriority={setCurrentPriority} />
+      )}
     </div>
   )
 }

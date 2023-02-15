@@ -1,2 +1,0 @@
-"use strict";(self.webpackChunkband_schedule_web=self.webpackChunkband_schedule_web||[]).push([[47],{5047:function(e,n,s){s.r(n);var t=s(4162),c=s(8928),u=s(2791),a=s(7689),i=s(8020),h=s(15),r=s(184);n.default=function(){var e=(0,h.a)().accessToken,n=(0,a.s0)();return(0,u.useEffect)((function(){e&&n("/calendar")}),[e]),(0,r.jsx)(t.Z,{justifyContent:"center",height:"100vh",alignItems:"center",children:(0,r.jsx)(c.Z,{style:{maxWidth:"500px"},children:(0,r.jsx)(i.R,{isSignup:!0})})})}}}]);
-//# sourceMappingURL=47.9185e32c.chunk.js.map
