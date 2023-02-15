@@ -3,6 +3,7 @@ import { Box, Card, CardHeader, Divider, IconButton, CardContent } from "@mui/ma
 import { Add } from "@mui/icons-material"
 import { HeaderFinances } from "./HeaderFinances"
 import { TableFinances } from "./TableFinances"
+import { ChartFinances } from "./ChartFinances"
 interface FinancesProp {
   setOpenDrawer: (boolean: boolean) => void
   handleCloseModal: () => void
@@ -31,7 +32,7 @@ export const Finances = ({ setOpenDrawer, handleCloseModal }: FinancesProp) => {
       </Box>
       <CardContent style={{}}>
         <HeaderFinances />
-        <div>chart</div>
+        <ChartFinances />
 
         <TableFinances />
 
