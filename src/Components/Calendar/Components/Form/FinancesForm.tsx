@@ -57,7 +57,6 @@ export const FinancesForm = ({ toggleDrawer, data }: FinancesProps) => {
 
 
   const { createCheckout, updateCheckout, checkouts } = useCheckout()
-  const [currentCheckout, setCurrentCheckout] = useState<number>()
   const [currentBand, setCurrentBand] = useState(data?.id_band)
   const isEditing = !!idCheckout
   const [maskedMoney, setMaskedMoney] = useState("")
@@ -73,20 +72,29 @@ export const FinancesForm = ({ toggleDrawer, data }: FinancesProps) => {
   } = useForm<ICheckout>({ resolver: yupResolver(schema), mode: "onSubmit" })
 
   const submitForm: SubmitHandler<ICheckout> = async (data: ICheckout) => {
-    console.log(data)
-    return
-    if (currentCheckout) {
+    if (isEditing) {
       // const response = await updateCheckout({ ...data, id: currentCheckout })
       // toast[response.success ? "success" : "error"](response.message)
       // if (response.success) {
       //   toggleDrawer()
       // }
     } else {
-      const response = await createCheckout(data)
+      const dataFormatted = formatData(data)
+      console.log(data)
+      const response = await createCheckout(dataFormatted)
       toast[response.success ? "success" : "error"](response.message)
       if (response.success) {
         toggleDrawer()
       }
+    }
+  }
+
+  const formatData = (data: ICheckout): ICheckout => {
+    const money = typeof data.value == "string" ? data.value.replace(".", "").replace(",", ".").replace(/\D\$\s/, "") : 0
+    return {
+      ...data,
+      value: Number(money),
+      date: typeof data.date == "object" ? data.date.toISOString().substring(0, 19) : ""
     }
   }
 
@@ -129,7 +137,7 @@ export const FinancesForm = ({ toggleDrawer, data }: FinancesProps) => {
     //     setValue("email", band.email)
     //   }
     // }
-  }, [currentCheckout])
+  }, [isEditing])
 
   React.useEffect(() => setValue("value", maskedMoney), [maskedMoney])
 
@@ -241,7 +249,7 @@ export const FinancesForm = ({ toggleDrawer, data }: FinancesProps) => {
                 <TextField
                   {...field}
                   autoComplete={"false"}
-                  label="Responsável *"
+                  label="Responsável"
                   error={!!errors.owner}
                   helperText={errors.owner && errors.owner.message}
                   fullWidth={true}
@@ -293,11 +301,10 @@ export const FinancesForm = ({ toggleDrawer, data }: FinancesProps) => {
 
         <Stack spacing={"10px"} mt={3}>
           <Button type="submit" variant="contained">
-            {currentCheckout ? "Atualizar" : "Salvar"}
+            {isEditing ? "Atualizar" : "Salvar"}
           </Button>
         </Stack>
       </form>
-      <Divider style={{ marginTop: "16px" }} />
     </Grid>
   )
 }

@@ -46,17 +46,7 @@ export const options = {
             position: 'left' as const,
             suggestedMin: 30,
             suggestedMax: 1000,
-        },
-        y1: {
-            type: 'linear' as const,
-            display: true,
-            position: 'right' as const,
-            grid: {
-                drawOnChartArea: false,
-            },
-            suggestedMin: 30,
-            suggestedMax: 1000,
-        },
+        }
     },
 };
 //todo: separar por meses, reativo filtros
@@ -81,12 +71,12 @@ export function ChartFinances() {
                 data: labels.filter((month, index) => new Date().getMonth() >= index).map((month, index) => checkoutsYearly.filter(checkout => new Date(checkout.date).getMonth() == index && checkout.type == 2).reduce((a, band) => a + Number(band.value), 0)) || null,
                 borderColor: '#D64045',
                 backgroundColor: '#D64045',
-                yAxisID: 'y1',
+                yAxisID: 'y',
             },
         ],
     };
     return (
-        <div style={{ maxWidth: '800px' }}>
+        <div>
             <Typography marginTop={"32px"}>Gráfico anual do fluxo de finanças: 2023</Typography>
             <Line options={options} data={data} />
         </div>
