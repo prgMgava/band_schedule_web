@@ -91,10 +91,11 @@ export const FinancesForm = ({ toggleDrawer, data }: FinancesProps) => {
 
   const formatData = (data: ICheckout): ICheckout => {
     const money = typeof data.value == "string" ? data.value.replace(".", "").replace(",", ".").replace(/\D\$\s/, "") : 0
+    const dateFormatted = new Date(typeof data.date == "object" ? data.date.toISOString().substring(0, 10) + new Date().toISOString().substring(10, 19) : "")
     return {
       ...data,
       value: Number(money),
-      date: typeof data.date == "object" ? data.date.toISOString().substring(0, 19) : ""
+      date: dateFormatted
     }
   }
 
