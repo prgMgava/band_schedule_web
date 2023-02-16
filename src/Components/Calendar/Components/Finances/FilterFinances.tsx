@@ -1,17 +1,16 @@
-import { Circle, Search } from "@mui/icons-material"
-import { Button, FormControl, IconButton, InputLabel, ListItemIcon, MenuItem, Select } from "@mui/material"
+import { Search } from "@mui/icons-material"
+import { Button, FormControl, FormHelperText, IconButton, InputLabel, MenuItem, Select } from "@mui/material"
 import { Box, Stack } from "@mui/system"
 import React, { Dispatch, useEffect } from "react"
-import { SubmitHandler, useForm } from "react-hook-form"
+import { Controller, SubmitHandler, useForm } from "react-hook-form"
 import { toast } from "react-toastify"
 import uuid from "react-uuid"
 import { useAppointment } from "../../../../Provider/Appointment/Appointment"
 import { useAuth } from "../../../../Provider/Auth/Auth"
 import { useBand } from "../../../../Provider/Band/Band"
-import { useLabel } from "../../../../Provider/Label/Label"
 import { useMobile } from "../../../../Provider/Theme/Mobile"
+import { IBand } from "../../../../Types/band.type"
 import { monthList } from "../../Utils/months"
-import { statesList } from "../../Utils/states"
 
 interface FilterFinancesProps {
   setCurrentFilter: Dispatch<React.SetStateAction<Array<string>>>
@@ -19,22 +18,23 @@ interface FilterFinancesProps {
 
 export const FilterFinances = ({ setCurrentFilter }: FilterFinancesProps) => {
   const { mobile } = useMobile()
-  const { labels } = useLabel()
-  const { myBands } = useBand()
+  const { myBands, getMyBands, setCurrentBand } = useBand()
   const { getMyAppointmentsAdvanced } = useAppointment()
   const { id, bandVisibility, adm } = useAuth()
   const currentMonth = new Date().getMonth() + 1
   const currentYear = new Date().getFullYear()
-
   const {
     register,
     handleSubmit,
     setValue,
     formState: { errors },
     watch,
+    control
   } = useForm<any>({ mode: "onSubmit" })
 
   const periodWatch = watch("period")
+  const idBandWatch = watch("id_band")
+
   const range = (start, stop, step) => Array.from({ length: (stop - start) / step + 1 }, (_, i) => start + i * step)
 
   const submitForm: SubmitHandler<any> = async data => {
@@ -89,8 +89,16 @@ export const FilterFinances = ({ setCurrentFilter }: FilterFinancesProps) => {
       data_inicial: dataInicialFormatada,
       data_final: dataFinalFormatada,
     }
-    getMyAppointmentsAdvanced(payload, owner || 0)
+
+    getMyBands()
+    //getMyAppointmentsAdvanced(payload, owner || 0)
   }, [])
+
+  useEffect(() => {
+    if (idBandWatch) {
+      setCurrentBand(myBands.find(band => band.id == idBandWatch)?.name || '')
+    }
+  }, [idBandWatch])
 
   return (
     <>
@@ -104,8 +112,8 @@ export const FilterFinances = ({ setCurrentFilter }: FilterFinancesProps) => {
         display={'flex'}
         justifyContent="end"
       >
-        <Box width={"300px"} display="flex" gap={1}>
-          <Stack direction={"row"} gap={1}>
+        <Box width={"600px"} display="flex" gap={1}>
+          <Stack direction={mobile ? "column" : "row"} gap={1}>
             <FormControl error={!!errors.period} sx={{ minWidth: 120 }} fullWidth={true}>
               <InputLabel id="demo-simple-select-helper-label">Período</InputLabel>
               <Select
@@ -159,8 +167,43 @@ export const FilterFinances = ({ setCurrentFilter }: FilterFinancesProps) => {
                 </FormControl>
               </Box>
             )}
+
+            <Controller
+              name="id_band"
+              control={control}
+              rules={{ required: true }}
+              render={({ field }) => (
+                <Box>
+                  <FormControl error={!!errors.id_band} >
+                    <InputLabel id="demo-simple-select-helper-label">Banda *</InputLabel>
+                    <Select
+                      size="small"
+                      sx={{ minWidth: 270 }}
+                      labelId="demo-simple-select-error-label"
+                      id="demo-simple-select-error"
+                      label="Banda"
+                      defaultValue={myBands.length == 1 ? myBands[0].id : ""}
+                      {...field}
+                    >
+                      {myBands.map(band => {
+                        if (!band.is_deleted) {
+                          return (
+                            <MenuItem value={band.id} key={uuid()}>
+                              {band.name}
+                            </MenuItem>
+                          )
+                        }
+                        return <></>
+                      })}
+                    </Select>
+                    {!!errors.id_band && <FormHelperText sx={{ color: "#E34367" }}>Selecione uma banda</FormHelperText>}
+                  </FormControl>
+                </Box>
+              )}
+            />
+
           </Stack>
-          <IconButton aria-label="delete" type="submit" style={{ backgroundColor: "#42A5F5", color: "white" }}>
+          <IconButton aria-label="delete" type="submit" style={{ backgroundColor: "#42A5F5", color: "white", height: "40px" }}>
             <Search />
           </IconButton>
         </Box>
