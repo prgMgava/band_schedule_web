@@ -129,6 +129,12 @@ const CheckoutProvider = ({ children }: CheckoutProviderProps) => {
           headers: { "x-access-token": accessToken },
         })
         setCheckouts(old => [response.data, ...old])
+        const dataInicial = new Date(currentDate.getFullYear(), currentDate.getMonth())
+        const dataFinal = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0)
+        setCurrentDate(dataInicial)
+        const dataInicialFormatada = dataInicial.toISOString().substring(0, 10)
+        const dataFinalFormatada = dataFinal.toISOString().substring(0, 10)
+        getCheckouts(dataInicialFormatada, dataFinalFormatada, payload.id_band)
         return {
           success: true,
           message: "Evento agendado com sucesso",
