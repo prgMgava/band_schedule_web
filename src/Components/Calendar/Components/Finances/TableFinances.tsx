@@ -10,11 +10,12 @@ import Paper from "@mui/material/Paper"
 import { useLabel } from "../../../../Provider/Label/Label"
 import uuid from "react-uuid"
 import { ICheckout } from "../../../../Types/checkout.type"
-import { ArrowDownward } from "@mui/icons-material"
+import { ArrowDownward, CloseOutlined, EditOutlined } from "@mui/icons-material"
 import { useCheckout } from "../../../../Provider/Checkout/Checkout"
 import { Typography } from "@mui/material"
 
 interface IDataTable {
+    acoes: any
     date: React.ReactNode
     type: React.ReactNode
     value: string
@@ -72,6 +73,17 @@ export const TableFinances = () => {
 
     function createData(checkout: any) {
         return {
+            acoes:
+                [
+                    {
+                        icon: <CloseOutlined fontSize="small" color="error" />,
+                        action: () => alert('deletar checkout')
+                    },
+                    {
+                        icon: <EditOutlined fontSize="small" style={{ marginLeft: "4px" }} color="primary" />,
+                        action: () => alert('editar checkout')
+                    }
+                ],
             type: (
                 <>
                     <div style={{ transform: checkout.type == 1 ? "rotate(180deg)" : '', color: checkout.type == 1 ? "green" : "red" }}>{<ArrowDownward />}</div>
@@ -95,6 +107,7 @@ export const TableFinances = () => {
                 <Table sx={{ minWidth: 700 }} aria-label="customized table">
                     <TableHead>
                         <TableRow style={{ textAlign: "center" }}>
+                            <StyledTableCell style={{ textAlign: "center" }}>Ações</StyledTableCell>
                             <StyledTableCell style={{ textAlign: "center" }}>Tipo</StyledTableCell>
                             <StyledTableCell style={{ textAlign: "center" }}>Valor</StyledTableCell>
                             <StyledTableCell>Data</StyledTableCell>
@@ -106,6 +119,7 @@ export const TableFinances = () => {
                     <TableBody>
                         {rows.map(row => (
                             <StyledTableRow key={uuid()} sx={{ ":hover": { backdropFilter: "contrast(0.5)" } }}>
+                                <StyledTableCell style={{ textAlign: "center" }}>{row.acoes.map((item, index) => <span key={index} onClick={item.action}>{item.icon}</span>)}</StyledTableCell>
                                 <StyledTableCell style={{ textAlign: "center" }}>{row.type}</StyledTableCell>
                                 <StyledTableCell style={{ textAlign: "center" }}>{row.value}</StyledTableCell>
                                 <StyledTableCell>{row.date}</StyledTableCell>
