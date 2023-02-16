@@ -60,6 +60,7 @@ export const FinancesForm = ({ toggleDrawer, data }: FinancesProps) => {
   const [currentCheckout, setCurrentCheckout] = useState<number>()
   const [currentBand, setCurrentBand] = useState(data?.id_band)
   const isEditing = !!idCheckout
+  const [maskedMoney, setMaskedMoney] = useState("")
 
 
   const {
@@ -89,6 +90,23 @@ export const FinancesForm = ({ toggleDrawer, data }: FinancesProps) => {
     }
   }
 
+  const maskMoney = (value: string) => {
+    const onlyDigits = value
+      .split("")
+      .filter(s => /\d/.test(s))
+      .join("")
+      .padStart(3, "0")
+    const digitsFloat = onlyDigits.slice(0, -2) + "." + onlyDigits.slice(-2)
+    value = maskCurrency(digitsFloat)
+    setMaskedMoney(value)
+  }
+  function maskCurrency(valor, locale = 'pt-BR', currency = 'BRL') {
+    return new Intl.NumberFormat(locale, {
+      style: 'currency',
+      currency
+    }).format(valor)
+  }
+
   function getMoney(str) {
     return parseInt(str.replace(/[\D]+/g, ''));
   }
@@ -113,6 +131,8 @@ export const FinancesForm = ({ toggleDrawer, data }: FinancesProps) => {
     // }
   }, [currentCheckout])
 
+  React.useEffect(() => setValue("value", maskedMoney), [maskedMoney])
+
   return (
     <Grid padding={mobile ? 2 : 8}>
       <form onSubmit={handleSubmit(submitForm)}>
@@ -124,15 +144,17 @@ export const FinancesForm = ({ toggleDrawer, data }: FinancesProps) => {
             <Controller
               name="value"
               control={control}
-              render={({ field }) => (
+              render={({ field: { onChange, ...restField } }) => (
                 <TextField
-                  {...field}
+                  {...restField}
                   autoComplete={"false"}
                   label="Valor *"
                   error={!!errors.value}
                   helperText={errors.value && errors.value.message}
                   fullWidth={true}
                   name="value"
+                  onChange={e => maskMoney(e.currentTarget.value)}
+                  value={maskedMoney}
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
