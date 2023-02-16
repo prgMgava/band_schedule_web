@@ -7,7 +7,7 @@ import { ICheckout } from "../../Types/checkout.type"
 import { addDays, subDays } from "date-fns"
 
 interface CheckoutContextProps {
-  getCheckouts: (isMonthly: boolean) => Promise<IResponse>
+  getCheckouts: (startDate: string, endDate: string, idBand: number) => Promise<IResponse>
   getCheckoutsByBand: (date: Date, idBand: number) => Promise<IResponse>
   checkouts: ICheckout[]
   currentDate: Date
@@ -39,16 +39,11 @@ const CheckoutProvider = ({ children }: CheckoutProviderProps) => {
   const [currentDate, setCurrentDate] = useState(new Date())
   const [currentBand, setCurrentBand] = useState<number>()
 
-  const getCheckouts = useCallback(async (isMonthly: boolean) => {
+  const getCheckouts = useCallback(async (startDate: string, endDate: string, idBand: number) => {
     try {
-      const startDateAux = isMonthly ? new Date(new Date().getFullYear(), new Date().getMonth(), 1) : new Date(new Date().getFullYear(), 0, 1)
-      const endDateAux = isMonthly ? new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0) : new Date(new Date().getFullYear() + 1, 0, 1)
-
-      const startDate = new Date(startDateAux).toISOString().substring(0, 10)
-      const endDate = new Date(endDateAux).toISOString().substring(0, 10)
 
       const { data }: AxiosResponse<ICheckout[]> = await api.get(
-        `/checkout?startDate=${startDate}&endDate=${endDate}`,
+        `/checkout?startDate=${startDate}&endDate=${endDate}&idBand=${idBand}`,
         {
           headers: { "x-access-token": accessToken },
         }
@@ -58,7 +53,7 @@ const CheckoutProvider = ({ children }: CheckoutProviderProps) => {
 
       return {
         success: true,
-        message: "OK",
+        message: data.length ? "Finanças encontradas com sucesso" : "Nenhuma finança encontrada",
       }
     } catch (e) {
       return {

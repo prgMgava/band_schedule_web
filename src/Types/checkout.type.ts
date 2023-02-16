@@ -1,6 +1,6 @@
 export interface ICheckout {
     id: number
-    value: number
+    value: string
     type: number
     date: string
     createdAt: Date
