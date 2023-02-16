@@ -18,3 +18,12 @@ export interface ICheckout {
     },
     is_deleted: boolean
 }
+
+export interface ICheckoutFields {
+    value: number
+    type: number
+    description: string
+    date: string
+    owner: string
+    id_band: number
+}
