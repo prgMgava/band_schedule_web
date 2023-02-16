@@ -12,6 +12,9 @@ import {
 } from 'chart.js';
 import { Bar, Line } from 'react-chartjs-2';
 import faker from 'faker';
+import { Typography } from '@mui/material';
+import { monthNames as labels } from './utils/month';
+import { useCheckout } from '../../../../Provider/Checkout/Checkout';
 
 ChartJS.register(
     CategoryScale,
@@ -57,33 +60,35 @@ export const options = {
     },
 };
 //todo: separar por meses, reativo filtros
-const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July', "September"];
 
-export const data = {
-    labels,
-    datasets: [
-        {
-            label: 'Entradas',
-            data: labels.map(() => faker.datatype.number({ min: 0, max: 1000 })),
-            borderColor: '#2E7D32',
-            backgroundColor: '#2E7D32',
-            yAxisID: 'y',
 
-        },
-        {
-            label: 'Saidas',
-            data: labels.map(() => faker.datatype.number({ min: 0, max: 1000 })),
-            borderColor: '#D64045',
-            backgroundColor: '#D64045',
-            yAxisID: 'y1',
-        },
-    ],
-};
 export function ChartFinances() {
-    return (
-        <div style={{ width: '800px' }}>
+    const { checkoutsYearly, currentDate } = useCheckout()
 
-            <Line options={options} data={data} />;
+    const data = {
+        labels,
+        datasets: [
+            {
+                label: 'Entradas',
+                data: labels.filter((month, index) => new Date().getMonth() >= index).map((month, index) => checkoutsYearly.filter(checkout => new Date(checkout.date).getMonth() == index && checkout.type == 1).reduce((a, band) => a + Number(band.value), 0)) || null,
+                borderColor: '#2E7D32',
+                backgroundColor: '#2E7D32',
+                yAxisID: 'y',
+
+            },
+            {
+                label: 'Saídas',
+                data: labels.filter((month, index) => new Date().getMonth() >= index).map((month, index) => checkoutsYearly.filter(checkout => new Date(checkout.date).getMonth() == index && checkout.type == 2).reduce((a, band) => a + Number(band.value), 0)) || null,
+                borderColor: '#D64045',
+                backgroundColor: '#D64045',
+                yAxisID: 'y1',
+            },
+        ],
+    };
+    return (
+        <div style={{ maxWidth: '800px' }}>
+            <Typography marginTop={"32px"}>Gráfico anual do fluxo de finanças: 2023</Typography>
+            <Line options={options} data={data} />
         </div>
     )
 }

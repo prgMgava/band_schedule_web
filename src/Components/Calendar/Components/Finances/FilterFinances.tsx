@@ -54,8 +54,8 @@ export const FilterFinances = ({ setCurrentFilter }: FilterFinancesProps) => {
     setCurrentDate(dataInicial)
     const dataInicialFormatada = dataInicial.toISOString().substring(0, 10)
     const dataFinalFormatada = dataFinal.toISOString().substring(0, 10)
-
     const response = await getCheckouts(dataInicialFormatada, dataFinalFormatada, data.id_band)
+
     toast[response.success ? "success" : "error"](response.message)
   }
 
