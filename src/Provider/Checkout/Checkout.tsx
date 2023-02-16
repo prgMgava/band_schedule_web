@@ -15,7 +15,7 @@ interface CheckoutContextProps {
   setCurrentDate: Dispatch<React.SetStateAction<Date>>
   createCheckout: (payload: ICheckout) => Promise<IResponse>
   updateCheckout: (payload: ICheckout, id: number) => Promise<IResponse>
-  deleteCheckout: (id: number) => Promise<IResponse>
+  deleteCheckout: (id: number, idBand: number) => Promise<IResponse>
   updateCheckoutStatus: () => Promise<IResponse>
 }
 const CheckoutContext = createContext<CheckoutContextProps>({} as CheckoutContextProps)
@@ -129,12 +129,7 @@ const CheckoutProvider = ({ children }: CheckoutProviderProps) => {
           headers: { "x-access-token": accessToken },
         })
         setCheckouts(old => [response.data, ...old])
-        const dataInicial = new Date(currentDate.getFullYear(), currentDate.getMonth())
-        const dataFinal = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0)
-        setCurrentDate(dataInicial)
-        const dataInicialFormatada = dataInicial.toISOString().substring(0, 10)
-        const dataFinalFormatada = dataFinal.toISOString().substring(0, 10)
-        getCheckouts(dataInicialFormatada, dataFinalFormatada, payload.id_band)
+        refreshCheckout(payload.id_band)
         return {
           success: true,
           message: "Evento agendado com sucesso",
@@ -152,21 +147,23 @@ const CheckoutProvider = ({ children }: CheckoutProviderProps) => {
     }
   }, [])
 
-  const deleteCheckout = useCallback(async (id: number) => {
+  const deleteCheckout = useCallback(async (id: number, idBand: number) => {
     try {
       if (adm) {
-        await api.delete(`/checkout${id}`, {
+        await api.delete(`/checkout/${id}`, {
           headers: { "x-access-token": accessToken },
         })
+        console.log(idBand)
         setCheckouts(old => old.filter(Checkout => Checkout.id !== id))
+        refreshCheckout(idBand)
         return {
           success: true,
-          message: "Evento deletado com sucesso",
+          message: "Finança deletada com sucesso",
         }
       }
       return {
         success: false,
-        message: "Você não tem permissão de deletar um evento",
+        message: "Você não tem permissão de deletar",
       }
     } catch (e) {
       return {
@@ -229,6 +226,14 @@ const CheckoutProvider = ({ children }: CheckoutProviderProps) => {
       }
     }
   }, [])
+
+  const refreshCheckout = (idBand: number) => {
+    const dataInicial = new Date(currentDate.getFullYear(), currentDate.getMonth())
+    const dataFinal = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0)
+    const dataInicialFormatada = dataInicial.toISOString().substring(0, 10)
+    const dataFinalFormatada = dataFinal.toISOString().substring(0, 10)
+    getCheckouts(dataInicialFormatada, dataFinalFormatada, idBand)
+  }
   return (
     <CheckoutContext.Provider
       value={{
