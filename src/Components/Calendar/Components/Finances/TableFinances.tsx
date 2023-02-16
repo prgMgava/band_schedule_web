@@ -10,9 +10,12 @@ import Paper from "@mui/material/Paper"
 import { useLabel } from "../../../../Provider/Label/Label"
 import uuid from "react-uuid"
 import { ICheckout } from "../../../../Types/checkout.type"
-import { ArrowDownward, CloseOutlined, EditOutlined } from "@mui/icons-material"
+import { ArrowDownward, CloseOutlined, Delete, EditOutlined } from "@mui/icons-material"
 import { useCheckout } from "../../../../Provider/Checkout/Checkout"
-import { Typography } from "@mui/material"
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Modal, Slide, Typography } from "@mui/material"
+import { DeleteFinancesModal } from "./components/DeleteFinanceModal"
+import { TransitionProps } from "@mui/material/transitions"
+import { toast } from "react-toastify"
 
 interface IDataTable {
     acoes: any
@@ -22,15 +25,33 @@ interface IDataTable {
     owner: string
     band: string
     description: string
+    id: number
 }
+
+const Transition = React.forwardRef(function Transition(
+    props: TransitionProps & {
+        children: React.ReactElement<any, any>;
+    },
+    ref: React.Ref<unknown>,
+) {
+    return <Slide direction="up" ref={ref} {...props} />;
+});
+
 
 export const TableFinances = () => {
     //const { appointmentsFiltered } = useAppointment()
     const { labels } = useLabel()
-    const { checkouts, currentDate } = useCheckout()
+    const { checkouts, deleteCheckout } = useCheckout()
     const [rows, setRows] = React.useState<IDataTable[]>([])
 
     const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
+    const [openModal, setOpenModal] = React.useState(false);
+    const [deletedFinance, setDeletedFinance] = React.useState({} as ICheckout)
+    const handleOpen = (finance: ICheckout) => {
+        setOpenModal(true)
+        setDeletedFinance(finance)
+    };
+    const handleCloseModal = () => setOpenModal(false);
 
     const handleClick = (event: any) => {
         setAnchorEl(event.currentTarget);
@@ -76,8 +97,8 @@ export const TableFinances = () => {
             acoes:
                 [
                     {
-                        icon: <CloseOutlined fontSize="small" color="error" />,
-                        action: () => alert('deletar checkout')
+                        icon: <Delete fontSize="small" color="error" />,
+                        action: (finance: ICheckout) => handleOpen(finance)
                     },
                     {
                         icon: <EditOutlined fontSize="small" style={{ marginLeft: "4px" }} color="primary" />,
@@ -98,7 +119,16 @@ export const TableFinances = () => {
             owner: checkout.owner || "--",
             description: checkout.description || "--",
             band: checkout.band?.name,
+            id: checkout.id,
+            id_band: checkout.band?.id
         }
+    }
+
+    const deleteFinance = async () => {
+        console.log()
+        const response = await deleteCheckout(deletedFinance.id, deletedFinance.id_band)
+        toast.error(response.message)
+        handleCloseModal()
     }
 
     return (
@@ -119,7 +149,7 @@ export const TableFinances = () => {
                     <TableBody>
                         {rows.map(row => (
                             <StyledTableRow key={uuid()} sx={{ ":hover": { backdropFilter: "contrast(0.5)" } }}>
-                                <StyledTableCell style={{ textAlign: "center" }}>{row.acoes.map((item, index) => <span key={index} onClick={item.action}>{item.icon}</span>)}</StyledTableCell>
+                                <StyledTableCell style={{ textAlign: "center" }}>{row.acoes.map((item, index) => <span key={index} onClick={() => item.action(row)}>{item.icon}</span>)}</StyledTableCell>
                                 <StyledTableCell style={{ textAlign: "center" }}>{row.type}</StyledTableCell>
                                 <StyledTableCell style={{ textAlign: "center" }}>{row.value}</StyledTableCell>
                                 <StyledTableCell>{row.date}</StyledTableCell>
@@ -133,6 +163,24 @@ export const TableFinances = () => {
                     </TableBody>
                 </Table>
             </TableContainer>
+            <Dialog
+                open={openModal}
+                TransitionComponent={Transition}
+                keepMounted
+                onClose={handleCloseModal}
+                aria-describedby="alert-dialog-slide-description"
+            >
+                <DialogTitle>{"Tem certeza que deseja excluir?"}</DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="alert-dialog-slide-description">
+                        Esta ação não poderá ser desfeita
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseModal}>Cancelar</Button>
+                    <Button onClick={deleteFinance} color="error">Excluir</Button>
+                </DialogActions>
+            </Dialog>
         </Paper>
     )
 }
