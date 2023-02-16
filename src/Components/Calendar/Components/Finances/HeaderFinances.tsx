@@ -62,7 +62,6 @@ export const HeaderFinances = () => {
 
                     ) : (
                         <Typography variant="subtitle2" gutterBottom color="#707070"><Chip label="Negativo" color="error" /></Typography>
-
                     )}
                 </Box>
             </CardContent>

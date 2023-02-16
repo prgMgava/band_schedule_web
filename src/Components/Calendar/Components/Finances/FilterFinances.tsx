@@ -48,7 +48,6 @@ export const FilterFinances = ({ setCurrentFilter }: FilterFinancesProps) => {
     Object.keys(obj).map(key => setCurrentFilter(old => [...old, key]))
 
     const currentDate = new Date()
-    const isMonth = true
 
     const dataInicial = new Date(currentDate.getFullYear(), data.mes - 1)
     const dataFinal = new Date(currentDate.getFullYear(), data.mes, 0)
@@ -73,6 +72,20 @@ export const FilterFinances = ({ setCurrentFilter }: FilterFinancesProps) => {
     }
   }, [idBandWatch])
 
+  useEffect(() => {
+    if (myBands.length == 1) {
+      const currentDate = new Date()
+
+      const dataInicial = new Date(currentDate.getFullYear(), new Date().getMonth())
+      const dataFinal = new Date(currentDate.getFullYear(), new Date().getMonth() + 1, 0)
+      setCurrentDate(dataInicial)
+      const dataInicialFormatada = dataInicial.toISOString().substring(0, 10)
+      const dataFinalFormatada = dataFinal.toISOString().substring(0, 10)
+
+      getCheckouts(dataInicialFormatada, dataFinalFormatada, myBands[0].id)
+    }
+  }, [myBands])
+
   return (
     <>
       <Stack
@@ -85,7 +98,7 @@ export const FilterFinances = ({ setCurrentFilter }: FilterFinancesProps) => {
         display={'flex'}
         justifyContent="end"
       >
-        <Box width={mobile ? "300px" : "600px"} display="flex" gap={1} justifyContent="center">
+        <Box width={mobile ? "300px" : "600px"} display="flex" gap={1} justifyContent={mobile ? "center" : "end"}>
           <Stack direction={mobile ? "column" : "row"} gap={1} alignItems={"center"} justifyContent="center">
             {/* <FormControl error={!!errors.period} sx={{ minWidth: 120 }} fullWidth={true}>
               <InputLabel id="demo-simple-select-helper-label">Período</InputLabel>

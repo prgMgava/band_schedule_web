@@ -11,6 +11,8 @@ import { useLabel } from "../../../../Provider/Label/Label"
 import uuid from "react-uuid"
 import { ICheckout } from "../../../../Types/checkout.type"
 import { ArrowDownward } from "@mui/icons-material"
+import { useCheckout } from "../../../../Provider/Checkout/Checkout"
+import { Typography } from "@mui/material"
 
 interface IDataTable {
     date: React.ReactNode
@@ -24,6 +26,7 @@ interface IDataTable {
 export const TableFinances = () => {
     //const { appointmentsFiltered } = useAppointment()
     const { labels } = useLabel()
+    const { checkouts, currentDate } = useCheckout()
     const [rows, setRows] = React.useState<IDataTable[]>([])
 
     const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
@@ -40,18 +43,12 @@ export const TableFinances = () => {
     const id = open ? 'simple-popover' : undefined;
 
     React.useEffect(() => {
-        const dataTable: IDataTable[] = [{
-            date: "2022-03-05", type: 1
-            , value: 1234.5, owner: "ze", band: { name: "calipso" }, description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.", id: 1
-        }, {
-            date: "2022-03-05", type: 2
-            , value: 1234.5, owner: "ze", band: { name: "calipso" }, description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.", id: 1
-        }].map(checkout => {
+        const dataTable: IDataTable[] = checkouts?.map(checkout => {
             return createData(checkout)
         })
 
         setRows(dataTable)
-    }, [])
+    }, [checkouts])
 
     const StyledTableCell = styled(TableCell)(({ theme }) => ({
         [`&.${tableCellClasses.head}`]: {
@@ -80,7 +77,7 @@ export const TableFinances = () => {
                     <div style={{ transform: checkout.type == 1 ? "rotate(180deg)" : '', color: checkout.type == 1 ? "green" : "red" }}>{<ArrowDownward />}</div>
                 </>
             ),
-            value: "R$ " + checkout.value.toFixed(2) || "--",
+            value: "R$ " + Number(checkout.value).toFixed(2) || "--",
             date: (
                 <>
                     <div>{new Date(checkout.date).toLocaleString().substring(0, 16).split(" ")[0]}</div>
@@ -93,7 +90,7 @@ export const TableFinances = () => {
     }
 
     return (
-        <Paper sx={{ width: "100%", overflow: "hidden" }}>
+        <Paper sx={{ width: "100%", overflow: "hidden", marginTop: "16px" }} className="finances-table">
             <TableContainer component={Paper} sx={{ maxHeight: 650 }}>
                 <Table sx={{ minWidth: 700 }} aria-label="customized table">
                     <TableHead>
@@ -113,7 +110,7 @@ export const TableFinances = () => {
                                 <StyledTableCell style={{ textAlign: "center" }}>{row.value}</StyledTableCell>
                                 <StyledTableCell>{row.date}</StyledTableCell>
                                 <StyledTableCell>{row.owner}</StyledTableCell>
-                                <StyledTableCell title={row.description} >{row.description.substring(0, 200)}...</StyledTableCell>
+                                <StyledTableCell title={row.description} >{row.description.substring(0, 200)}{row.description.length > 200 ?? '...'}</StyledTableCell>
                                 <StyledTableCell>
                                     {row.band}
                                 </StyledTableCell>
