@@ -37,9 +37,8 @@ export const Finances = () => {
       </Box>
       <CardContent style={{}}>
         <HeaderFinances />
-        {/* <ChartFinances /> */}
-
         <TableFinances />
+        <ChartFinances />
 
       </CardContent>
     </div>

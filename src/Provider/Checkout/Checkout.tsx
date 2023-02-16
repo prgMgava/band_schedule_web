@@ -10,6 +10,7 @@ interface CheckoutContextProps {
   getCheckouts: (startDate: string, endDate: string, idBand: number) => Promise<IResponse>
   getCheckoutsByBand: (date: Date, idBand: number) => Promise<IResponse>
   checkouts: ICheckout[]
+  checkoutsYearly: ICheckout[]
   currentDate: Date
   setCurrentDate: Dispatch<React.SetStateAction<Date>>
   createCheckout: (payload: ICheckout) => Promise<IResponse>
@@ -34,6 +35,8 @@ interface CheckoutProviderProps {
 const CheckoutProvider = ({ children }: CheckoutProviderProps) => {
   const { accessToken, adm } = useAuth()
   const [checkouts, setCheckouts] = useState<ICheckout[]>([])
+  const [checkoutsYearly, setCheckoutsYearly] = useState<ICheckout[]>([])
+
   const [checkoutsFiltered, setCheckoutsFiltered] = useState<ICheckout[]>([])
 
   const [currentDate, setCurrentDate] = useState(new Date())
@@ -50,6 +53,33 @@ const CheckoutProvider = ({ children }: CheckoutProviderProps) => {
       )
 
       setCheckouts(data)
+      const firstDayOfYear = new Date(new Date().getFullYear(), 0, 1).toISOString().substring(0, 10)
+      const lastDayOfYear = new Date(new Date().getFullYear(), 11, 31).toISOString().substring(0, 10)
+      getCheckoutsYearly(firstDayOfYear, lastDayOfYear, idBand)
+
+      return {
+        success: true,
+        message: data.length ? "Finanças encontradas com sucesso" : "Nenhuma finança encontrada",
+      }
+    } catch (e) {
+      return {
+        success: false,
+        message: e.response.data.error,
+      }
+    }
+  }, [])
+
+  const getCheckoutsYearly = useCallback(async (startDate: string, endDate: string, idBand: number) => {
+    try {
+
+      const { data }: AxiosResponse<ICheckout[]> = await api.get(
+        `/checkout?startDate=${startDate}&endDate=${endDate}&idBand=${idBand}`,
+        {
+          headers: { "x-access-token": accessToken },
+        }
+      )
+
+      setCheckoutsYearly(data)
 
       return {
         success: true,
@@ -204,8 +234,8 @@ const CheckoutProvider = ({ children }: CheckoutProviderProps) => {
         updateCheckoutStatus,
         currentDate,
         setCurrentDate,
-        getCheckoutsByBand
-
+        getCheckoutsByBand,
+        checkoutsYearly
       }}
     >
       {children}
