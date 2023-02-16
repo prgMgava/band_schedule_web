@@ -1,8 +1,8 @@
 export interface ICheckout {
     id: number
-    value: string
+    value: string | number
     type: number
-    date: string
+    date: Date | string
     createdAt: Date
     updatedAt: Date
     id_band: number

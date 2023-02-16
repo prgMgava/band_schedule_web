@@ -128,7 +128,7 @@ const CheckoutProvider = ({ children }: CheckoutProviderProps) => {
         const response: AxiosResponse = await api.post("/checkout", payload, {
           headers: { "x-access-token": accessToken },
         })
-        setCheckouts(old => [...old, response.data])
+        setCheckouts(old => [response.data, ...old])
         return {
           success: true,
           message: "Evento agendado com sucesso",
