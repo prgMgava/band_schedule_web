@@ -24,6 +24,7 @@ import { Filter } from "../Filter/Filter"
 import { StatusHandler } from "../../StatusHandler"
 import { useMobile } from "../../../../Provider/Theme/Mobile"
 import { useBand } from "../../../../Provider/Band/Band"
+import { useNavigate } from "react-router-dom"
 interface HeaderProps {
   setCurrentPriority?: React.Dispatch<React.SetStateAction<number>>
   hiddenFilter: boolean
@@ -36,6 +37,8 @@ export const Header = ({ setCurrentPriority }: HeaderProps) => {
   const { mobile } = useMobile()
   const open = Boolean(anchorEl)
   const { currentBand } = useBand()
+  const navigate = useNavigate()
+
   const handleClick = event => {
     setAnchorEl(event.currentTarget)
   }
@@ -241,10 +244,7 @@ export const Header = ({ setCurrentPriority }: HeaderProps) => {
                     </ListItemIcon>
                     Atualizar eventos
                   </MenuItem>
-                  <MenuItem onClick={() => {
-                    setCurrentForm("finances")
-                    setOpenDrawer(true)
-                  }}>
+                  <MenuItem onClick={() => navigate('/calendar/financas')}>
                     <ListItemIcon>
                       <AttachMoney fontSize="small" />
                     </ListItemIcon>
