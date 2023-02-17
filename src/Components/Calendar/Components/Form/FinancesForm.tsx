@@ -36,10 +36,10 @@ import { useBand } from "../../../../Provider/Band/Band";
 const schema = yup.object().shape({
   value: yup.string().required('Valor é obrigatório'),
   type: yup.string().required('Tipo da movimentação é obrigatório'),
-  owner: yup.string().notRequired(),
-  description: yup.string().notRequired(),
+  owner: yup.string().notRequired().nullable(),
+  description: yup.string().notRequired().nullable(),
   id_band: yup.number().required('Banda é obrigatório'),
-  date: yup.date().default(new Date()).notRequired(),
+  date: yup.date().default(new Date()).notRequired().nullable(),
 
 })
 
@@ -60,6 +60,8 @@ export const FinancesForm = ({ toggleDrawer, data }: FinancesProps) => {
   const [currentBand, setCurrentBand] = useState(data?.id_band)
   const isEditing = !!idCheckout
   const [maskedMoney, setMaskedMoney] = useState("")
+  const [currentType, setCurrentType] = useState(data.type)
+
 
 
   const {
@@ -71,16 +73,16 @@ export const FinancesForm = ({ toggleDrawer, data }: FinancesProps) => {
     getValues,
   } = useForm<ICheckout>({ resolver: yupResolver(schema), mode: "onSubmit" })
 
-  const submitForm: SubmitHandler<ICheckout> = async (data: ICheckout) => {
+  const submitForm: SubmitHandler<ICheckout> = async (dataForm: ICheckout) => {
     if (isEditing) {
-      // const response = await updateCheckout({ ...data, id: currentCheckout })
-      // toast[response.success ? "success" : "error"](response.message)
-      // if (response.success) {
-      //   toggleDrawer()
-      // }
+      const dataFormatted = formatData(dataForm)
+      const response = await updateCheckout(dataFormatted, data.id)
+      toast[response.success ? "success" : "error"](response.message)
+      if (response.success) {
+        toggleDrawer()
+      }
     } else {
-      const dataFormatted = formatData(data)
-      console.log(data)
+      const dataFormatted = formatData(dataForm)
       const response = await createCheckout(dataFormatted)
       toast[response.success ? "success" : "error"](response.message)
       if (response.success) {
@@ -116,28 +118,19 @@ export const FinancesForm = ({ toggleDrawer, data }: FinancesProps) => {
     }).format(valor)
   }
 
-  function getMoney(str) {
-    return parseInt(str.replace(/[\D]+/g, ''));
-  }
-  function formatReal(int) {
-    let tmp = int + '';
-    tmp = tmp.replace(/([0-9]{2})$/g, ",$1");
-    if (tmp.length > 6)
-      tmp = tmp.replace(/([0-9]{3}),([0-9]{2}$)/g, ".$1,$2");
-
-    return tmp;
-  }
-
   React.useEffect(() => {
-    // if (currentCheckout) {
-    //   const band = checkouts.find(item => item.id === currentCheckout)
-    //   if (band) {
-    //     setValue("name", band.name)
-    //     setValue("cellphone", band.cellphone)
-    //     maskCellNumber(band.cellphone)
-    //     setValue("email", band.email)
-    //   }
-    // }
+    if (isEditing) {
+      setValue("type", data.type)
+      setCurrentType(data.type)
+
+      setValue("date", new Date(data.date).toISOString().substring(0, 10))
+      maskMoney(data.value.toString())
+      setValue("description", data.description)
+      setValue("owner", data.owner)
+      setValue("id_band", data.id_band)
+
+      setCurrentBand(data.id_band)
+    }
   }, [isEditing])
 
   React.useEffect(() => setValue("value", maskedMoney), [maskedMoney])
@@ -181,7 +174,7 @@ export const FinancesForm = ({ toggleDrawer, data }: FinancesProps) => {
               control={control}
               name="type"
               render={({ field }) => (
-                <RadioGroup {...field}>
+                <RadioGroup {...field} defaultValue={currentType}>
                   <FormControlLabel
                     value="1"
                     control={<Radio />}
