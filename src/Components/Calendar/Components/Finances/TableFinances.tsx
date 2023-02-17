@@ -1,4 +1,4 @@
-import * as React from "react"
+import React, { useState } from "react"
 import { styled } from "@mui/material/styles"
 import Table from "@mui/material/Table"
 import TableBody from "@mui/material/TableBody"
@@ -10,12 +10,12 @@ import Paper from "@mui/material/Paper"
 import { useLabel } from "../../../../Provider/Label/Label"
 import uuid from "react-uuid"
 import { ICheckout } from "../../../../Types/checkout.type"
-import { ArrowDownward, CloseOutlined, Delete, EditOutlined } from "@mui/icons-material"
+import { ArrowDownward, Close, Delete, EditOutlined } from "@mui/icons-material"
 import { useCheckout } from "../../../../Provider/Checkout/Checkout"
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Modal, Slide, Typography } from "@mui/material"
-import { DeleteFinancesModal } from "./components/DeleteFinanceModal"
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider, Drawer, IconButton, Modal, Slide, Typography } from "@mui/material"
 import { TransitionProps } from "@mui/material/transitions"
 import { toast } from "react-toastify"
+import { FinancesForm } from '../Form/FinancesForm'
 
 interface IDataTable {
     acoes: any
@@ -43,7 +43,12 @@ export const TableFinances = () => {
     const { labels } = useLabel()
     const { checkouts, deleteCheckout } = useCheckout()
     const [rows, setRows] = React.useState<IDataTable[]>([])
+    const [currentFinance, setCurrentFinance] = React.useState({} as ICheckout)
+    const [openDrawer, setOpenDrawer] = useState(false)
 
+    const toggleDrawer = () => {
+        setOpenDrawer(old => !old)
+    }
     const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
     const [openModal, setOpenModal] = React.useState(false);
     const [deletedFinance, setDeletedFinance] = React.useState({} as ICheckout)
@@ -53,13 +58,6 @@ export const TableFinances = () => {
     };
     const handleCloseModal = () => setOpenModal(false);
 
-    const handleClick = (event: any) => {
-        setAnchorEl(event.currentTarget);
-    };
-
-    const handleClose = () => {
-        setAnchorEl(null);
-    };
 
     const open = Boolean(anchorEl);
     const id = open ? 'simple-popover' : undefined;
@@ -102,7 +100,13 @@ export const TableFinances = () => {
                     },
                     {
                         icon: <EditOutlined fontSize="small" style={{ marginLeft: "4px" }} color="primary" />,
-                        action: () => alert('editar checkout')
+                        action: (finance: ICheckout) => {
+                            const checkoutEdited = checkouts.find(checkout => checkout.id == finance.id)
+                            if (checkoutEdited) {
+                                checkoutEdited?.id && setCurrentFinance(checkoutEdited)
+                            }
+                            toggleDrawer()
+                        }
                     }
                 ],
             type: (
@@ -125,7 +129,6 @@ export const TableFinances = () => {
     }
 
     const deleteFinance = async () => {
-        console.log()
         const response = await deleteCheckout(deletedFinance.id, deletedFinance.id_band)
         toast.error(response.message)
         handleCloseModal()
@@ -181,6 +184,20 @@ export const TableFinances = () => {
                     <Button onClick={deleteFinance} color="error">Excluir</Button>
                 </DialogActions>
             </Dialog>
+            <Drawer anchor={"left"} open={openDrawer} onClose={toggleDrawer} style={{ padding: "0 4px 0 4px" }}>
+                <IconButton onClick={toggleDrawer} size="medium" style={{ width: "25px", marginLeft: "8px" }}>
+                    <Close alignmentBaseline="baseline"></Close>
+                </IconButton>
+                <Divider />
+                {currentFinance?.id && (
+
+                    <FinancesForm data={currentFinance} toggleDrawer={() => {
+                        toggleDrawer()
+                        setCurrentFinance({} as ICheckout)
+                    }} />
+                )}
+                <Divider />
+            </Drawer>
         </Paper>
     )
 }

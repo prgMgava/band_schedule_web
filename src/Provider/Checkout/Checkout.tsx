@@ -176,10 +176,10 @@ const CheckoutProvider = ({ children }: CheckoutProviderProps) => {
   const updateCheckout = useCallback(async (payload: ICheckout, id: number) => {
     try {
       if (adm) {
-        await api.patch(`/checkout${id}`, payload, {
+        await api.patch(`/checkout/${id}`, payload, {
           headers: { "x-access-token": accessToken },
         })
-        setCheckouts(old => [...old.filter(Checkout => Checkout.id !== id), payload])
+        refreshCheckout(payload.id_band)
 
         return {
           success: true,
