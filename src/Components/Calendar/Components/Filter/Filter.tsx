@@ -107,15 +107,17 @@ export const Filter = ({ setCurrentPriority }: FilterProps) => {
           <Events setOpenDrawer={setOpenDrawer} handleCloseModal={handleCloseModal} />
         </Modal>
         <FilterByBand />
-        <Button
-          id="basic-button"
-          aria-haspopup="true"
-          color="inherit"
-          onClick={() => navigate('/calendar/financas')}
-          style={{ fontSize: mobile ? "8px" : "12px" }}
-        >
-          Finanças
-        </Button>
+        {!mobile && (
+          <Button
+            id="basic-button"
+            aria-haspopup="true"
+            color="inherit"
+            onClick={() => navigate('/calendar/financas')}
+            style={{ fontSize: mobile ? "8px" : "12px" }}
+          >
+            Finanças
+          </Button>
+        )}
       </Box>
 
       {/* Label Filters */}

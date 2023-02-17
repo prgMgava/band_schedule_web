@@ -84,6 +84,7 @@ export const FilterFinances = ({ setCurrentFilter }: FilterFinancesProps) => {
       setCurrentDate(dataInicial)
       const dataInicialFormatada = dataInicial.toISOString().substring(0, 10)
       const dataFinalFormatada = dataFinal.toISOString().substring(0, 10)
+      setCurrentBand(myBands.filter(band => !band.is_deleted)[0].name || '')
 
       getCheckouts(dataInicialFormatada, dataFinalFormatada, myBands.filter(band => !band.is_deleted)[0].id)
     }
