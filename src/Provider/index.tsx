@@ -5,6 +5,7 @@ import { BandProvider } from "./Band/Band"
 import { AppointmentProvider } from "./Appointment/Appointment"
 import { ReactNode } from "react"
 import { LabelProvider } from "./Label/Label"
+import { CheckoutProvider } from "./Checkout/Checkout"
 
 interface AppProviderProps {
   children: ReactNode
@@ -15,7 +16,9 @@ export const AppProvider = ({ children }: AppProviderProps) => (
     <BandProvider>
       <AppointmentProvider>
         <LabelProvider>
-          <MobileProvider>{children}</MobileProvider>
+          <CheckoutProvider>
+            <MobileProvider>{children}</MobileProvider>
+          </CheckoutProvider>
         </LabelProvider>
       </AppointmentProvider>
     </BandProvider>

@@ -1,6 +1,7 @@
 import { Close } from "@mui/icons-material"
 import { Box, Button, Card, Dialog, Divider, Drawer, IconButton, Modal, Stack } from "@mui/material"
 import React, { useState } from "react"
+import { useNavigate } from "react-router-dom"
 import uuid from "react-uuid"
 import { useAppointment } from "../../../../Provider/Appointment/Appointment"
 import { useBand } from "../../../../Provider/Band/Band"
@@ -28,8 +29,10 @@ export const Filter = ({ setCurrentPriority }: FilterProps) => {
     setOpenModal(false)
     localStorage.setItem("@BandSchedule:first_time", "true")
   }
+  const navigate = useNavigate()
 
   const [open, setOpen] = React.useState(false)
+
   const handleOpen = () => setOpen(true)
   const handleCloseModal = () => setOpen(false)
 
@@ -81,6 +84,7 @@ export const Filter = ({ setCurrentPriority }: FilterProps) => {
         >
           Todos os artistas
         </Button>
+
         <Button
           id="basic-button"
           aria-haspopup="true"
@@ -103,6 +107,15 @@ export const Filter = ({ setCurrentPriority }: FilterProps) => {
           <Events setOpenDrawer={setOpenDrawer} handleCloseModal={handleCloseModal} />
         </Modal>
         <FilterByBand />
+        <Button
+          id="basic-button"
+          aria-haspopup="true"
+          color="inherit"
+          onClick={() => navigate('/calendar/financas')}
+          style={{ fontSize: mobile ? "8px" : "12px" }}
+        >
+          Finanças
+        </Button>
       </Box>
 
       {/* Label Filters */}
