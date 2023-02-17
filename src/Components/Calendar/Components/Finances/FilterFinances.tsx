@@ -73,7 +73,7 @@ export const FilterFinances = ({ setCurrentFilter }: FilterFinancesProps) => {
   }, [idBandWatch])
 
   useEffect(() => {
-    if (myBands.length == 1) {
+    if (myBands.filter(band => !band.is_deleted).length == 1) {
       const currentDate = new Date()
 
       const dataInicial = new Date(currentDate.getFullYear(), new Date().getMonth())
