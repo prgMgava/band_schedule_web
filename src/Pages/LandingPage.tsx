@@ -6,11 +6,13 @@ import "react-carousel-animated/dist/style.css"
 
 import { MidiaContainer } from "../Components/LandingPage/MidiaContainer"
 import { bandData } from "../data/bandData"
-import { FaWhatsapp } from "react-icons/fa"
+import { FaWhatsapp, FaLock } from "react-icons/fa"
 import { Finances } from "../Components/Calendar/Components/Finances/Finances"
+import { useNavigate } from "react-router"
 const LandingPage = () => {
   const viewPortHeight = window.innerHeight
   const PosterVideo = require("../assets/videos/naMedidaVideo.gif")
+  const navigate = useNavigate()
 
   const Logo = require("../assets/images/logo.png")
 
@@ -24,6 +26,11 @@ const LandingPage = () => {
 
   return (
     <div className="main-container">
+      <div style={{ position: "absolute", right: 10, top: 10 }}>
+        <FaLock onClick={() => navigate('/agenda')} style={{ color: "#d64045", cursor: "pointer", fontSize: "20px" }} />
+
+      </div>
+
       <section className="section1">
         <div className="brand-container" style={{ height: `${viewPortHeight - 30}px` }}>
           <img src={Logo} alt="Logo, onibus vermelho" className="logo-bus"></img>
