@@ -172,7 +172,7 @@ export const FilterFinances = ({ setCurrentFilter }: FilterFinancesProps) => {
                       labelId="demo-simple-select-error-label"
                       id="demo-simple-select-error"
                       label="Banda"
-                      defaultValue={myBands.length == 1 ? myBands[0].id : ""}
+                      defaultValue={myBands.filter(band => !band.is_deleted).length == 1 ? myBands[0].id : ""}
                       {...field}
                     >
                       {myBands.map(band => {
