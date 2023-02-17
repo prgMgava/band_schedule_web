@@ -244,7 +244,7 @@ export const Header = ({ setCurrentPriority }: HeaderProps) => {
                     </ListItemIcon>
                     Atualizar eventos
                   </MenuItem>
-                  <MenuItem onClick={() => navigate('/calendar/financas')}>
+                  <MenuItem onClick={() => navigate('/calendar/financas')} disabled={!adm}>
                     <ListItemIcon>
                       <AttachMoney fontSize="small" />
                     </ListItemIcon>

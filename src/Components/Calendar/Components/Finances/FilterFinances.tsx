@@ -85,7 +85,6 @@ export const FilterFinances = ({ setCurrentFilter }: FilterFinancesProps) => {
       const dataInicialFormatada = dataInicial.toISOString().substring(0, 10)
       const dataFinalFormatada = dataFinal.toISOString().substring(0, 10)
       setCurrentBand(myBands.filter(band => !band.is_deleted)[0].name || '')
-
       getCheckouts(dataInicialFormatada, dataFinalFormatada, myBands.filter(band => !band.is_deleted)[0].id)
     }
   }, [myBands])
@@ -173,7 +172,7 @@ export const FilterFinances = ({ setCurrentFilter }: FilterFinancesProps) => {
                       labelId="demo-simple-select-error-label"
                       id="demo-simple-select-error"
                       label="Banda"
-                      defaultValue={myBands.filter(band => !band.is_deleted).length == 1 ? myBands.filter(band => !band.is_deleted)[0].id : ""}
+                      defaultValue={""}
                       {...field}
                     >
                       {myBands.map(band => {

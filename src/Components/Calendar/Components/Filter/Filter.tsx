@@ -4,6 +4,7 @@ import React, { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import uuid from "react-uuid"
 import { useAppointment } from "../../../../Provider/Appointment/Appointment"
+import { useAuth } from "../../../../Provider/Auth/Auth"
 import { useBand } from "../../../../Provider/Band/Band"
 import { useLabel } from "../../../../Provider/Label/Label"
 import { useMobile } from "../../../../Provider/Theme/Mobile"
@@ -24,6 +25,7 @@ export const Filter = ({ setCurrentPriority }: FilterProps) => {
   const { getAppointments, currentDate } = useAppointment()
   const { setCurrentBand } = useBand()
   const { mobile } = useMobile()
+  const { adm } = useAuth()
   const handleClose = () => {
     window.location.reload()
     setOpenModal(false)
@@ -107,7 +109,7 @@ export const Filter = ({ setCurrentPriority }: FilterProps) => {
           <Events setOpenDrawer={setOpenDrawer} handleCloseModal={handleCloseModal} />
         </Modal>
         <FilterByBand />
-        {!mobile && (
+        {!mobile && adm && (
           <Button
             id="basic-button"
             aria-haspopup="true"

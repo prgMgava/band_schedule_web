@@ -9,7 +9,7 @@ const Signup = lazy(() => import("../Pages/Signup"))
 const LandingPage = lazy(() => import("../Pages/LandingPage"))
 
 export const Routes = () => {
-  const { accessToken } = useAuth()
+  const { accessToken, adm } = useAuth()
   return (
     <Suspense fallback={<Loader />}>
       <Switch>
@@ -18,7 +18,7 @@ export const Routes = () => {
         <Route path="/signup" element={<Signup />} />
         <Route path="/calendar" element={accessToken ? <Demo /> : <Navigate to={"/agenda"}></Navigate>} />
         <Route path="/tanamedida" element={<LandingPage />} />
-        <Route path="/calendar/financas" element={<FinancesPage />} />
+        <Route path="/calendar/financas" element={adm ? <FinancesPage /> : <Navigate to={"/agenda"}></Navigate>} />
 
       </Switch>
     </Suspense>
