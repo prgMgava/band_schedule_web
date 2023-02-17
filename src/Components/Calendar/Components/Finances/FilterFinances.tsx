@@ -73,6 +73,9 @@ export const FilterFinances = ({ setCurrentFilter }: FilterFinancesProps) => {
   }, [idBandWatch])
 
   useEffect(() => {
+    console.log(myBands)
+    console.log(myBands.filter(band => !band.is_deleted))
+
     if (myBands.filter(band => !band.is_deleted).length == 1) {
       const currentDate = new Date()
 
