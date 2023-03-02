@@ -1,4 +1,13 @@
-import { Close, ColorLens, EventAvailable, Logout, MusicNote, PersonAddAlt, SyncOutlined, AttachMoney } from "@mui/icons-material"
+import {
+  Close,
+  ColorLens,
+  EventAvailable,
+  Logout,
+  MusicNote,
+  PersonAddAlt,
+  SyncOutlined,
+  AttachMoney,
+} from "@mui/icons-material"
 import {
   Box,
   Menu,
@@ -14,6 +23,7 @@ import {
 import { Stack } from "@mui/system"
 import React, { useState } from "react"
 import MenuIcon from "@mui/icons-material/Menu"
+import BadgeIcon from "@mui/icons-material/Badge"
 import { AppointmentForm } from "../Form/AppointmentForm"
 import { BandForm } from "../Form/BandForm"
 import { AdminForm } from "../Form/AdminForm"
@@ -25,6 +35,7 @@ import { StatusHandler } from "../../StatusHandler"
 import { useMobile } from "../../../../Provider/Theme/Mobile"
 import { useBand } from "../../../../Provider/Band/Band"
 import { useNavigate } from "react-router-dom"
+import { CreditorForm } from "../Form/Creditor"
 interface HeaderProps {
   setCurrentPriority?: React.Dispatch<React.SetStateAction<number>>
   hiddenFilter: boolean
@@ -67,6 +78,7 @@ export const Header = ({ setCurrentPriority }: HeaderProps) => {
     label: <LabelForm toggleDrawer={toggleDrawer} />,
     status: <StatusHandler toggleDrawer={toggleDrawer} />,
     musician: <AdminForm toggleDrawer={toggleDrawer} isSignup />,
+    creditor: <CreditorForm toggleDrawer={toggleDrawer} />,
   }
   return (
     <div>
@@ -232,6 +244,25 @@ export const Header = ({ setCurrentPriority }: HeaderProps) => {
                     </ListItemIcon>
                     Adicionar categoria
                   </MenuItem>
+
+                  <MenuItem
+                    onClick={() => {
+                      setCurrentForm("creditor")
+                      setOpenDrawer(true)
+                    }}
+                    disabled={!adm}
+                  >
+                    <ListItemIcon>
+                      <BadgeIcon fontSize="small" />
+                    </ListItemIcon>
+                    Adicionar/Editar credor
+                  </MenuItem>
+                  <MenuItem onClick={() => navigate("/calendar/financas")} disabled={!adm}>
+                    <ListItemIcon>
+                      <AttachMoney fontSize="small" />
+                    </ListItemIcon>
+                    Finanças
+                  </MenuItem>
                   <MenuItem
                     onClick={() => {
                       setCurrentForm("status")
@@ -243,12 +274,6 @@ export const Header = ({ setCurrentPriority }: HeaderProps) => {
                       <SyncOutlined fontSize="small" />
                     </ListItemIcon>
                     Atualizar eventos
-                  </MenuItem>
-                  <MenuItem onClick={() => navigate('/calendar/financas')} disabled={!adm}>
-                    <ListItemIcon>
-                      <AttachMoney fontSize="small" />
-                    </ListItemIcon>
-                    Finanças
                   </MenuItem>
                   <MenuItem onClick={() => signOut()}>
                     <ListItemIcon>
@@ -262,9 +287,7 @@ export const Header = ({ setCurrentPriority }: HeaderProps) => {
           </Stack>
         </Stack>
       </Box>
-      {!!setCurrentPriority && (
-        <Filter setCurrentPriority={setCurrentPriority} />
-      )}
+      {!!setCurrentPriority && <Filter setCurrentPriority={setCurrentPriority} />}
     </div>
   )
 }
