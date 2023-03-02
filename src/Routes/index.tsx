@@ -19,7 +19,6 @@ export const Routes = () => {
         <Route path="/calendar" element={accessToken ? <Demo /> : <Navigate to={"/agenda"}></Navigate>} />
         <Route path="/tanamedida" element={<LandingPage />} />
         <Route path="/calendar/financas" element={adm ? <FinancesPage /> : <Navigate to={"/agenda"}></Navigate>} />
-
       </Switch>
     </Suspense>
   )

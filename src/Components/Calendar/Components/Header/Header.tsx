@@ -275,6 +275,12 @@ export const Header = ({ setCurrentPriority }: HeaderProps) => {
                     </ListItemIcon>
                     Atualizar eventos
                   </MenuItem>
+                  <MenuItem onClick={() => navigate("/calendar/financas")}>
+                    <ListItemIcon>
+                      <AttachMoney fontSize="small" />
+                    </ListItemIcon>
+                    Finanças
+                  </MenuItem>
                   <MenuItem onClick={() => signOut()}>
                     <ListItemIcon>
                       <Logout fontSize="small" />

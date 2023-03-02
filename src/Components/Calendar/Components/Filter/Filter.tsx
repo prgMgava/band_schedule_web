@@ -114,7 +114,7 @@ export const Filter = ({ setCurrentPriority }: FilterProps) => {
             id="basic-button"
             aria-haspopup="true"
             color="inherit"
-            onClick={() => navigate('/calendar/financas')}
+            onClick={() => navigate("/calendar/financas")}
             style={{ fontSize: mobile ? "8px" : "12px" }}
           >
             Finanças

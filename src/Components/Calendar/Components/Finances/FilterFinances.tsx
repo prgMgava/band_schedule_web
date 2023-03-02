@@ -11,7 +11,7 @@ import { useBand } from "../../../../Provider/Band/Band"
 import { useMobile } from "../../../../Provider/Theme/Mobile"
 import { IBand } from "../../../../Types/band.type"
 import { monthList } from "../../Utils/months"
-import { useCheckout } from '../../../../Provider/Checkout/Checkout'
+import { useCheckout } from "../../../../Provider/Checkout/Checkout"
 
 interface FilterFinancesProps {
   setCurrentFilter: Dispatch<React.SetStateAction<Array<string>>>
@@ -30,7 +30,7 @@ export const FilterFinances = ({ setCurrentFilter }: FilterFinancesProps) => {
     setValue,
     formState: { errors },
     watch,
-    control
+    control,
   } = useForm<any>({ mode: "onSubmit" })
 
   const idBandWatch = watch("id_band")
@@ -63,19 +63,15 @@ export const FilterFinances = ({ setCurrentFilter }: FilterFinancesProps) => {
     setValue("period", "1")
     getMyBands()
     setCurrentDate(new Date())
-
   }, [])
 
   useEffect(() => {
     if (idBandWatch) {
-      setCurrentBand(myBands.find(band => band.id == idBandWatch)?.name || '')
+      setCurrentBand(myBands.find(band => band.id == idBandWatch)?.name || "")
     }
   }, [idBandWatch])
 
   useEffect(() => {
-    console.log(myBands)
-    console.log(myBands.filter(band => !band.is_deleted))
-
     if (myBands.filter(band => !band.is_deleted).length == 1) {
       const currentDate = new Date()
 
@@ -84,7 +80,7 @@ export const FilterFinances = ({ setCurrentFilter }: FilterFinancesProps) => {
       setCurrentDate(dataInicial)
       const dataInicialFormatada = dataInicial.toISOString().substring(0, 10)
       const dataFinalFormatada = dataFinal.toISOString().substring(0, 10)
-      setCurrentBand(myBands.filter(band => !band.is_deleted)[0].name || '')
+      setCurrentBand(myBands.filter(band => !band.is_deleted)[0].name || "")
       getCheckouts(dataInicialFormatada, dataFinalFormatada, myBands.filter(band => !band.is_deleted)[0].id)
     }
   }, [myBands])
@@ -98,7 +94,7 @@ export const FilterFinances = ({ setCurrentFilter }: FilterFinancesProps) => {
         component="form"
         onSubmit={handleSubmit(submitForm)}
         p="8px 0"
-        display={'flex'}
+        display={"flex"}
         justifyContent="end"
       >
         <Box width={mobile ? "300px" : "600px"} display="flex" gap={1} justifyContent={mobile ? "center" : "end"}>
@@ -164,7 +160,7 @@ export const FilterFinances = ({ setCurrentFilter }: FilterFinancesProps) => {
               rules={{ required: true }}
               render={({ field }) => (
                 <Box>
-                  <FormControl error={!!errors.id_band} >
+                  <FormControl error={!!errors.id_band}>
                     <InputLabel id="demo-simple-select-helper-label">Banda *</InputLabel>
                     <Select
                       size="small"
@@ -197,8 +193,11 @@ export const FilterFinances = ({ setCurrentFilter }: FilterFinancesProps) => {
                 Buscar
               </Button>
             ) : (
-
-              <IconButton aria-label="delete" type="submit" style={{ backgroundColor: "#42A5F5", color: "white", height: "40px" }}>
+              <IconButton
+                aria-label="delete"
+                type="submit"
+                style={{ backgroundColor: "#42A5F5", color: "white", height: "40px" }}
+              >
                 <Search />
               </IconButton>
             )}

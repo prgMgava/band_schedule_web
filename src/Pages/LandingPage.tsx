@@ -27,8 +27,7 @@ const LandingPage = () => {
   return (
     <div className="main-container">
       <div style={{ position: "absolute", right: 10, top: 10 }}>
-        <FaLock onClick={() => navigate('/agenda')} style={{ color: "#d64045", cursor: "pointer", fontSize: "20px" }} />
-
+        <FaLock onClick={() => navigate("/agenda")} style={{ color: "#d64045", cursor: "pointer", fontSize: "20px" }} />
       </div>
 
       <section className="section1">
