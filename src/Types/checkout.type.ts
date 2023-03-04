@@ -1,3 +1,5 @@
+import { ICreditor } from "./creditor.type"
+
 export interface ICheckout {
     id: number
     value: string | number
@@ -8,7 +10,7 @@ export interface ICheckout {
     id_band: number
     owner: string
     description: string
-    id_creditor: number
+    creditor: ICreditor
     id_appointment: number
     band: {
         id: number
@@ -24,4 +26,5 @@ export interface ICheckout {
 export interface ICheckoutFields extends ICheckout {
     appointment_title: string
     appointment_date: string
+    id_creditor: number
 }

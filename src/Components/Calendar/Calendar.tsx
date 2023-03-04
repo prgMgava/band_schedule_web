@@ -30,7 +30,6 @@ import { useLabel } from "../../Provider/Label/Label"
 import { api } from "../../Services/api"
 import classNames from "clsx"
 import { ILabel } from "../../Types/label.type"
-import { useCreditor } from "../../Provider/Creditor/Creditor"
 
 const PREFIX = "Demo"
 export const classes = {
@@ -71,7 +70,6 @@ export const Demo = () => {
   const [labels, setLabels] = useState<ILabel[]>(JSON.parse(localStorage.getItem("@BandSchedule:labels")) || [])
   const { id, accessToken, getAdmins, getMembers, superAdmin, bandVisibility, adm, getUser } = useAuth()
   const { getMyBands, currentBand, myBands, getBands } = useBand()
-  const { getCreditors } = useCreditor()
 
   const { getLabels } = useLabel()
   const {
@@ -167,7 +165,6 @@ export const Demo = () => {
     getAdmins()
     getUser()
     getBands()
-    getCreditors()
   }, [])
 
   useEffect(() => {

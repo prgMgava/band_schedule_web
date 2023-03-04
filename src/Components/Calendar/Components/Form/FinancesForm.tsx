@@ -43,7 +43,7 @@ const schema = yup.object().shape({
   id_creditor: yup.number().required("Credor é obrigatório"),
   date: yup.date().default(new Date()).notRequired().nullable(),
   appointment_title: yup.string().required("Obrigatório procurar por um evento"),
-  appointment_date: yup.date().notRequired().nullable(),
+  appointment_date: yup.string().notRequired().nullable(),
   id_appointment: yup.number().required("Evento é obrigatório"),
 })
 
@@ -58,14 +58,15 @@ export const FinancesForm = ({ toggleDrawer, data }: FinancesProps) => {
   const { mobile } = useMobile()
   const { id: idCheckout } = data
   const { myBands } = useBand()
-  const { creditors } = useCreditor()
+  const { creditors, getCreditors } = useCreditor()
   const { getMyAppointmentsByTitle, appointmentsCheckout } = useAppointment()
 
   const { createCheckout, updateCheckout } = useCheckout()
   const [currentBand, setCurrentBand] = useState(data?.id_band)
   const isEditing = !!idCheckout
   const [maskedMoney, setMaskedMoney] = useState("")
-  const [currentType, setCurrentType] = useState(data.type)
+  const [currentType, setCurrentType] = useState(data?.type)
+  const [currentCreditor, setCurrentCreditor] = useState(data?.creditor.id)
 
   const {
     handleSubmit,
@@ -79,7 +80,6 @@ export const FinancesForm = ({ toggleDrawer, data }: FinancesProps) => {
   } = useForm<ICheckoutFields>({ resolver: yupResolver(schema), mode: "onSubmit" })
 
   const typeWatch = useWatch({ control: control, name: "type" })
-
   const submitForm: SubmitHandler<ICheckout> = async (dataForm: ICheckout) => {
     if (isEditing) {
       const dataFormatted = formatData(dataForm)
@@ -156,12 +156,19 @@ export const FinancesForm = ({ toggleDrawer, data }: FinancesProps) => {
       setValue("description", data.description)
       setValue("owner", data.owner)
       setValue("id_band", data.id_band)
-
+      setValue("id_creditor", data.creditor.id)
+      setCurrentCreditor(data.creditor.id)
       setCurrentBand(data.id_band)
+      setValue("appointment_title", "anything")
+      setValue("id_appointment", data.id_appointment)
     }
   }, [isEditing])
 
   React.useEffect(() => setValue("value", maskedMoney), [maskedMoney])
+
+  React.useEffect(() => {
+    getCreditors()
+  }, [])
 
   return (
     <Grid padding={mobile ? 2 : 8}>
@@ -225,6 +232,8 @@ export const FinancesForm = ({ toggleDrawer, data }: FinancesProps) => {
                       labelId="demo-simple-select-error-label"
                       id="demo-simple-select-error"
                       label="Credor"
+                      defaultValue={currentCreditor}
+                      disabled={isEditing}
                       {...field}
                     >
                       {typeWatch ? (
@@ -238,10 +247,9 @@ export const FinancesForm = ({ toggleDrawer, data }: FinancesProps) => {
                                 </MenuItem>
                               )
                             }
-                            return <></>
                           })
                       ) : (
-                        <></>
+                        <MenuItem disabled>Selecione o tipo de transação primeiro</MenuItem>
                       )}
                     </Select>
                     {!!errors.id_band && <FormHelperText sx={{ color: "#E34367" }}>Selecione uma banda</FormHelperText>}
@@ -333,6 +341,7 @@ export const FinancesForm = ({ toggleDrawer, data }: FinancesProps) => {
                     labelId="demo-simple-select-error-label"
                     id="demo-simple-select-error"
                     label="Banda"
+                    disabled={isEditing}
                     defaultValue={currentBand}
                     {...field}
                   >
@@ -344,7 +353,6 @@ export const FinancesForm = ({ toggleDrawer, data }: FinancesProps) => {
                           </MenuItem>
                         )
                       }
-                      return <></>
                     })}
                   </Select>
                   {!!errors.id_band && <FormHelperText sx={{ color: "#E34367" }}>Selecione uma banda</FormHelperText>}
@@ -352,102 +360,107 @@ export const FinancesForm = ({ toggleDrawer, data }: FinancesProps) => {
               </Box>
             )}
           />
-          <Divider variant="inset" style={{ marginTop: "10px" }} />
-          <Stack marginTop={"12px"}>
-            <Typography variant="subtitle1">Procure por um evento</Typography>
-          </Stack>
-          <Stack direction={mobile ? "column" : "row"} spacing={2}>
-            <Controller
-              name="appointment_title"
-              control={control}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  label="Título do evento *"
-                  error={!!errors.appointment_title}
-                  helperText={errors.appointment_title && errors.appointment_title.message}
+          {!isEditing && (
+            <>
+              <Divider variant="inset" style={{ marginTop: "10px" }} />
+              <Stack marginTop={"12px"}>
+                <Typography variant="subtitle1">Procure por um evento</Typography>
+              </Stack>
+              <Stack direction={mobile ? "column" : "row"} spacing={2}>
+                <Controller
                   name="appointment_title"
-                  fullWidth={true}
-                  size="small"
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <NewspaperOutlined />
-                      </InputAdornment>
-                    ),
-                  }}
-                ></TextField>
-              )}
-            />
-          </Stack>
-          <Stack direction={mobile ? "column" : "row"} spacing={2}>
-            <FormControl fullWidth={true} size="small">
-              <fieldset
-                style={{
-                  border: `${errors.appointment_date ? "1px #E34367 solid" : "1px #C0C0C0 solid"}`,
-                  borderRadius: "4px",
-                }}
-              >
-                <legend style={{ fontSize: "12px", color: "#696969" }}>Data do evento</legend>
-                <Box>
-                  <input
-                    type={"date"}
-                    defaultValue={""}
-                    {...register("appointment_date")}
-                    style={{ height: "24px", border: "none", outline: "none", width: "100%" }}
-                  ></input>
-                </Box>
-              </fieldset>
-            </FormControl>
-          </Stack>
-        </Stack>
-        <Stack mt={3}>
-          <Button type="button" variant="outlined" color="secondary" onClick={searchAppointment}>
-            {"Procurar evento"}
-          </Button>
-        </Stack>
-        <Stack mt={3}>
-          <Controller
-            name="id_appointment"
-            control={control}
-            render={({ field }) => (
-              <Box>
-                <FormControl error={!!errors.id_appointment} fullWidth={true}>
-                  <InputLabel id="demo-simple-select-helper-label">Evento *</InputLabel>
-                  <Select
-                    size="small"
-                    sx={{ minWidth: 270 }}
-                    labelId="demo-simple-select-error-label"
-                    id="demo-simple-select-error"
-                    label="Evento *"
-                    defaultValue={currentBand}
-                    {...field}
+                  control={control}
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      label="Título do evento *"
+                      error={!!errors.appointment_title}
+                      helperText={errors.appointment_title && errors.appointment_title.message}
+                      name="appointment_title"
+                      fullWidth={true}
+                      size="small"
+                      InputProps={{
+                        startAdornment: (
+                          <InputAdornment position="start">
+                            <NewspaperOutlined />
+                          </InputAdornment>
+                        ),
+                      }}
+                    ></TextField>
+                  )}
+                />
+              </Stack>
+              <Stack direction={mobile ? "column" : "row"} spacing={2}>
+                <FormControl fullWidth={true} size="small">
+                  <fieldset
+                    style={{
+                      border: `${errors.appointment_date ? "1px #E34367 solid" : "1px #C0C0C0 solid"}`,
+                      borderRadius: "4px",
+                    }}
                   >
-                    {appointmentsCheckout.length ? (
-                      appointmentsCheckout.map(appointment => {
-                        return (
-                          <MenuItem
-                            value={appointment.id}
-                            key={uuid()}
-                            style={{ flexDirection: "column", alignItems: "self-start" }}
-                          >
-                            <Box fontWeight={800}>{appointment.title}</Box>
-                            <Box fontSize={12} display={"block"}>
-                              {" "}
-                              {new Date(appointment.start_date).toLocaleDateString()}
-                            </Box>
-                          </MenuItem>
-                        )
-                      })
-                    ) : (
-                      <MenuItem disabled>Nenhum evento encontrado</MenuItem>
-                    )}
-                  </Select>
-                  {!!errors.id_band && <FormHelperText sx={{ color: "#E34367" }}>Selecione uma banda</FormHelperText>}
+                    <legend style={{ fontSize: "12px", color: "#696969" }}>Data do evento</legend>
+                    <Box>
+                      <input
+                        type={"date"}
+                        defaultValue={undefined}
+                        {...register("appointment_date")}
+                        style={{ height: "24px", border: "none", outline: "none", width: "100%" }}
+                      ></input>
+                    </Box>
+                  </fieldset>
                 </FormControl>
-              </Box>
-            )}
-          />
+              </Stack>
+              <Stack mt={3}>
+                <Button type="button" variant="outlined" color="secondary" onClick={searchAppointment}>
+                  {"Procurar evento"}
+                </Button>
+              </Stack>
+              <Stack mt={3}>
+                <Controller
+                  name="id_appointment"
+                  control={control}
+                  render={({ field }) => (
+                    <Box>
+                      <FormControl error={!!errors.id_appointment} fullWidth={true}>
+                        <InputLabel id="demo-simple-select-helper-label">Evento *</InputLabel>
+                        <Select
+                          size="small"
+                          sx={{ minWidth: 270 }}
+                          labelId="demo-simple-select-error-label"
+                          id="demo-simple-select-error"
+                          label="Evento *"
+                          {...field}
+                        >
+                          {appointmentsCheckout.length ? (
+                            appointmentsCheckout.map(appointment => {
+                              return (
+                                <MenuItem
+                                  value={appointment.id}
+                                  key={uuid()}
+                                  style={{ flexDirection: "column", alignItems: "self-start" }}
+                                >
+                                  <Box fontWeight={800}>{appointment.title}</Box>
+                                  <Box fontSize={12} display={"block"}>
+                                    {" "}
+                                    {new Date(appointment.start_date).toLocaleDateString()}
+                                  </Box>
+                                </MenuItem>
+                              )
+                            })
+                          ) : (
+                            <MenuItem disabled>Nenhum evento encontrado</MenuItem>
+                          )}
+                        </Select>
+                        {!!errors.id_band && (
+                          <FormHelperText sx={{ color: "#E34367" }}>Selecione uma banda</FormHelperText>
+                        )}
+                      </FormControl>
+                    </Box>
+                  )}
+                />
+              </Stack>
+            </>
+          )}
         </Stack>
         <Stack spacing={"10px"} mt={3}>
           <Button type="submit" variant="contained">
