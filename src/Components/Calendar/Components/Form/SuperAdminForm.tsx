@@ -26,12 +26,14 @@ import { useMobile } from "../../../../Provider/Theme/Mobile"
 import { useBand } from "../../../../Provider/Band/Band"
 import { useAuth } from "../../../../Provider/Auth/Auth"
 import { useLabel } from "../../../../Provider/Label/Label"
+import { useCreditor } from "../../../../Provider/Creditor/Creditor"
 
 interface IDataForm {
   band_id?: number
   user_id?: number
   member_id?: number
   label_id?: number
+  creditor_id?: number
 }
 
 interface SuperAdminProps {
@@ -41,6 +43,8 @@ export const SuperAdminForm = ({ toggleDrawer }: SuperAdminProps) => {
   const { mobile } = useMobile()
   const { myBands, deleteBand } = useBand()
   const { labels, deleteLabel } = useLabel()
+  const { creditors, deleteCreditor } = useCreditor()
+
   const { getAdmins, adminList, deleteAdmin, getMembers, memberList } = useAuth()
   const [dataForm, setDataForm] = useState<IDataForm>({} as IDataForm)
   const { handleSubmit, control } = useForm<IDataForm>({ mode: "all" })
@@ -63,6 +67,7 @@ export const SuperAdminForm = ({ toggleDrawer }: SuperAdminProps) => {
     dataForm.user_id && (await deleteAdmin(dataForm.user_id))
     dataForm.member_id && (await deleteAdmin(dataForm.member_id))
     dataForm.label_id && (await deleteLabel(dataForm.label_id))
+    dataForm.creditor_id && (await deleteCreditor(dataForm.creditor_id))
 
     toggleDrawer()
     toast.error("Dados deletados com sucesso")
@@ -206,6 +211,35 @@ export const SuperAdminForm = ({ toggleDrawer }: SuperAdminProps) => {
               )}
             />
           </Stack>
+          <Stack direction={mobile ? "column" : "row"} spacing={2} justifyContent={"center"}>
+            <Controller
+              name="creditor_id"
+              control={control}
+              render={({ field }) => (
+                <FormControl fullWidth={true}>
+                  <InputLabel id="demo-simple-select-helper-label">Credor</InputLabel>
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    label="Credor"
+                    fullWidth={true}
+                    {...field}
+                  >
+                    {creditors.map(creditor => {
+                      if (!creditor.is_deleted) {
+                        return (
+                          <MenuItem value={creditor.id} key={uuid()}>
+                            {creditor.name}
+                          </MenuItem>
+                        )
+                      }
+                      return <></>
+                    })}
+                  </Select>
+                </FormControl>
+              )}
+            />
+          </Stack>
         </Stack>
 
         <Stack spacing={"10px"} mt={3}>
@@ -246,6 +280,11 @@ export const SuperAdminForm = ({ toggleDrawer }: SuperAdminProps) => {
                   <b>Label: {labels.find(item => item.id === dataForm.label_id)?.title}</b>
                 </Box>
               )}
+              {dataForm?.creditor_id && (
+                <Box>
+                  <b>Credor: {creditors.find(item => item.id === dataForm.creditor_id)?.name}</b>
+                </Box>
+              )}
             </DialogContentText>
           </DialogContent>
           <DialogActions>
@@ -253,7 +292,7 @@ export const SuperAdminForm = ({ toggleDrawer }: SuperAdminProps) => {
               Cancelar
             </Button>
             <Button onClick={handleDelete} color="error">
-              Continua
+              Excluir
             </Button>
           </DialogActions>
         </Dialog>

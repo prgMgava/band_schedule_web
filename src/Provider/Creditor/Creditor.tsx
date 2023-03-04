@@ -102,12 +102,12 @@ const CreditorProvider = ({ children }: CreditorProviderProps) => {
         setCreditors(old => [...old, response.data])
         return {
           success: true,
-          message: "Creditor cadastrada com sucesso",
+          message: "Credor cadastrado com sucesso",
         }
       }
       return {
         success: false,
-        message: "Você não tem permissão de criar uma creditor",
+        message: "Você não tem permissão de criar um credor",
       }
     } catch (e) {
       return {
@@ -155,12 +155,12 @@ const CreditorProvider = ({ children }: CreditorProviderProps) => {
         setCreditors(old => old.filter(Creditor => Creditor.id !== id))
         return {
           success: true,
-          message: "Creditor deletada com sucesso",
+          message: "Credor deletado com sucesso",
         }
       }
       return {
         success: false,
-        message: "Você não tem permissão de deletar uma creditor",
+        message: "Você não tem permissão de deletar um credor",
       }
     } catch (e) {
       return {
