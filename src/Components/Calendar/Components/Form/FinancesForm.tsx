@@ -3,6 +3,7 @@ import * as React from "react"
 import {
   Box,
   Button,
+  Divider,
   FormControl,
   FormControlLabel,
   FormHelperText,
@@ -17,11 +18,11 @@ import {
 } from "@mui/material"
 import DescriptionIcon from "@mui/icons-material/Description"
 import { useForm, SubmitHandler, Controller, useWatch } from "react-hook-form"
-import { ICheckout } from "../../../../Types/checkout.type"
+import { ICheckout, ICheckoutForm } from "../../../../Types/checkout.type"
 import { yupResolver } from "@hookform/resolvers/yup"
 import * as yup from "yup"
 import { TextField } from "@mui/material"
-import { AttachMoney, Person } from "@mui/icons-material"
+import { AttachMoney, NewspaperOutlined, Person } from "@mui/icons-material"
 import { Stack } from "@mui/system"
 import { useState } from "react"
 import { toast } from "react-toastify"
@@ -40,6 +41,8 @@ const schema = yup.object().shape({
   id_band: yup.number().required("Banda é obrigatório"),
   id_creditor: yup.number().required("Credor é obrigatório"),
   date: yup.date().default(new Date()).notRequired().nullable(),
+  appointment_title: yup.string().required("Obrigatório procurar por um evento"),
+  appointment_date: yup.date().notRequired().nullable(),
 })
 
 interface FinancesProps {
@@ -68,7 +71,9 @@ export const FinancesForm = ({ toggleDrawer, data }: FinancesProps) => {
     formState: { errors },
     register,
     getValues,
-  } = useForm<ICheckout>({ resolver: yupResolver(schema), mode: "onSubmit" })
+    setError,
+    clearErrors,
+  } = useForm<ICheckoutForm>({ resolver: yupResolver(schema), mode: "onSubmit" })
 
   const typeWatch = useWatch({ control: control, name: "type" })
 
@@ -127,6 +132,14 @@ export const FinancesForm = ({ toggleDrawer, data }: FinancesProps) => {
     }).format(valor)
   }
 
+  const searchAppointment = () => {
+    const appointmentDate = getValues("appointment_date")
+    const appointmentTitle = getValues("appointment_title")
+    if (!appointmentTitle) {
+      return setError("appointment_title", { message: "Obrigatório procurar por um evento" })
+    }
+  }
+
   React.useEffect(() => {
     if (isEditing) {
       setValue("type", data.type)
@@ -158,6 +171,7 @@ export const FinancesForm = ({ toggleDrawer, data }: FinancesProps) => {
               render={({ field: { onChange, ...restField } }) => (
                 <TextField
                   {...restField}
+                  size="small"
                   autoComplete={"false"}
                   label="Valor *"
                   error={!!errors.value}
@@ -263,6 +277,7 @@ export const FinancesForm = ({ toggleDrawer, data }: FinancesProps) => {
                   helperText={errors.description && errors.description.message}
                   fullWidth={true}
                   name="description"
+                  size="small"
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
@@ -287,6 +302,7 @@ export const FinancesForm = ({ toggleDrawer, data }: FinancesProps) => {
                   helperText={errors.owner && errors.owner.message}
                   fullWidth={true}
                   name="owner"
+                  size="small"
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
@@ -330,8 +346,60 @@ export const FinancesForm = ({ toggleDrawer, data }: FinancesProps) => {
               </Box>
             )}
           />
+          <Divider variant="inset" style={{ marginTop: "10px" }} />
+          <Stack marginTop={"12px"}>
+            <Typography variant="subtitle1">Procure por um evento</Typography>
+          </Stack>
+          <Stack direction={mobile ? "column" : "row"} spacing={2}>
+            <Controller
+              name="appointment_title"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  label="Título do evento *"
+                  error={!!errors.appointment_title}
+                  helperText={errors.appointment_title && errors.appointment_title.message}
+                  name="appointment_title"
+                  fullWidth={true}
+                  size="small"
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <NewspaperOutlined />
+                      </InputAdornment>
+                    ),
+                  }}
+                ></TextField>
+              )}
+            />
+          </Stack>
+          <Stack direction={mobile ? "column" : "row"} spacing={2}>
+            <FormControl fullWidth={true} size="small">
+              <fieldset
+                style={{
+                  border: `${errors.appointment_date ? "1px #E34367 solid" : "1px #C0C0C0 solid"}`,
+                  borderRadius: "4px",
+                }}
+              >
+                <legend style={{ fontSize: "12px", color: "#696969" }}>Data do evento</legend>
+                <Box>
+                  <input
+                    type={"date"}
+                    defaultValue={""}
+                    {...register("appointment_date")}
+                    style={{ height: "24px", border: "none", outline: "none", width: "100%" }}
+                  ></input>
+                </Box>
+              </fieldset>
+            </FormControl>
+          </Stack>
         </Stack>
-
+        <Stack mt={3}>
+          <Button type="button" variant="outlined" color="secondary" onClick={searchAppointment}>
+            {"Procurar evento"}
+          </Button>
+        </Stack>
         <Stack spacing={"10px"} mt={3}>
           <Button type="submit" variant="contained">
             {isEditing ? "Atualizar" : "Salvar"}

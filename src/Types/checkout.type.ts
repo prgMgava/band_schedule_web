@@ -20,6 +20,11 @@ export interface ICheckout {
     is_deleted: boolean
 }
 
+export interface ICheckoutForm extends ICheckout {
+    appointment_title: string
+    appointment_date: string
+}
+
 export interface ICheckoutFields {
     value: number
     type: number
@@ -28,4 +33,6 @@ export interface ICheckoutFields {
     owner: string
     id_band: number
     id_creditor: number
+    appointment_title: string
+    appointment_date: Date | string
 }
