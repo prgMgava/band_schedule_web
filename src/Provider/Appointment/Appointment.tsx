@@ -17,6 +17,7 @@ interface AppointmentContextProps {
   getAppointments: (date: Date) => Promise<IResponse>
   getAppointmentsByBand: (date: Date, idBand?: number) => Promise<IResponse>
   getMyAppointments: (date: Date, owner: number) => Promise<IResponse>
+  getMyAppointmentsByTitle: (owner: number, title: string, date?: Date) => Promise<IResponse>
   appointments: IAppointments[]
   appointmentsFiltered: IAppointments[]
   currentDate: Date
@@ -106,6 +107,48 @@ const AppointmentProvider = ({ children }: AppointmentProviderProps) => {
       }
     }
   }, [])
+
+  const getMyAppointmentsByTitle = useCallback(async (owner: number, title: string, date?: Date) => {
+    try {
+      const startDate = new Date(date ? date : getFirstLastDayFromMonth(currentDate).startDateAux)
+        .toISOString()
+        .substring(0, 10)
+      const endDate = new Date(date ? date : getFirstLastDayFromMonth(currentDate).endDateAux)
+        .toISOString()
+        .substring(0, 10)
+
+      const { data }: AxiosResponse<IAppointments[]> = await api.get(
+        `/appointment/${owner}/report?start_date=${startDate}&end_date=${endDate}&title=${title}`,
+        {
+          headers: { "x-access-token": accessToken },
+        }
+      )
+
+      setAppointments(data)
+
+      return {
+        success: true,
+        message: "OK",
+      }
+    } catch (e) {
+      return {
+        success: false,
+        message: e.response.data.error,
+      }
+    }
+  }, [])
+
+  const getFirstLastDayFromMonth = (date: Date) => {
+    const dataInicial = new Date(date.getFullYear(), date.getMonth(), 1)
+    const dataFinal = new Date(date.getFullYear(), date.getMonth() + 1, 0)
+
+    const startDateAux = dataInicial.toISOString().substring(0, 10)
+    const endDateAux = dataFinal.toISOString().substring(0, 10)
+    return {
+      startDateAux,
+      endDateAux,
+    }
+  }
 
   const getMyAppointmentsAdvanced = useCallback(async (payload, owner) => {
     try {
@@ -274,6 +317,7 @@ const AppointmentProvider = ({ children }: AppointmentProviderProps) => {
         getMyAppointments,
         getMyAppointmentsAdvanced,
         appointmentsFiltered,
+        getMyAppointmentsByTitle,
       }}
     >
       {children}

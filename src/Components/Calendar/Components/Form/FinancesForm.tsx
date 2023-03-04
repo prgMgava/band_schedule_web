@@ -32,6 +32,7 @@ import uuid from "react-uuid"
 import { useAuth } from "../../../../Provider/Auth/Auth"
 import { useBand } from "../../../../Provider/Band/Band"
 import { useCreditor } from "../../../../Provider/Creditor/Creditor"
+import { useAppointment } from "../../../../Provider/Appointment/Appointment"
 
 const schema = yup.object().shape({
   value: yup.string().required("Valor é obrigatório"),
@@ -51,12 +52,13 @@ interface FinancesProps {
 }
 
 export const FinancesForm = ({ toggleDrawer, data }: FinancesProps) => {
-  const { superAdmin, adminList, adm } = useAuth()
+  const { superAdmin, adminList, adm, id } = useAuth()
 
   const { mobile } = useMobile()
   const { id: idCheckout } = data
   const { myBands } = useBand()
   const { creditors } = useCreditor()
+  const { getMyAppointmentsByTitle } = useAppointment()
 
   const { createCheckout, updateCheckout } = useCheckout()
   const [currentBand, setCurrentBand] = useState(data?.id_band)
@@ -132,12 +134,15 @@ export const FinancesForm = ({ toggleDrawer, data }: FinancesProps) => {
     }).format(valor)
   }
 
-  const searchAppointment = () => {
+  const searchAppointment = async () => {
     const appointmentDate = getValues("appointment_date")
     const appointmentTitle = getValues("appointment_title")
     if (!appointmentTitle) {
       return setError("appointment_title", { message: "Obrigatório procurar por um evento" })
     }
+    clearErrors("appointment_title")
+    const dateAux = appointmentDate ? new Date(appointmentDate) : undefined
+    await getMyAppointmentsByTitle(id, appointmentTitle, dateAux)
   }
 
   React.useEffect(() => {

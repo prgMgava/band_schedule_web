@@ -3,10 +3,10 @@ import { Demo } from "../Components/Calendar/Calendar"
 import React, { lazy, Suspense } from "react"
 import { useAuth } from "../Provider/Auth/Auth"
 import { Loader } from "../Components/Loader/Loader"
-import FinancesPage from "../Pages/FinancesPage"
 const Login = lazy(() => import("../Pages/Login"))
 const Signup = lazy(() => import("../Pages/Signup"))
 const LandingPage = lazy(() => import("../Pages/LandingPage"))
+const FinancesPage = lazy(() => import("../Pages/FinancesPage"))
 
 export const Routes = () => {
   const { accessToken, adm } = useAuth()
