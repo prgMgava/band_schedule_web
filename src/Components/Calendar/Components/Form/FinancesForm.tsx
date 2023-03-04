@@ -18,7 +18,7 @@ import {
 } from "@mui/material"
 import DescriptionIcon from "@mui/icons-material/Description"
 import { useForm, SubmitHandler, Controller, useWatch } from "react-hook-form"
-import { ICheckout, ICheckoutForm } from "../../../../Types/checkout.type"
+import { ICheckout, ICheckoutFields } from "../../../../Types/checkout.type"
 import { yupResolver } from "@hookform/resolvers/yup"
 import * as yup from "yup"
 import { TextField } from "@mui/material"
@@ -44,6 +44,7 @@ const schema = yup.object().shape({
   date: yup.date().default(new Date()).notRequired().nullable(),
   appointment_title: yup.string().required("Obrigatório procurar por um evento"),
   appointment_date: yup.date().notRequired().nullable(),
+  id_appointment: yup.number().required("Evento é obrigatório"),
 })
 
 interface FinancesProps {
@@ -52,13 +53,13 @@ interface FinancesProps {
 }
 
 export const FinancesForm = ({ toggleDrawer, data }: FinancesProps) => {
-  const { superAdmin, adminList, adm, id } = useAuth()
+  const { id } = useAuth()
 
   const { mobile } = useMobile()
   const { id: idCheckout } = data
   const { myBands } = useBand()
   const { creditors } = useCreditor()
-  const { getMyAppointmentsByTitle } = useAppointment()
+  const { getMyAppointmentsByTitle, appointmentsCheckout } = useAppointment()
 
   const { createCheckout, updateCheckout } = useCheckout()
   const [currentBand, setCurrentBand] = useState(data?.id_band)
@@ -75,7 +76,7 @@ export const FinancesForm = ({ toggleDrawer, data }: FinancesProps) => {
     getValues,
     setError,
     clearErrors,
-  } = useForm<ICheckoutForm>({ resolver: yupResolver(schema), mode: "onSubmit" })
+  } = useForm<ICheckoutFields>({ resolver: yupResolver(schema), mode: "onSubmit" })
 
   const typeWatch = useWatch({ control: control, name: "type" })
 
@@ -404,6 +405,49 @@ export const FinancesForm = ({ toggleDrawer, data }: FinancesProps) => {
           <Button type="button" variant="outlined" color="secondary" onClick={searchAppointment}>
             {"Procurar evento"}
           </Button>
+        </Stack>
+        <Stack mt={3}>
+          <Controller
+            name="id_appointment"
+            control={control}
+            render={({ field }) => (
+              <Box>
+                <FormControl error={!!errors.id_appointment} fullWidth={true}>
+                  <InputLabel id="demo-simple-select-helper-label">Evento *</InputLabel>
+                  <Select
+                    size="small"
+                    sx={{ minWidth: 270 }}
+                    labelId="demo-simple-select-error-label"
+                    id="demo-simple-select-error"
+                    label="Evento *"
+                    defaultValue={currentBand}
+                    {...field}
+                  >
+                    {appointmentsCheckout.length ? (
+                      appointmentsCheckout.map(appointment => {
+                        return (
+                          <MenuItem
+                            value={appointment.id}
+                            key={uuid()}
+                            style={{ flexDirection: "column", alignItems: "self-start" }}
+                          >
+                            <Box fontWeight={800}>{appointment.title}</Box>
+                            <Box fontSize={12} display={"block"}>
+                              {" "}
+                              {new Date(appointment.start_date).toLocaleDateString()}
+                            </Box>
+                          </MenuItem>
+                        )
+                      })
+                    ) : (
+                      <MenuItem disabled>Nenhum evento encontrado</MenuItem>
+                    )}
+                  </Select>
+                  {!!errors.id_band && <FormHelperText sx={{ color: "#E34367" }}>Selecione uma banda</FormHelperText>}
+                </FormControl>
+              </Box>
+            )}
+          />
         </Stack>
         <Stack spacing={"10px"} mt={3}>
           <Button type="submit" variant="contained">

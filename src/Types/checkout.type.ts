@@ -9,6 +9,7 @@ export interface ICheckout {
     owner: string
     description: string
     id_creditor: number
+    id_appointment: number
     band: {
         id: number
         name: string
@@ -20,19 +21,7 @@ export interface ICheckout {
     is_deleted: boolean
 }
 
-export interface ICheckoutForm extends ICheckout {
+export interface ICheckoutFields extends ICheckout {
     appointment_title: string
     appointment_date: string
-}
-
-export interface ICheckoutFields {
-    value: number
-    type: number
-    description: string
-    date: string
-    owner: string
-    id_band: number
-    id_creditor: number
-    appointment_title: string
-    appointment_date: Date | string
 }
