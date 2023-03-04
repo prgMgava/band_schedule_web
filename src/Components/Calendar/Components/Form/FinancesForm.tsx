@@ -3,7 +3,6 @@ import * as React from "react"
 import {
   Box,
   Button,
-  Divider,
   FormControl,
   FormControlLabel,
   FormHelperText,
@@ -16,13 +15,13 @@ import {
   Select,
   Typography,
 } from "@mui/material"
-import DescriptionIcon from '@mui/icons-material/Description';
-import { useForm, SubmitHandler, Controller } from "react-hook-form"
-import { ICheckout, ICheckoutFields } from "../../../../Types/checkout.type"
+import DescriptionIcon from "@mui/icons-material/Description"
+import { useForm, SubmitHandler, Controller, useWatch } from "react-hook-form"
+import { ICheckout } from "../../../../Types/checkout.type"
 import { yupResolver } from "@hookform/resolvers/yup"
 import * as yup from "yup"
 import { TextField } from "@mui/material"
-import { NewspaperOutlined, PhoneOutlined, EmailOutlined, AttachMoney, Person } from "@mui/icons-material"
+import { AttachMoney, Person } from "@mui/icons-material"
 import { Stack } from "@mui/system"
 import { useState } from "react"
 import { toast } from "react-toastify"
@@ -30,17 +29,17 @@ import { useMobile } from "../../../../Provider/Theme/Mobile"
 import { useCheckout } from "../../../../Provider/Checkout/Checkout"
 import uuid from "react-uuid"
 import { useAuth } from "../../../../Provider/Auth/Auth"
-import { removeMaskNumber } from "../../../../Utils/masks"
-import { useBand } from "../../../../Provider/Band/Band";
+import { useBand } from "../../../../Provider/Band/Band"
+import { useCreditor } from "../../../../Provider/Creditor/Creditor"
 
 const schema = yup.object().shape({
-  value: yup.string().required('Valor é obrigatório'),
-  type: yup.string().required('Tipo da movimentação é obrigatório'),
+  value: yup.string().required("Valor é obrigatório"),
+  type: yup.string().required("Tipo da movimentação é obrigatório"),
   owner: yup.string().notRequired().nullable(),
   description: yup.string().notRequired().nullable(),
-  id_band: yup.number().required('Banda é obrigatório'),
+  id_band: yup.number().required("Banda é obrigatório"),
+  id_creditor: yup.number().required("Credor é obrigatório"),
   date: yup.date().default(new Date()).notRequired().nullable(),
-
 })
 
 interface FinancesProps {
@@ -54,15 +53,13 @@ export const FinancesForm = ({ toggleDrawer, data }: FinancesProps) => {
   const { mobile } = useMobile()
   const { id: idCheckout } = data
   const { myBands } = useBand()
+  const { creditors } = useCreditor()
 
-
-  const { createCheckout, updateCheckout, checkouts } = useCheckout()
+  const { createCheckout, updateCheckout } = useCheckout()
   const [currentBand, setCurrentBand] = useState(data?.id_band)
   const isEditing = !!idCheckout
   const [maskedMoney, setMaskedMoney] = useState("")
   const [currentType, setCurrentType] = useState(data.type)
-
-
 
   const {
     handleSubmit,
@@ -72,6 +69,8 @@ export const FinancesForm = ({ toggleDrawer, data }: FinancesProps) => {
     register,
     getValues,
   } = useForm<ICheckout>({ resolver: yupResolver(schema), mode: "onSubmit" })
+
+  const typeWatch = useWatch({ control: control, name: "type" })
 
   const submitForm: SubmitHandler<ICheckout> = async (dataForm: ICheckout) => {
     if (isEditing) {
@@ -92,12 +91,22 @@ export const FinancesForm = ({ toggleDrawer, data }: FinancesProps) => {
   }
 
   const formatData = (data: ICheckout): ICheckout => {
-    const money = typeof data.value == "string" ? data.value.replace(".", "").replace(",", ".").replace(/\D\$\s/, "") : 0
-    const dateFormatted = new Date(typeof data.date == "object" ? data.date.toISOString().substring(0, 10) + new Date().toISOString().substring(10, 19) : "")
+    const money =
+      typeof data.value == "string"
+        ? data.value
+            .replace(".", "")
+            .replace(",", ".")
+            .replace(/\D\$\s/, "")
+        : 0
+    const dateFormatted = new Date(
+      typeof data.date == "object"
+        ? data.date.toISOString().substring(0, 10) + new Date().toISOString().substring(10, 19)
+        : ""
+    )
     return {
       ...data,
       value: Number(money),
-      date: dateFormatted
+      date: dateFormatted,
     }
   }
 
@@ -111,10 +120,10 @@ export const FinancesForm = ({ toggleDrawer, data }: FinancesProps) => {
     value = maskCurrency(digitsFloat)
     setMaskedMoney(value)
   }
-  function maskCurrency(valor, locale = 'pt-BR', currency = 'BRL') {
+  function maskCurrency(valor, locale = "pt-BR", currency = "BRL") {
     return new Intl.NumberFormat(locale, {
-      style: 'currency',
-      currency
+      style: "currency",
+      currency,
     }).format(valor)
   }
 
@@ -175,22 +184,52 @@ export const FinancesForm = ({ toggleDrawer, data }: FinancesProps) => {
               name="type"
               render={({ field }) => (
                 <RadioGroup {...field} defaultValue={currentType}>
-                  <FormControlLabel
-                    value="1"
-                    control={<Radio />}
-                    label="Entrada"
-                  />
-                  <FormControlLabel
-                    value="2"
-                    control={<Radio />}
-                    label="Saída"
-                  />
+                  <FormControlLabel value="1" control={<Radio />} label="Entrada" />
+                  <FormControlLabel value="2" control={<Radio />} label="Saída" />
                 </RadioGroup>
               )}
             />
-
           </Stack>
           {!!errors.type && <FormHelperText sx={{ color: "#E34367" }}>{errors.type?.message}</FormHelperText>}
+          <Stack>
+            <Controller
+              name="id_creditor"
+              control={control}
+              render={({ field }) => (
+                <Box>
+                  <FormControl error={!!errors.id_creditor} fullWidth={true}>
+                    <InputLabel id="demo-simple-select-helper-label">Credor *</InputLabel>
+                    <Select
+                      size="small"
+                      sx={{ minWidth: 270 }}
+                      labelId="demo-simple-select-error-label"
+                      id="demo-simple-select-error"
+                      label="Credor"
+                      {...field}
+                    >
+                      {typeWatch ? (
+                        creditors
+                          .filter(creditor => (typeWatch == 1 ? creditor.is_supplier : !creditor.is_supplier))
+                          .map(creditor => {
+                            if (!creditor.is_deleted || isEditing) {
+                              return (
+                                <MenuItem value={creditor.id} key={uuid()}>
+                                  {creditor.name}
+                                </MenuItem>
+                              )
+                            }
+                            return <></>
+                          })
+                      ) : (
+                        <></>
+                      )}
+                    </Select>
+                    {!!errors.id_band && <FormHelperText sx={{ color: "#E34367" }}>Selecione uma banda</FormHelperText>}
+                  </FormControl>
+                </Box>
+              )}
+            />
+          </Stack>
           <Stack direction={mobile ? "column" : "row"} spacing={2}>
             <FormControl fullWidth={true}>
               <fieldset

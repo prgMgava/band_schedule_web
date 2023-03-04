@@ -8,6 +8,7 @@ export interface ICheckout {
     id_band: number
     owner: string
     description: string
+    id_creditor: number
     band: {
         id: number
         name: string
@@ -26,4 +27,5 @@ export interface ICheckoutFields {
     date: string
     owner: string
     id_band: number
+    id_creditor: number
 }
