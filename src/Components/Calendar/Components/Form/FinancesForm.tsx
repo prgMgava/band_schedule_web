@@ -56,7 +56,7 @@ export const FinancesForm = ({ toggleDrawer, data }: FinancesProps) => {
   const { id } = useAuth()
 
   const { mobile } = useMobile()
-  const { id: idCheckout } = data
+  const idCheckout = data?.id
   const { myBands } = useBand()
   const { creditors, getCreditors } = useCreditor()
   const { getMyAppointmentsByTitle, appointmentsCheckout } = useAppointment()
@@ -66,7 +66,7 @@ export const FinancesForm = ({ toggleDrawer, data }: FinancesProps) => {
   const isEditing = !!idCheckout
   const [maskedMoney, setMaskedMoney] = useState("")
   const [currentType, setCurrentType] = useState(data?.type)
-  const [currentCreditor, setCurrentCreditor] = useState(data?.creditor.id)
+  const [currentCreditor, setCurrentCreditor] = useState(data?.creditor?.id)
 
   const {
     handleSubmit,
@@ -98,21 +98,21 @@ export const FinancesForm = ({ toggleDrawer, data }: FinancesProps) => {
     }
   }
 
-  const formatData = (data: ICheckout): ICheckout => {
+  const formatData = (dataAux: ICheckout): ICheckout => {
     const money =
-      typeof data.value == "string"
-        ? data.value
+      typeof dataAux.value == "string"
+        ? dataAux.value
             .replace(".", "")
             .replace(",", ".")
             .replace(/\D\$\s/, "")
         : 0
     const dateFormatted = new Date(
-      typeof data.date == "object"
-        ? data.date.toISOString().substring(0, 10) + new Date().toISOString().substring(10, 19)
+      typeof dataAux.date == "object"
+        ? dataAux.date.toISOString().substring(0, 10) + new Date().toISOString().substring(10, 19)
         : ""
     )
     return {
-      ...data,
+      ...dataAux,
       value: Number(money),
       date: dateFormatted,
     }
@@ -167,7 +167,7 @@ export const FinancesForm = ({ toggleDrawer, data }: FinancesProps) => {
   React.useEffect(() => setValue("value", maskedMoney), [maskedMoney])
 
   React.useEffect(() => {
-    getCreditors()
+    //getCreditors()
   }, [])
 
   return (

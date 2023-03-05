@@ -179,7 +179,6 @@ export const FilterFinances = ({ setCurrentFilter }: FilterFinancesProps) => {
                             </MenuItem>
                           )
                         }
-                        return <></>
                       })}
                     </Select>
                     {!!errors.id_band && <FormHelperText sx={{ color: "#E34367" }}>Selecione uma banda</FormHelperText>}
