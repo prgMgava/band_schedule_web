@@ -23,8 +23,8 @@ export const createPdfReport = (listCheckout: ICheckout[], startDate: string, en
 		if (checkoutsByAppointment.length) {
 
 			/** Appointment title - 1 Table Header: Evento*/
-			//currentRow.push(checkoutsByAppointment[0].appointment.title)
-			currentRow.push('loremadj ça asdhçf jlskdf ljasldfj lajsdlkfj lkj aldfksj')
+			currentRow.push(checkoutsByAppointment[0].appointment.title)
+
 			/** Appointment Date- 2 Table Header: Data*/
 			currentRow.push(new Date(checkoutsByAppointment[0].appointment.start_date).toLocaleDateString())
 
@@ -41,7 +41,7 @@ export const createPdfReport = (listCheckout: ICheckout[], startDate: string, en
 			currentRow.push(sumComercial)
 
 			/** Batera creditor - 5 Table Header: Batera*/
-			const sumDrummer = checkoutsByAppointment.filter(checkout => checkout.creditor?.name.toLowerCase() == 'baterista').filter(checkout => checkout.type == 2).reduce((a, b) => {
+			const sumDrummer = checkoutsByAppointment.filter(checkout => checkout.creditor?.name.toLowerCase() == 'batera').filter(checkout => checkout.type == 2).reduce((a, b) => {
 				return a + Number(b.value)
 			}, 0).toLocaleString('pt-br', { style: 'currency', currency: 'BRL' }).split(' ')[1]
 			currentRow.push(sumDrummer)
@@ -99,11 +99,13 @@ export const createPdfReport = (listCheckout: ICheckout[], startDate: string, en
 
 			currentRow.push(profit.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' }).split(' ')[1])
 
+			tableRows.push(currentRow.map(row => {
+				return row == "R$ 0,00" ? '--' : row
+			}))
 		}
-		tableRows.push(currentRow.map(row => {
-			return row == "R$ 0,00" ? '--' : row
-		}))
+		console.log(tableRows.filter(rows => rows.length))
 	})
+
 
 	return {
 		pageOrientation: "landscape",
@@ -118,7 +120,7 @@ export const createPdfReport = (listCheckout: ICheckout[], startDate: string, en
 					"48866171/0001-24    ",
 					{ text: "Email: ", fontSize: 12, bold: true },
 					"redbusproducoes@gmail.com    ",
-					{ text: "Tel.:", fontSize: 12, bold: true },
+					{ text: "Tel.: ", fontSize: 12, bold: true },
 					"(61) 9533-1001",
 				],
 			},
