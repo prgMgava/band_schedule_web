@@ -139,6 +139,7 @@ export const TableFinances = () => {
       ),
       owner: checkout.owner || "--",
       description: checkout.description || "--",
+      creditor: checkout.creditor?.name || "--",
       band: checkout.band?.name,
       id: checkout.id,
       id_band: checkout.band?.id,
@@ -163,6 +164,7 @@ export const TableFinances = () => {
               <StyledTableCell>Data</StyledTableCell>
               <StyledTableCell>Responsável</StyledTableCell>
               <StyledTableCell>Detalhes</StyledTableCell>
+              <StyledTableCell>Credor</StyledTableCell>
               <StyledTableCell style={{ textAlign: "center" }}>Artista</StyledTableCell>
             </TableRow>
           </TableHead>
@@ -184,6 +186,7 @@ export const TableFinances = () => {
                   {row.description.substring(0, 200)}
                   {row.description.length > 200 ?? "..."}
                 </StyledTableCell>
+                <StyledTableCell>{row.creditor}</StyledTableCell>
                 <StyledTableCell>{row.band}</StyledTableCell>
               </StyledTableRow>
             ))}
