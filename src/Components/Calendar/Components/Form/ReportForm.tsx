@@ -14,6 +14,12 @@ import { useAuth } from "../../../../Provider/Auth/Auth"
 import { useBand } from "../../../../Provider/Band/Band"
 import { useCreditor } from "../../../../Provider/Creditor/Creditor"
 import { useAppointment } from "../../../../Provider/Appointment/Appointment"
+import pdfMake from "pdfmake/build/pdfmake"
+import pdfFonts from "pdfmake/build/vfs_fonts"
+import { createPdfReport } from "../../../../Utils/pdfModel"
+import { ICheckout } from "../../../../Types/checkout.type"
+import { IAppointments } from "../../../../Types/appointments.type"
+pdfMake.vfs = pdfFonts.pdfMake.vfs
 interface ReportFields {
   start_date: Date
   end_date: Date
@@ -40,6 +46,11 @@ export const ReportForm = ({ toggleDrawer }: ReportProps) => {
   const { getCheckoutsByAppointments } = useCheckout()
   const { getAppointmentsByDate } = useAppointment()
 
+  const createPdf = (listCheckout: ICheckout[], startDate: string, endDate: string, idsAppointments: number[]) => {
+    const pdfGenerator = pdfMake.createPdf(createPdfReport(listCheckout, startDate, endDate, idsAppointments))
+    pdfGenerator.open()
+  }
+
   const {
     handleSubmit,
     control,
@@ -48,16 +59,22 @@ export const ReportForm = ({ toggleDrawer }: ReportProps) => {
   } = useForm<ReportFields>({ resolver: yupResolver(schema), mode: "onSubmit" })
 
   const submitForm: SubmitHandler<ReportFields> = async (dataForm: ReportFields) => {
-    console.log(dataForm)
     const startDate = dataForm.start_date.toISOString().substring(0, 10)
     const endDate = dataForm.end_date.toISOString().substring(0, 10)
     const idBand = dataForm.id_band
     const { data: listAppointments } = await getAppointmentsByDate(startDate, endDate, idBand)
     if (listAppointments.length) {
-      const idsAppointments = listAppointments.map(appointment => appointment.id).join(",")
+      const idsAppointments: number[] = listAppointments.map((appointment: IAppointments) => appointment.id)
 
-      const response = await getCheckoutsByAppointments(startDate, endDate, dataForm.id_band, idsAppointments)
-      console.log(response)
+      const { data: listCheckout } = await getCheckoutsByAppointments(
+        startDate,
+        endDate,
+        dataForm.id_band,
+        idsAppointments.join(",")
+      )
+      if (listCheckout.length) {
+        return createPdf(listCheckout as ICheckout[], startDate, endDate, idsAppointments)
+      }
     }
     // toast[response.success ? "success" : "error"](response.message)
     // if (response.success) {
@@ -155,7 +172,7 @@ export const ReportForm = ({ toggleDrawer }: ReportProps) => {
         </Stack>
         <Stack spacing={"10px"} mt={3}>
           <Button type="submit" variant="contained">
-            Imprimir
+            Baixar relatório
           </Button>
         </Stack>
       </form>

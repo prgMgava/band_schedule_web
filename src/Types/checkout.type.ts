@@ -1,3 +1,5 @@
+import { IAppointments } from "./appointments.type"
+import { IBand } from "./band.type"
 import { ICreditor } from "./creditor.type"
 
 export interface ICheckout {
@@ -12,14 +14,8 @@ export interface ICheckout {
     description: string
     creditor: ICreditor
     id_appointment: number
-    band: {
-        id: number
-        name: string
-        email: string
-        cellphone: string
-        status: boolean
-        owner: number
-    },
+    band: IBand
+    appointment: IAppointments
     is_deleted: boolean
 }
 
