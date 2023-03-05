@@ -1,12 +1,12 @@
 {
   "files": {
     "main.css": "/static/css/main.b6ea72bb.css",
-    "main.js": "/static/js/main.f0c80644.js",
+    "main.js": "/static/js/main.61cd25e1.js",
     "static/js/883.1bcef5a7.chunk.js": "/static/js/883.1bcef5a7.chunk.js",
     "static/js/47.9185e32c.chunk.js": "/static/js/47.9185e32c.chunk.js",
     "static/css/201.23ac8b3f.chunk.css": "/static/css/201.23ac8b3f.chunk.css",
     "static/js/201.de0e36c6.chunk.js": "/static/js/201.de0e36c6.chunk.js",
-    "static/js/380.d7d0bd2c.chunk.js": "/static/js/380.d7d0bd2c.chunk.js",
+    "static/js/380.def9fc65.chunk.js": "/static/js/380.def9fc65.chunk.js",
     "static/js/692.122beac9.chunk.js": "/static/js/692.122beac9.chunk.js",
     "static/js/952.438442c3.chunk.js": "/static/js/952.438442c3.chunk.js",
     "static/media/naMedidaVideo.gif": "/static/media/naMedidaVideo.3fae0e85d178195216e9.gif",
@@ -16,17 +16,17 @@
     "static/media/low-logo.webp": "/static/media/low-logo.2e977fa077deedb43246.webp",
     "index.html": "/index.html",
     "main.b6ea72bb.css.map": "/static/css/main.b6ea72bb.css.map",
-    "main.f0c80644.js.map": "/static/js/main.f0c80644.js.map",
+    "main.61cd25e1.js.map": "/static/js/main.61cd25e1.js.map",
     "883.1bcef5a7.chunk.js.map": "/static/js/883.1bcef5a7.chunk.js.map",
     "47.9185e32c.chunk.js.map": "/static/js/47.9185e32c.chunk.js.map",
     "201.23ac8b3f.chunk.css.map": "/static/css/201.23ac8b3f.chunk.css.map",
     "201.de0e36c6.chunk.js.map": "/static/js/201.de0e36c6.chunk.js.map",
-    "380.d7d0bd2c.chunk.js.map": "/static/js/380.d7d0bd2c.chunk.js.map",
+    "380.def9fc65.chunk.js.map": "/static/js/380.def9fc65.chunk.js.map",
     "692.122beac9.chunk.js.map": "/static/js/692.122beac9.chunk.js.map",
     "952.438442c3.chunk.js.map": "/static/js/952.438442c3.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.b6ea72bb.css",
-    "static/js/main.f0c80644.js"
+    "static/js/main.61cd25e1.js"
   ]
 }

@@ -79,13 +79,13 @@ export const createPdfReport = (listCheckout: ICheckout[], startDate: string, en
 			/** Entradas - 11 Table Header: Entradas*/
 			const sumEntry = checkoutsByAppointment.filter(checkout => checkout.type == 1).reduce((a, b) => {
 				return a + Number(b.value)
-			}, 0).toLocaleString('pt-br', { style: 'currency', currency: 'BRL' }).split(' ')[1]
+			}, 0).toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })
 			currentRow.push(sumEntry)
 
 			/** Saídas - 12 Table Header: Saídas*/
 			const sumOut = checkoutsByAppointment.filter(checkout => checkout.type == 2).reduce((a, b) => {
 				return a + Number(b.value)
-			}, 0).toLocaleString('pt-br', { style: 'currency', currency: 'BRL' }).split(' ')[1]
+			}, 0).toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })
 			currentRow.push(sumOut)
 
 			/** Profit - 13 Table Header: Lucro*/
@@ -97,7 +97,7 @@ export const createPdfReport = (listCheckout: ICheckout[], startDate: string, en
 			}, 0)
 
 
-			currentRow.push(profit.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' }).split(' ')[1])
+			currentRow.push(profit.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' }))
 
 			tableRows.push(currentRow.map(row => {
 				return row == "R$ 0,00" ? '--' : row
