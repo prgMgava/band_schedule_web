@@ -57,6 +57,7 @@ export const ReportForm = ({ toggleDrawer }: ReportProps) => {
     control,
     formState: { errors },
     register,
+    setValue,
   } = useForm<ReportFields>({ resolver: yupResolver(schema), mode: "onSubmit" })
 
   const submitForm: SubmitHandler<ReportFields> = async (dataForm: ReportFields) => {
@@ -90,6 +91,12 @@ export const ReportForm = ({ toggleDrawer }: ReportProps) => {
       toggleDrawer()
     }
   }
+
+  React.useEffect(() => {
+    if (myBands.filter(band => !band.is_deleted).length == 1) {
+      setValue("id_band", (myBands.find(band => !band.is_deleted)?.id as number) || 0)
+    }
+  }, [myBands])
 
   return (
     <Grid padding={mobile ? 2 : 8}>

@@ -138,12 +138,12 @@ export const CreditorForm = ({ toggleDrawer }: CreditorProps) => {
       </Stack>
       <Box>
         <FormControl fullWidth={true}>
-          <InputLabel>Categoria *</InputLabel>
+          <InputLabel>Credor *</InputLabel>
           <Select
             sx={{ minWidth: 270 }}
             labelId="demo-simple-select-error-label"
             id="demo-simple-select-error"
-            label="Categoria"
+            label="Credor"
             value={currentCreditor}
             onChange={e => {
               setCurrentCreditor(e.target.value as number)
