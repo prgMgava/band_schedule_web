@@ -101,7 +101,6 @@ export const createPdfReport = (listCheckout: ICheckout[], startDate: string, en
 
 		}
 		tableRows.push(currentRow.map(row => {
-			console.log(row)
 			return row == "R$ 0,00" ? '--' : row
 		}))
 	})
@@ -116,7 +115,7 @@ export const createPdfReport = (listCheckout: ICheckout[], startDate: string, en
 			{
 				text: [
 					{ text: "CNPJ: ", fontSize: 12, bold: true },
-					"xxxxxxxxxxx    ",
+					"48866171/0001-24    ",
 					{ text: "Email: ", fontSize: 12, bold: true },
 					"redbusproducoes@gmail.com    ",
 					{ text: "Tel.:", fontSize: 12, bold: true },
