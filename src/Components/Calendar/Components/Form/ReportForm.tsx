@@ -37,6 +37,7 @@ interface ReportProps {
 
 export const ReportForm = ({ toggleDrawer }: ReportProps) => {
   const { id } = useAuth()
+  const [loading, setLoading] = useState(false)
 
   const { mobile } = useMobile()
   const { myBands } = useBand()
@@ -62,24 +63,32 @@ export const ReportForm = ({ toggleDrawer }: ReportProps) => {
     const startDate = dataForm.start_date.toISOString().substring(0, 10)
     const endDate = dataForm.end_date.toISOString().substring(0, 10)
     const idBand = dataForm.id_band
-    const { data: listAppointments } = await getAppointmentsByDate(startDate, endDate, idBand)
-    if (listAppointments.length) {
-      const idsAppointments: number[] = listAppointments.map((appointment: IAppointments) => appointment.id)
+    try {
+      toast.warning("Gerando relatório aguarde....")
+      setLoading(true)
 
-      const { data: listCheckout } = await getCheckoutsByAppointments(
-        startDate,
-        endDate,
-        dataForm.id_band,
-        idsAppointments.join(",")
-      )
-      if (listCheckout.length) {
-        return createPdf(listCheckout as ICheckout[], startDate, endDate, idsAppointments)
+      const { data: listAppointments } = await getAppointmentsByDate(startDate, endDate, idBand)
+      if (listAppointments.length) {
+        const idsAppointments: number[] = listAppointments.map((appointment: IAppointments) => appointment.id)
+
+        const { data: listCheckout } = await getCheckoutsByAppointments(
+          startDate,
+          endDate,
+          dataForm.id_band,
+          idsAppointments.join(",")
+        )
+        if (listCheckout.length) {
+          createPdf(listCheckout as ICheckout[], startDate, endDate, idsAppointments)
+        }
+        toast.success("Relatório gerado com sucesso")
       }
+    } catch (e) {
+      console.log(e)
+      toast["error"](e)
+    } finally {
+      setLoading(false)
+      toggleDrawer()
     }
-    // toast[response.success ? "success" : "error"](response.message)
-    // if (response.success) {
-    //   toggleDrawer()
-    // }
   }
 
   return (
