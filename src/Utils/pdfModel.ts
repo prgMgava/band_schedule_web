@@ -88,7 +88,7 @@ export const createPdfReport = (listCheckout: ICheckout[], startDate: string, en
 			}, 0).toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })
 			currentRow.push(sumOut)
 
-			/** Profit - 13 Table Header: Lucro*/
+			/** Profit - 13 Table Header: Lucros*/
 
 			const profit = checkoutsByAppointment.filter(checkout => checkout.type == 1).reduce((a, b) => {
 				return a + Number(b.value)
