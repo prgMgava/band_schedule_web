@@ -50,6 +50,7 @@ export const ReportForm = ({ toggleDrawer }: ReportProps) => {
   const createPdf = (listCheckout: ICheckout[], startDate: string, endDate: string, idsAppointments: number[]) => {
     const pdfGenerator = pdfMake.createPdf(createPdfReport(listCheckout, startDate, endDate, idsAppointments))
     pdfGenerator.open()
+    pdfGenerator.download()
   }
 
   const {
