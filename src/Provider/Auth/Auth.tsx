@@ -35,6 +35,7 @@ interface SignUpCredentials extends SignInCredentials {
 export interface IResponse {
   success: boolean
   message: string
+  data?: any
 }
 
 interface AuthContextData {

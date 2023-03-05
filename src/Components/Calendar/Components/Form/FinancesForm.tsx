@@ -167,7 +167,7 @@ export const FinancesForm = ({ toggleDrawer, data }: FinancesProps) => {
   React.useEffect(() => setValue("value", maskedMoney), [maskedMoney])
 
   React.useEffect(() => {
-    //getCreditors()
+    getCreditors()
   }, [])
 
   return (

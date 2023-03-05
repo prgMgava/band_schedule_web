@@ -8,6 +8,12 @@ import { addDays, subDays } from "date-fns"
 
 interface CheckoutContextProps {
   getCheckouts: (startDate: string, endDate: string, idBand: number) => Promise<IResponse>
+  getCheckoutsByAppointments: (
+    startDate: string,
+    endDate: string,
+    idBand: number,
+    idsAppointments: string
+  ) => Promise<IResponse>
   getCheckoutsByBand: (date: Date, idBand: number) => Promise<IResponse>
   checkouts: ICheckout[]
   checkoutsYearly: ICheckout[]
@@ -44,7 +50,6 @@ const CheckoutProvider = ({ children }: CheckoutProviderProps) => {
 
   const getCheckouts = useCallback(async (startDate: string, endDate: string, idBand: number) => {
     try {
-
       const { data }: AxiosResponse<ICheckout[]> = await api.get(
         `/checkout?startDate=${startDate}&endDate=${endDate}&idBand=${idBand}`,
         {
@@ -69,9 +74,33 @@ const CheckoutProvider = ({ children }: CheckoutProviderProps) => {
     }
   }, [])
 
+  const getCheckoutsByAppointments = useCallback(
+    async (startDate: string, endDate: string, idBand: number, idsAppointments: string) => {
+      try {
+        const { data }: AxiosResponse<ICheckout[]> = await api.get(
+          `/checkout/appointment?startDate=${startDate}&endDate=${endDate}&id_band=${idBand}&ids_appointments=${idsAppointments}`,
+          {
+            headers: { "x-access-token": accessToken },
+          }
+        )
+
+        return {
+          success: true,
+          message: data.length ? "Finanças encontradas com sucesso" : "Nenhuma finança encontrada",
+          data: data,
+        }
+      } catch (e) {
+        return {
+          success: false,
+          message: e.response.data.error,
+        }
+      }
+    },
+    []
+  )
+
   const getCheckoutsYearly = useCallback(async (startDate: string, endDate: string, idBand: number) => {
     try {
-
       const { data }: AxiosResponse<ICheckout[]> = await api.get(
         `/checkout?startDate=${startDate}&endDate=${endDate}&idBand=${idBand}`,
         {
@@ -246,7 +275,8 @@ const CheckoutProvider = ({ children }: CheckoutProviderProps) => {
         currentDate,
         setCurrentDate,
         getCheckoutsByBand,
-        checkoutsYearly
+        checkoutsYearly,
+        getCheckoutsByAppointments,
       }}
     >
       {children}

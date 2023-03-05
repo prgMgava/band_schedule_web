@@ -15,6 +15,7 @@ export interface IParams {
 }
 interface AppointmentContextProps {
   getAppointments: (date: Date) => Promise<IResponse>
+  getAppointmentsByDate: (startDate: string, endDate: string, idBand: number) => Promise<IResponse>
   getAppointmentsByBand: (date: Date, idBand?: number) => Promise<IResponse>
   getMyAppointments: (date: Date, owner: number) => Promise<IResponse>
   getMyAppointmentsByTitle: (owner: number, title: string, date?: Date) => Promise<IResponse>
@@ -73,6 +74,28 @@ const AppointmentProvider = ({ children }: AppointmentProviderProps) => {
       return {
         success: true,
         message: "OK",
+      }
+    } catch (e) {
+      return {
+        success: false,
+        message: e.response.data.error,
+      }
+    }
+  }, [])
+
+  const getAppointmentsByDate = useCallback(async (startDate: string, endDate: string, idBand: number) => {
+    try {
+      const { data }: AxiosResponse<IAppointments[]> = await api.get(
+        `/appointment/band/${idBand}?start_date=${startDate}&end_date=${endDate}`,
+        {
+          headers: { "x-access-token": accessToken },
+        }
+      )
+
+      return {
+        success: true,
+        message: "OK",
+        data: data,
       }
     } catch (e) {
       return {
@@ -322,6 +345,7 @@ const AppointmentProvider = ({ children }: AppointmentProviderProps) => {
         appointmentsFiltered,
         getMyAppointmentsByTitle,
         appointmentsCheckout,
+        getAppointmentsByDate,
       }}
     >
       {children}

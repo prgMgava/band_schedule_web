@@ -13,6 +13,7 @@ import uuid from "react-uuid"
 import { useAuth } from "../../../../Provider/Auth/Auth"
 import { useBand } from "../../../../Provider/Band/Band"
 import { useCreditor } from "../../../../Provider/Creditor/Creditor"
+import { useAppointment } from "../../../../Provider/Appointment/Appointment"
 interface ReportFields {
   start_date: Date
   end_date: Date
@@ -36,7 +37,8 @@ export const ReportForm = ({ toggleDrawer }: ReportProps) => {
   const { creditors, getCreditors } = useCreditor()
   const currentDate = new Date()
 
-  const { createCheckout, updateCheckout } = useCheckout()
+  const { getCheckoutsByAppointments } = useCheckout()
+  const { getAppointmentsByDate } = useAppointment()
 
   const {
     handleSubmit,
@@ -47,7 +49,16 @@ export const ReportForm = ({ toggleDrawer }: ReportProps) => {
 
   const submitForm: SubmitHandler<ReportFields> = async (dataForm: ReportFields) => {
     console.log(dataForm)
-    // const response = await createCheckout(dataForm )
+    const startDate = dataForm.start_date.toISOString().substring(0, 10)
+    const endDate = dataForm.end_date.toISOString().substring(0, 10)
+    const idBand = dataForm.id_band
+    const { data: listAppointments } = await getAppointmentsByDate(startDate, endDate, idBand)
+    if (listAppointments.length) {
+      const idsAppointments = listAppointments.map(appointment => appointment.id).join(",")
+
+      const response = await getCheckoutsByAppointments(startDate, endDate, dataForm.id_band, idsAppointments)
+      console.log(response)
+    }
     // toast[response.success ? "success" : "error"](response.message)
     // if (response.success) {
     //   toggleDrawer()
