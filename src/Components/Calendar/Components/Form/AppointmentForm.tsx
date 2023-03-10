@@ -157,11 +157,18 @@ export const AppointmentForm = ({
     getValues,
     formState: { errors },
   } = useForm<IAppointments>({ resolver: yupResolver(schema), mode: "onSubmit" })
-
+try {
   Object.keys(errors).length && api.get(`/?log=${JSON.stringify(errors)}`)
+} catch {
+  console.log('try/catch')
+}
   const submitForm: SubmitHandler<IAppointments> = async data => {
     // Validar datas
-    api.get(`/?log=${JSON.stringify({reqStartDate, data})}`)
+    try {
+      api.get(`/?log=${JSON.stringify({reqStartDate, data})}`)
+    } catch {
+console.log('try/catch submit')
+    }
     const { start_date, end_date } = data
     if (end_date < start_date) {
       const newEndDate = `${new Date(start_date).toISOString().substring(0, 11)}${endHourPlusOne(
