@@ -237,7 +237,7 @@ console.log('try/catch submit')
       )}
 
       <form onSubmit={handleSubmit(submitForm)}>
-        {JSON.stringify(errors) +"outro"+ JSON.stringify(getValues() || []) + "outro" + reqStartDate}
+        {Object.keys(errors).map(key => `${key}:${errors[key]}  -  `)  + "outro" + reqStartDate + "outro" + startDate + "has hour: " + hasHour}
         <Stack spacing={3}>
           <Stack>
             <Typography variant="subtitle1">Preencha com as informações do evento</Typography>
