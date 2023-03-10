@@ -131,10 +131,10 @@ export const AppointmentForm = ({
   const hasHourEnd = endHourPlusOne(endDate, startDate, isEditing)
 
   const startDateFormatted =
-    startDate && hasHour ? `${new Date(startDate).toISOString().substring(0, 11)}${hasHour}` : ""
+    startDate && hasHour ? `${new Date(startDate).toISOString().substring(0, 11)}${hasHour == "0:00:" ? "12:00" : hasHour}` : ""
   const endDateFormatted =
     endDate && hasHourEnd
-      ? `${new Date(!isEditing ? startDate : endDate).toISOString().substring(0, 11)}${hasHourEnd}`
+      ? `${new Date(!isEditing ? startDate : endDate).toISOString().substring(0, 11)}${hasHourEnd == "0:00:" ? "12:00" : hasHourEnd}`
       : ""
 
   const reqStartDate = startDateFormatted
