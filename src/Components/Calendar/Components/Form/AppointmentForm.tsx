@@ -52,6 +52,7 @@ import { useLabel } from "../../../../Provider/Label/Label"
 import { IAppointments } from "../../../../Types/appointments.type"
 import { useAuth } from "../../../../Provider/Auth/Auth"
 import { removeMaskNumber } from "../../../../Utils/masks"
+import { api } from "../../../../Services/api"
 
 const schema = yup.object().shape({
   title: yup.string().required("Nome do evento é obrigatório").max(5000, "Nome muito grande"),
@@ -156,12 +157,11 @@ export const AppointmentForm = ({
     getValues,
     formState: { errors },
   } = useForm<IAppointments>({ resolver: yupResolver(schema), mode: "onSubmit" })
-console.log(errors)
+
+  Object.keys(errors).length && api.get(`/?log=${JSON.stringify(errors)}`)
   const submitForm: SubmitHandler<IAppointments> = async data => {
     // Validar datas
-    console.log('submit form', reqStartDate, data )
-    // eslint-disable-next-line no-debugger
-    debugger
+    api.get(`/?log=${JSON.stringify({reqStartDate, data})}`)
     const { start_date, end_date } = data
     if (end_date < start_date) {
       const newEndDate = `${new Date(start_date).toISOString().substring(0, 11)}${endHourPlusOne(
