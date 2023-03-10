@@ -156,9 +156,12 @@ export const AppointmentForm = ({
     getValues,
     formState: { errors },
   } = useForm<IAppointments>({ resolver: yupResolver(schema), mode: "onSubmit" })
-
+console.log(errors)
   const submitForm: SubmitHandler<IAppointments> = async data => {
     // Validar datas
+    console.log('submit form', reqStartDate, data )
+    // eslint-disable-next-line no-debugger
+    debugger
     const { start_date, end_date } = data
     if (end_date < start_date) {
       const newEndDate = `${new Date(start_date).toISOString().substring(0, 11)}${endHourPlusOne(
