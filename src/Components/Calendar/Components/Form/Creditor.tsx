@@ -121,7 +121,7 @@ export const CreditorForm = ({ toggleDrawer }: CreditorProps) => {
                   )}
                 />
               }
-              label={"É fornecedor?"}
+              label={"É contratante?"}
             />
           </Stack>
         </Stack>

@@ -1,0 +1,36 @@
+			// /** Batera creditor - 5 Table Header: Batera*/
+			// const sumDrummer = checkoutsByAppointment.filter(checkout => checkout.creditor?.name.toLowerCase() == 'batera').filter(checkout => checkout.type == 2).reduce((a, b) => {
+			// 	return a + Number(b.value)
+			// }, 0).toLocaleString('pt-br', { style: 'currency', currency: 'BRL' }).split(' ')[1]
+			// currentRow.push(sumDrummer)
+
+			// /** Percussion - 6 Table Header: Percussão*/
+			// const sumPercussion = checkoutsByAppointment.filter(checkout => checkout.creditor?.name.toLowerCase() == 'percussão').filter(checkout => checkout.type == 2).reduce((a, b) => {
+			// 	return a + Number(b.value)
+			// }, 0).toLocaleString('pt-br', { style: 'currency', currency: 'BRL' }).split(' ')[1]
+			// currentRow.push(sumPercussion)
+
+			// /** Guitar - 7 Table Header: Violão*/
+			// const sumGuitar = checkoutsByAppointment.filter(checkout => checkout.creditor?.name.toLowerCase() == 'violão').filter(checkout => checkout.type == 2).reduce((a, b) => {
+			// 	return a + Number(b.value)
+			// }, 0).toLocaleString('pt-br', { style: 'currency', currency: 'BRL' }).split(' ')[1]
+			// currentRow.push(sumGuitar)
+
+			// /** Bass - 8 Table Header: Baixo*/
+			// const sumBass = checkoutsByAppointment.filter(checkout => checkout.creditor?.name.toLowerCase() == 'baixo').filter(checkout => checkout.type == 2).reduce((a, b) => {
+			// 	return a + Number(b.value)
+			// }, 0).toLocaleString('pt-br', { style: 'currency', currency: 'BRL' }).split(' ')[1]
+			// currentRow.push(sumBass)
+
+			// /** Staff - 9 Table Header: Operador staff*/
+			// const sumStaff = checkoutsByAppointment.filter(checkout => checkout.creditor?.name.toLowerCase() == 'operador staff').filter(checkout => checkout.type == 2).reduce((a, b) => {
+			// 	return a + Number(b.value)
+			// }, 0).toLocaleString('pt-br', { style: 'currency', currency: 'BRL' }).split(' ')[1]
+			// currentRow.push(sumStaff)
+
+
+      							// { text: "Batera", style: "tableHeader" },
+							// { text: "Percussão", style: "tableHeader" },
+							// { text: "Violão", style: "tableHeader" },
+							// { text: "Baixo", style: "tableHeader" },
+							// { text: "Staff", style: "tableHeader" },

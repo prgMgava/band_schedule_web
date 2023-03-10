@@ -30,6 +30,8 @@ import { useLabel } from "../../Provider/Label/Label"
 import { api } from "../../Services/api"
 import classNames from "clsx"
 import { ILabel } from "../../Types/label.type"
+import { IAppointments } from "../../Types/appointments.type"
+import { useCreditor } from "../../Provider/Creditor/Creditor"
 
 const PREFIX = "Demo"
 export const classes = {
@@ -70,6 +72,7 @@ export const Demo = () => {
   const [labels, setLabels] = useState<ILabel[]>(JSON.parse(localStorage.getItem("@BandSchedule:labels")) || [])
   const { id, accessToken, getAdmins, getMembers, superAdmin, bandVisibility, adm, getUser } = useAuth()
   const { getMyBands, currentBand, myBands, getBands } = useBand()
+  const {getCreditors} = useCreditor()
 
   const { getLabels } = useLabel()
   const {
@@ -165,6 +168,7 @@ export const Demo = () => {
     getAdmins()
     getUser()
     getBands()
+    getCreditors()
   }, [])
 
   useEffect(() => {
@@ -216,10 +220,13 @@ export const Demo = () => {
     return <AppointmentForm.TextEditor {...props} />
   }
 
-  const filterTasks = (items, status) => {
+  const filterTasks = (items: IAppointments[], status) => {
     const appointmentsFiltered = items.filter(task => {
       if (status == "4") {
         return task.id_label == status
+      }
+      if(task.title.toLocaleLowerCase().includes('outros g') || task.title.toLocaleLowerCase().includes('saldo devedor')) {
+        return false
       }
       return !status || task.id_label === status
     })

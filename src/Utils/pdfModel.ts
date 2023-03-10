@@ -40,55 +40,44 @@ export const createPdfReport = (listCheckout: ICheckout[], startDate: string, en
 			}, 0).toLocaleString('pt-br', { style: 'currency', currency: 'BRL' }).split(' ')[1]
 			currentRow.push(sumComercial)
 
-			/** Batera creditor - 5 Table Header: Batera*/
-			const sumDrummer = checkoutsByAppointment.filter(checkout => checkout.creditor?.name.toLowerCase() == 'batera').filter(checkout => checkout.type == 2).reduce((a, b) => {
+			/** Custo Operacional - 5 Table Header: Custo operacional*/
+			const sumCostOperation = checkoutsByAppointment.filter(checkout => checkout.creditor?.name.toLowerCase() == 'custo operacional').filter(checkout => checkout.type == 2).reduce((a, b) => {
 				return a + Number(b.value)
 			}, 0).toLocaleString('pt-br', { style: 'currency', currency: 'BRL' }).split(' ')[1]
-			currentRow.push(sumDrummer)
+			currentRow.push(sumCostOperation)
 
-			/** Percussion - 6 Table Header: Percussão*/
-			const sumPercussion = checkoutsByAppointment.filter(checkout => checkout.creditor?.name.toLowerCase() == 'percussão').filter(checkout => checkout.type == 2).reduce((a, b) => {
+			/** Custo Sócios - 6 Table Header: Sócios*/
+			const sumPartners = checkoutsByAppointment.filter(checkout => checkout.creditor?.name.toLowerCase() == 'sócios').filter(checkout => checkout.type == 2).reduce((a, b) => {
 				return a + Number(b.value)
 			}, 0).toLocaleString('pt-br', { style: 'currency', currency: 'BRL' }).split(' ')[1]
-			currentRow.push(sumPercussion)
+			currentRow.push(sumPartners)
 
-			/** Guitar - 7 Table Header: Violão*/
-			const sumGuitar = checkoutsByAppointment.filter(checkout => checkout.creditor?.name.toLowerCase() == 'violão').filter(checkout => checkout.type == 2).reduce((a, b) => {
+			/** Custo Saldo devedor - 7 Table Header: Saldo Devedor*/
+			const sumDebitBalance = checkoutsByAppointment.filter(checkout => checkout.creditor?.name.toLowerCase() == 'saldo devedor').filter(checkout => checkout.type == 2).reduce((a, b) => {
 				return a + Number(b.value)
 			}, 0).toLocaleString('pt-br', { style: 'currency', currency: 'BRL' }).split(' ')[1]
-			currentRow.push(sumGuitar)
+			currentRow.push(sumDebitBalance)
 
-			/** Bass - 8 Table Header: Baixo*/
-			const sumBass = checkoutsByAppointment.filter(checkout => checkout.creditor?.name.toLowerCase() == 'baixo').filter(checkout => checkout.type == 2).reduce((a, b) => {
-				return a + Number(b.value)
-			}, 0).toLocaleString('pt-br', { style: 'currency', currency: 'BRL' }).split(' ')[1]
-			currentRow.push(sumBass)
 
-			/** Staff - 9 Table Header: Operador staff*/
-			const sumStaff = checkoutsByAppointment.filter(checkout => checkout.creditor?.name.toLowerCase() == 'operador staff').filter(checkout => checkout.type == 2).reduce((a, b) => {
-				return a + Number(b.value)
-			}, 0).toLocaleString('pt-br', { style: 'currency', currency: 'BRL' }).split(' ')[1]
-			currentRow.push(sumStaff)
-
-			/** Staff - 10 Table Header: Operador staff*/
-			const sumOthers = checkoutsByAppointment.filter(checkout => checkout.creditor?.name.toLowerCase() == 'outros').filter(checkout => checkout.type == 2).reduce((a, b) => {
+			/** Outros - 8 Table Header: outros*/
+			const sumOthers = checkoutsByAppointment.filter(checkout => checkout.creditor?.name.toLowerCase() != 'comercial' && checkout.creditor?.name.toLowerCase() != 'sócios' && checkout.creditor?.name.toLowerCase() != 'custo operacional' && checkout.creditor?.name.toLowerCase() != 'saldo devedor').filter(checkout => checkout.type == 2).reduce((a, b) => {
 				return a + Number(b.value)
 			}, 0).toLocaleString('pt-br', { style: 'currency', currency: 'BRL' }).split(' ')[1]
 			currentRow.push(sumOthers)
 
-			/** Entradas - 11 Table Header: Entradas*/
+			/** Entradas - 9 Table Header: Entradas*/
 			const sumEntry = checkoutsByAppointment.filter(checkout => checkout.type == 1).reduce((a, b) => {
 				return a + Number(b.value)
 			}, 0).toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })
 			currentRow.push(sumEntry)
 
-			/** Saídas - 12 Table Header: Saídas*/
+			/** Saídas - 10 Table Header: Saídas*/
 			const sumOut = checkoutsByAppointment.filter(checkout => checkout.type == 2).reduce((a, b) => {
 				return a + Number(b.value)
 			}, 0).toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })
 			currentRow.push(sumOut)
 
-			/** Profit - 13 Table Header: Lucros*/
+			/** Profit - 11 Table Header: Lucros*/
 
 			const profit = checkoutsByAppointment.filter(checkout => checkout.type == 1).reduce((a, b) => {
 				return a + Number(b.value)
@@ -103,7 +92,6 @@ export const createPdfReport = (listCheckout: ICheckout[], startDate: string, en
 				return row == "R$ 0,00" ? '--' : row
 			}))
 		}
-		console.log(tableRows.filter(rows => rows.length))
 	})
 
 
@@ -142,11 +130,9 @@ export const createPdfReport = (listCheckout: ICheckout[], startDate: string, en
 							{ text: "Data", style: "tableHeader" },
 							{ text: "Cache", style: "tableHeader" },
 							{ text: "Comercial", style: "tableHeader" },
-							{ text: "Batera", style: "tableHeader" },
-							{ text: "Percussão", style: "tableHeader" },
-							{ text: "Violão", style: "tableHeader" },
-							{ text: "Baixo", style: "tableHeader" },
-							{ text: "Staff", style: "tableHeader" },
+							{ text: "Custo Operacional", style: "tableHeader" },
+							{ text: "Sócios", style: "tableHeader" },
+							{ text: "Saldo Devedor", style: "tableHeader" },
 							{ text: "Outros", style: "tableHeader" },
 							{ text: "Entradas", style: "tableHeader" },
 							{ text: "Saídas", style: "tableHeader" },

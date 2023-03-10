@@ -245,7 +245,7 @@ export const Header = ({ setCurrentPriority }: HeaderProps) => {
                     Adicionar categoria
                   </MenuItem>
 
-                  <MenuItem
+                  {/* <MenuItem
                     onClick={() => {
                       setCurrentForm("creditor")
                       setOpenDrawer(true)
@@ -256,7 +256,7 @@ export const Header = ({ setCurrentPriority }: HeaderProps) => {
                       <BadgeIcon fontSize="small" />
                     </ListItemIcon>
                     Adicionar/Editar credor
-                  </MenuItem>
+                  </MenuItem> */}
                   <MenuItem onClick={() => navigate("/calendar/financas")} disabled={!adm}>
                     <ListItemIcon>
                       <AttachMoney fontSize="small" />

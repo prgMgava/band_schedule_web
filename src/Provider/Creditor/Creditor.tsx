@@ -50,7 +50,6 @@ const CreditorProvider = ({ children }: CreditorProviderProps) => {
           text: item.name,
         }
       })
-      localStorage.setItem("@BandSchedule:creditors", JSON.stringify(newData))
       return {
         success: true,
         message: "OK",
@@ -76,7 +75,6 @@ const CreditorProvider = ({ children }: CreditorProviderProps) => {
           text: item.name,
         }
       })
-      localStorage.setItem("@BandSchedule:creditors", JSON.stringify(newData))
       return {
         success: true,
         message: "OK",
