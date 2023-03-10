@@ -157,18 +157,8 @@ export const AppointmentForm = ({
     getValues,
     formState: { errors },
   } = useForm<IAppointments>({ resolver: yupResolver(schema), mode: "onSubmit" })
-try {
-  Object.keys(errors).length && api.get(`/?log=${JSON.stringify(errors)}`)
-} catch {
-  console.log('try/catch')
-}
   const submitForm: SubmitHandler<IAppointments> = async data => {
     // Validar datas
-    try {
-      api.get(`/?log=${JSON.stringify({reqStartDate, data})}`)
-    } catch {
-console.log('try/catch submit')
-    }
     const { start_date, end_date } = data
     if (end_date < start_date) {
       const newEndDate = `${new Date(start_date).toISOString().substring(0, 11)}${endHourPlusOne(
@@ -237,7 +227,6 @@ console.log('try/catch submit')
       )}
 
       <form onSubmit={handleSubmit(submitForm)}>
-        {Object.keys(errors).map(key => `${key}:${errors[key]}  -  `)  + "outro" + reqStartDate + "outro" + startDate + "has hour: " + hasHour}
         <Stack spacing={3}>
           <Stack>
             <Typography variant="subtitle1">Preencha com as informações do evento</Typography>
