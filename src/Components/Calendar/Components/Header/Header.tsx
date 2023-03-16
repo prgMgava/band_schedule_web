@@ -100,11 +100,10 @@ export const Header = ({ setCurrentPriority }: HeaderProps) => {
                   width={"300px"}
                   justifySelf={"flex-start"}
                   display="flex"
-                  bgcolor={"#FFF"}
                   alignItems="center"
                 >
                   <img
-                    src={require("../../../../assets/low-logo.webp")}
+                    src={require("../../../../assets/images/logo.png")}
                     data-src={require("../../../../assets/images/logo.png")}
                     alt="logo"
                     style={{ paddingLeft: "24px", height: "90%", width: "75%" }}
