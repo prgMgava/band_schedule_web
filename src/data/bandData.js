@@ -38,7 +38,7 @@ export const bandData = [
       },
       {
         name: "spotify",
-        link: "#",
+        link: "https://onerpm.link/437991299219",
         icon: <FaSpotify className="media-icon" />,
       },
       // {
