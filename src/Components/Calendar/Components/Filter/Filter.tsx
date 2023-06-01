@@ -109,7 +109,7 @@ export const Filter = ({ setCurrentPriority }: FilterProps) => {
           <Events setOpenDrawer={setOpenDrawer} handleCloseModal={handleCloseModal} />
         </Modal>
         <FilterByBand />
-        {!mobile && adm && (
+        {!mobile && (
           <Button
             id="basic-button"
             aria-haspopup="true"

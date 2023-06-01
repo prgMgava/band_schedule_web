@@ -18,7 +18,7 @@ export const Routes = () => {
         <Route path="/signup" element={<Signup />} />
         <Route path="/calendar" element={accessToken ? <Demo /> : <Navigate to={"/agenda"}></Navigate>} />
         <Route path="/tanamedida" element={<LandingPage />} />
-        <Route path="/calendar/financas" element={adm ? <FinancesPage /> : <Navigate to={"/agenda"}></Navigate>} />
+        <Route path="/calendar/financas" element={<FinancesPage />} />
       </Switch>
     </Suspense>
   )

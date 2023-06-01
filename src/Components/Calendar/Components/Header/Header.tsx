@@ -256,7 +256,7 @@ export const Header = ({ setCurrentPriority }: HeaderProps) => {
                     </ListItemIcon>
                     Adicionar/Editar credor
                   </MenuItem> */}
-                  <MenuItem onClick={() => navigate("/calendar/financas")} disabled={!adm}>
+                  <MenuItem onClick={() => navigate("/calendar/financas")}>
                     <ListItemIcon>
                       <AttachMoney fontSize="small" />
                     </ListItemIcon>

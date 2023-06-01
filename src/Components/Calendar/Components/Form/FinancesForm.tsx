@@ -102,9 +102,9 @@ export const FinancesForm = ({ toggleDrawer, data }: FinancesProps) => {
     const money =
       typeof dataAux.value == "string"
         ? dataAux.value
-            .replace(".", "")
-            .replace(",", ".")
-            .replace(/\D\$\s/, "")
+          .replace(".", "")
+          .replace(",", ".")
+          .replace(/\D\$\s/, "")
         : 0
     const dateFormatted = new Date(
       typeof dataAux.date == "object"
@@ -252,7 +252,7 @@ export const FinancesForm = ({ toggleDrawer, data }: FinancesProps) => {
                         <MenuItem disabled>Selecione o tipo de transação primeiro</MenuItem>
                       )}
                     </Select>
-                    {!!errors.id_band && <FormHelperText sx={{ color: "#E34367" }}>Selecione uma banda</FormHelperText>}
+                    {!!errors.id_band && <FormHelperText sx={{ color: "#E34367" }}>Selecione uma credor</FormHelperText>}
                   </FormControl>
                 </Box>
               )}
