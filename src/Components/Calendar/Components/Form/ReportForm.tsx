@@ -39,18 +39,16 @@ interface ReportProps {
 }
 
 export const ReportForm = ({ toggleDrawer }: ReportProps) => {
-  const { id } = useAuth()
   const [loading, setLoading] = useState(false)
 
   const { mobile } = useMobile()
   const { myBands } = useBand()
-  const { creditors, getCreditors } = useCreditor()
   const currentDate = new Date()
 
-  const { getCheckoutsByAppointments } = useCheckout()
+  const { getCheckoutsByAppointments, getCheckouts } = useCheckout()
   const { getAppointmentsByDate } = useAppointment()
 
-  const createPdf = (listCheckout: ICheckout[], startDate: string, endDate: string, idsAppointments: number[], isByCheckout: boolean) => {
+  const createPdf = (listCheckout: ICheckout[], startDate: string, endDate: string, idsAppointments: number[] | null, isByCheckout: boolean) => {
     const pdfCreatorFn = isByCheckout ? createPdfReportByCheckout : createPdfReport
     const pdfGenerator = pdfMake.createPdf(pdfCreatorFn(listCheckout, startDate, endDate, idsAppointments))
     pdfGenerator.open()
@@ -74,21 +72,31 @@ export const ReportForm = ({ toggleDrawer }: ReportProps) => {
       toast.warning("Gerando relatório aguarde....")
       setLoading(true)
 
-      const { data: listAppointments } = await getAppointmentsByDate(startDate, endDate, idBand)
-      if (listAppointments.length) {
-        const idsAppointments: number[] = listAppointments.map((appointment: IAppointments) => appointment.id)
+      if (isByCheckout) {
+        const { data: listCheckouts } = await getCheckouts(startDate, endDate, idBand)
+        if (listCheckouts.length) {
+          createPdf(listCheckouts as ICheckout[], startDate, endDate, null, isByCheckout)
 
-        const { data: listCheckout } = await getCheckoutsByAppointments(
-          startDate,
-          endDate,
-          dataForm.id_band,
-          idsAppointments.join(",")
-        )
-        if (listCheckout.length) {
-          createPdf(listCheckout as ICheckout[], startDate, endDate, idsAppointments, isByCheckout)
         }
-        toast.success("Relatório gerado com sucesso")
+      } else {
+        const { data: listAppointments } = await getAppointmentsByDate(startDate, endDate, idBand)
+        if (listAppointments.length) {
+          const idsAppointments: number[] = listAppointments.map((appointment: IAppointments) => appointment.id)
+
+          const { data: listCheckout } = await getCheckoutsByAppointments(
+            startDate,
+            endDate,
+            dataForm.id_band,
+            idsAppointments.join(",")
+          )
+          if (listCheckout.length) {
+            createPdf(listCheckout as ICheckout[], startDate, endDate, idsAppointments, isByCheckout)
+          }
+          toast.success("Relatório gerado com sucesso")
+        }
+
       }
+
     } catch (e) {
       console.log(e)
       toast["error"](e)

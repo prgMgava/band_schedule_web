@@ -1,6 +1,6 @@
 import { ICheckout } from "../Types/checkout.type"
 
-export const createPdfReport = (listCheckout: ICheckout[], startDate: string, endDate: string, idsAppointments: number[]) => {
+export const createPdfReport = (listCheckout: ICheckout[], startDate: string, endDate: string, idsAppointments: number[] | null) => {
 	const { band } = listCheckout[0]
 	const tableRows: any[] = []
 
@@ -16,7 +16,7 @@ export const createPdfReport = (listCheckout: ICheckout[], startDate: string, en
 		return a + Number(b.value)
 	}, 0)).toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })
 
-	idsAppointments.map(idAppointment => {
+	idsAppointments?.map(idAppointment => {
 		const checkoutsByAppointment = listCheckout.filter(checkout => checkout.id_appointment == idAppointment)
 		const currentRow: string[] = []
 

@@ -65,6 +65,7 @@ const CheckoutProvider = ({ children }: CheckoutProviderProps) => {
       return {
         success: true,
         message: data.length ? "Finanças encontradas com sucesso" : "Nenhuma finança encontrada",
+        data: data
       }
     } catch (e) {
       return {

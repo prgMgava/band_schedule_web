@@ -1,6 +1,6 @@
 import { ICheckout } from "../Types/checkout.type"
 
-export const createPdfReportByCheckout = (listCheckout: ICheckout[], startDate: string, endDate: string, idsAppointments: number[]) => {
+export const createPdfReportByCheckout = (listCheckout: ICheckout[], startDate: string, endDate: string, idsAppointments: number[] | null) => {
 	const { band } = listCheckout[0]
 	const tableRows: any[] = []
 
@@ -23,7 +23,7 @@ export const createPdfReportByCheckout = (listCheckout: ICheckout[], startDate: 
 		currentRow.push(checkout.description)
 
 		/** Checkout Date- 2 Table Header: Data*/
-		currentRow.push(new Date(checkout.createdAt).toLocaleDateString())
+		currentRow.push(new Date(checkout.date).toLocaleDateString())
 
 		/** Checkout Creditor Name - 3 Table Header: Type*/
 		currentRow.push(checkout.creditor.name)
@@ -32,7 +32,7 @@ export const createPdfReportByCheckout = (listCheckout: ICheckout[], startDate: 
 		currentRow.push(checkout.band.name)
 
 		/** Custo valor - 5 Table Header: Custo operacional*/
-		const valueEdited = checkout.value.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' }).split(' ')[1]
+		const valueEdited = parseFloat(checkout.value as string).toLocaleString('pt-br', { style: 'currency', currency: 'BRL' }).split(' ')[1]
 		const checkoutType = checkout.type
 		currentRow.push(checkoutType == 1 ? valueEdited : `- ${valueEdited}`)
 
