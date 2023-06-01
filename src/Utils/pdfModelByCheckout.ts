@@ -28,10 +28,13 @@ export const createPdfReportByCheckout = (listCheckout: ICheckout[], startDate: 
 		/** Checkout Creditor Name - 3 Table Header: Type*/
 		currentRow.push(checkout.creditor.name)
 
-		/** Comercial band - 4 Table Header: Comercial*/
+		/** Checkout band - 4 Table Header: Checkout*/
 		currentRow.push(checkout.band.name)
 
-		/** Custo valor - 5 Table Header: Custo operacional*/
+		/** Checkout band - 5 Table Header: Checkout*/
+		currentRow.push(checkout.appointment.title)
+
+		/** Custo valor - 6 Table Header: Custo operacional*/
 		const valueEdited = parseFloat(checkout.value as string).toLocaleString('pt-br', { style: 'currency', currency: 'BRL' }).split(' ')[1]
 		const checkoutType = checkout.type
 		currentRow.push(checkoutType == 1 ? valueEdited : `- ${valueEdited}`)
@@ -77,6 +80,7 @@ export const createPdfReportByCheckout = (listCheckout: ICheckout[], startDate: 
 							{ text: "Data", style: "tableHeader" },
 							{ text: "Credor", style: "tableHeader" },
 							{ text: "Banda", style: "tableHeader" },
+							{ text: "Evento", style: "tableHeader" },
 							{ text: "Valor", style: "tableHeader" },
 						],
 						...tableRows
